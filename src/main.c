@@ -2,48 +2,71 @@
 #include "minishell.h"
 
 
-t_mycommands g_mycommands[] = 
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <readline/readline.h>
+#include <readline/history.h>
+#include <ctype.h>
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <readline/readline.h>
+#include <readline/history.h>
+#include <ctype.h>
+
+int is_empty_or_whitespace(const char *s)
 {
-	{"history", my_history},
-	{NULL, NULL}
-};
-
-
-
-void    distribution_center(char *input, t_shell *shell)
-{
-    //function for splitting up the tokens and filtering out the noncommands
-    int i;
-    i = 0;
-
-    while(g_mycommands[i].name)
+    if (!s) 
+        return 1;
+    while (*s)
     {
-        if (strcmp(input, g_mycommands[i].name) == 0)
-        {
-            g_mycommands[i].func(NULL, shell);
-            return;
-        }
-        i++;
+        if (!isspace((unsigned char)*s)) 
+            return 0;
+        s++;
     }
+    return 1;
 }
 
-int main()
+void print_history()
 {
-    t_shell shell = {NULL, NULL};
-    char *input;
+    HIST_ENTRY **the_list = history_list(); // need to get my own bc this is not allowed ig
+    if (!the_list) 
+        return;
 
-    printf("hello there\n");
+    for (int i = 0; the_list[i]; i++)
+        printf("%d  %s\n", i + history_base, the_list[i]->line);// wtf is history space ?? wo kommt das her ? prolly start von dem hist_entry
+}
+
+int main(void)
+{
+    char *input;
 
     while (1)
     {
         input = readline("minishell> ");
         if (!input)
             break;
-        //filter all the junk
-        add_to_history(input, &shell.head, &shell.tail);
-        distribution_center(input, &shell);
+
+        if (!is_empty_or_whitespace(input))
+        {
+            if (strcmp(input, "history") == 0)
+            {
+                add_history(input);// need a filter for the real commands
+                print_history();
+            }
+            else
+            {
+                add_history(input); // only store real commands
+                // TODO: here you would normally parse & execute the command
+            }
+        }
+
         free(input);
     }
-    free_myhistory(shell.head);
+
+    rl_clear_history(); // free readline's internal history at exit
     return 0;
 }
+

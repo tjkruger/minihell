@@ -6,7 +6,7 @@
 /*   By: r2d2 <r2d2@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 17:28:21 by tjkruger          #+#    #+#             */
-/*   Updated: 2025/10/10 18:02:13 by r2d2             ###   ########.fr       */
+/*   Updated: 2025/10/18 11:03:14 by r2d2             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 static int	wordcount(const char *s, char c)
 {
 	int i;
-	int count
+	int count;
 
 	i = 0;
 	count = 0;

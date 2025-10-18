@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strjoin.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
+/*   By: r2d2 <r2d2@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 12:27:18 by tjkruger          #+#    #+#             */
-/*   Updated: 2024/10/24 14:37:52 by tjkruger         ###   ########.fr       */
+/*   Updated: 2025/10/18 11:03:48 by r2d2             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,11 +53,7 @@ void	ft_strcopy(char *new_str, const char *s1, const char *s2)
 char	*ft_strjoin(char const *s1, char const *s2)
 {
 	char	*new_str;
-	int		len1;
-	int		len2;
-
-	len1 = 0;
-	len2 = 0;
+	
 	if (!s1 || !s2)
 	{
 		return (NULL);
