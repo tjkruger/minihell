@@ -8,11 +8,13 @@ OBJ_DIR		=	obj
 INC_DIR		=	include
 
 SRC			=	main.c \
+				history.c \
 				
 LIBFT		=	$(wildcard libft/*.c)
 OBJ 		= 	$(addprefix $(OBJ_DIR)/, $(SRC:.c=.o)) $(addprefix $(OBJ_DIR)/, $(notdir $(LIBFT:.c=.o)))
 
 cc			=	cc
+CC			=	cc
 CFLAGS		=	-Wall -Werror -Wextra -I$(INC_DIR)
 READLINE	=	-lreadline
 
