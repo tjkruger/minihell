@@ -2,7 +2,7 @@
 # minishell TODO (Checklist with Boxes)
 
 ## Core Execution
-- [ ] Tokenizer
+- [x] Tokenizer
 - [ ] Quote handling
 - [ ] Escapes
 - [ ] Pipes
@@ -17,7 +17,7 @@
 ## Builtins
 
 ### echo
-- [ ] Plain echo
+- [x] Plain echo
 - [ ] Handle -n flag
 - [ ] Handle multiple arguments
 - [ ] Handle variable expansion
@@ -81,9 +81,8 @@
 - [ ] Syntax errors
 
 ## History
-- [ ] In-memory history
-- [ ] Persistent history (optional)
-- [ ] Navigation (optional)
+- [x] In-memory history
+- [x] Navigation (optional)
 
 ## Memory Management
 - [ ] Free all allocated memory on exit
@@ -98,8 +97,6 @@
 - [ ] Permission denied / not found errors
 
 ## Bonus (Optional)
-- [ ] History navigation with arrows
-- [ ] Autocompletion
 - [ ] Wildcards (*, ?)
 - [ ] Colored/custom prompt
 - [ ] Persistent environment/history
