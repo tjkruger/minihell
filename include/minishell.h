@@ -14,6 +14,9 @@
 // all other .h files
 
 #include "history.h"
+#include "libft.h"
+#include "echo.h"
+#include "tokens.h"
 
 
 

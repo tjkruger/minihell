@@ -18,14 +18,14 @@ int main(void)
             if (strcmp(input, "history") == 0)
             {
                 add_to_hist_list(&history_list, input);
-                add_history(input);// put later out if i can test with different commands then history
+                add_history(input);// put later out when i can test with different commands then history
                 print_history(history_list);
             }
             else
             {
                 add_to_hist_list(&history_list, input);
-                add_history(input); // only store real commands
-                // TODO: here you would normally parse & execute the command
+                add_history(input);
+                what_to_do_with_tokens(get_tokens(input));
             }
         }
         free(input);
