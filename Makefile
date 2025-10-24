@@ -11,6 +11,7 @@ SRC			=	main.c \
 				history.c \
 				tokens.c \
 				echo.c	\
+				test_hkaraogl.c \
 				
 SRCSLIBFT = ft_bzero.c \
 			ft_isalnum.c \
@@ -71,6 +72,9 @@ $(OBJ_DIR)/%.o: $(LIBFT_DIR)/%.c | $(OBJ_DIR)
 
 $(OBJ_DIR):
 	@mkdir -p $(OBJ_DIR)
+
+run: $(NAME)
+	./$(NAME)
 
 clean:
 	@rm -rf $(OBJ_DIR)
