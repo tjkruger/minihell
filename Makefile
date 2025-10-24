@@ -13,10 +13,10 @@ HISTORY		=	history.c
 TOKENS		=	tokens/token.c \
 				tokens/token_utils.c
 
-ECHO		=	echo/echo.c
+BUILDINS		=	buildins/echo.c
 
 # Combine all source groups here
-SRC			=	$(MAIN) $(HISTORY) $(TOKENS) $(ECHO)
+SRC			=	$(MAIN) $(HISTORY) $(TOKENS) $(BUILDINS)
 
 # === Libft sources ===
 SRCSLIBFT	=	ft_bzero.c \
