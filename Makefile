@@ -10,8 +10,8 @@ INC_DIR		=	include
 MAIN		=	main.c
 HISTORY		=	history.c
 
-TOKENS		=	tokens/token.c \
-				tokens/token_utils.c
+TOKENS		=	token/tokens.c \
+				token/token_utils.c
 
 BUILDINS		=	buildins/echo.c
 
