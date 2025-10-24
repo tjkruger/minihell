@@ -1,0 +1,18 @@
+# Ignore object files
+obj/
+*.o
+# Ignore executable
+minishell
+# Ignore temporary files and swap files
+*~
+*.swp
+*.swo
+# Ignore system files
+.DS_Store
+Thumbs.db
+# Ignore other editor/project-specific files
+.vscode/
+.idea/
+# Ignore compiled library files
+*.a
+*.so
