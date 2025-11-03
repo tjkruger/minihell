@@ -10,13 +10,15 @@ INC_DIR		=	include
 MAIN		=	main.c
 HISTORY		=	history.c
 
-TOKENS		=	tokens/token.c \
-				tokens/token_utils.c
+PARSER		=	parser/create_command_list.c
 
-BUILDINS		=	buildins/echo.c
+LEXER		=	lexer/token.c \
+				lexer/token_utils.c
+
+BUILDINS	=	buildins/echo.c
 
 # Combine all source groups here
-SRC			=	$(MAIN) $(HISTORY) $(TOKENS) $(BUILDINS)
+SRC			=	$(MAIN) $(HISTORY) $(LEXER) $(BUILDINS) $(PARSER)
 
 # === Libft sources ===
 SRCSLIBFT	=	ft_bzero.c \
