@@ -1,37 +1,41 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cd.c                                               :+:      :+:    :+:   */
+/*   utils_hkaraogl.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hkaraogl <hkaraogl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/10/24 15:50:25 by hkaraogl          #+#    #+#             */
-/*   Updated: 2025/11/03 17:45:32 by hkaraogl         ###   ########.fr       */
+/*   Created: 2025/10/29 13:40:50 by hkaraogl          #+#    #+#             */
+/*   Updated: 2025/11/03 14:28:59 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include    "minishell.h"
 
-
-int    buildin_cd(char **args, t_env_list *env)
+int	strncmp_strlen(char *s1, char *s2)
 {
-	char *path;
-	char cwd[PATH_MAX];
+	int str_len = ft_strlen(s1);
+	return ((str_len == ft_strlen(s2)) && (ft_strncmp(s1, s2, str_len) == 0));
+}
 
-	if(!args[1])
-		path = get_env_value(env, "HOME");
-	else
-		path = args[1];
-	if(getcwd(cwd, sizeof(cwd)))
-		set_env_value(env, "OLDPWD", cwd);
-	if(chdir(path) != 0)
+int count_array_string(char **arr)
+{
+	int i = 0;
+
+	while(arr[i])
+		i++;
+	return i;
+}
+
+void	free_str_arr(char **arr)
+{
+	int i;
+
+	i = 0;
+	while(arr[i])
 	{
-		perror("cd failed");
-		exit(1);
+		free(arr[i]);
+		i++;
 	}
-	if(getcwd(cwd, sizeof(cwd)))
-	{
-		set_env_value(env, "PWD", cwd);
-	}
-	return 0;
+	free(arr);
 }

@@ -6,7 +6,7 @@
 /*   By: hkaraogl <hkaraogl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/24 15:31:21 by hkaraogl          #+#    #+#             */
-/*   Updated: 2025/10/24 16:32:20 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2025/10/28 19:47:57 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 //tokens = {echo, -nnhnnnn, -n, Hello, World, NULL}
 //echo -nnnnnnn -n -n -n Hello World
+
 
 static int validate_flag(char *flag)
 {
@@ -36,21 +37,21 @@ static int validate_flag(char *flag)
 	return 1;
 }
 
-int	run_echo(char **tokens)
+int	run_echo(t_cmd_node *cmd_node)
 {
 	int i;
 	int newline = 1;
 	i = 1;
-	while(tokens[i] != NULL && validate_flag(tokens[i]))
+	while(cmd_node->cmd[i] != NULL && validate_flag(cmd_node->cmd[i]))
 	{
 		newline = 0;
 		i++;
 	}
 
-	while(tokens[i] != NULL)
+	while(cmd_node->cmd[i] != NULL)
 	{
-		printf("%s", tokens[i]);
-		if(tokens[i + 1] != NULL)
+		printf("%s", cmd_node->cmd[i]);
+		if(cmd_node->cmd[i + 1] != NULL)
 			printf(" ");
 		i++;
 	}
