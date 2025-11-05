@@ -6,7 +6,7 @@
 /*   By: hkaraogl <hkaraogl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/29 13:40:50 by hkaraogl          #+#    #+#             */
-/*   Updated: 2025/11/03 14:28:59 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2025/11/04 15:27:44 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,4 +38,22 @@ void	free_str_arr(char **arr)
 		i++;
 	}
 	free(arr);
+}
+
+int	is_valid_identifier(char *str)
+{
+	int i;
+
+	if (!str || !str[0])
+		return (0);
+	if (!ft_isalpha(str[0]) && str[0] != '_')
+		return (0);
+	i = 1;
+	while (str[i])
+	{
+		if (!ft_isalnum(str[i] && str[i] != '_'))
+			return (0);
+		i++;
+	}
+	return (1);
 }

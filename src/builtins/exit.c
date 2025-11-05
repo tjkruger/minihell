@@ -1,21 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.h                                            :+:      :+:    :+:   */
+/*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hkaraogl <hkaraogl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/10/29 13:45:15 by hkaraogl          #+#    #+#             */
-/*   Updated: 2025/11/04 15:27:38 by hkaraogl         ###   ########.fr       */
+/*   Created: 2025/11/05 20:39:00 by hkaraogl          #+#    #+#             */
+/*   Updated: 2025/11/05 20:41:44 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef UTILS_H
-#define UTILS_H
+#include "minishell.h"
 
-int count_array_string(char **arr);
-void	free_str_arr(char **arr);
-int	strncmp_strlen(char *s1, char *s2);
-int	is_valid_identifier(char *str);
-
-#endif
+void run_exit(void)
+{
+	//cleanup
+	exit(0);
+}

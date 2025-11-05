@@ -18,6 +18,13 @@
 
 # define PATH_MAX 4096
 
+typedef enum CMD_TYPE
+{
+	BUILTIN,
+	CMD,
+	PIPE,
+}	t_CMD_TYPE;
+
 typedef struct s_file_node
 {
 	char				*filename;
@@ -70,6 +77,6 @@ typedef	struct s_env_list
 # include "tokens.h"
 # include "utils.h"
 # include "environment.h"
-# include "buildins.h"
+# include "builtins.h"
 
 #endif

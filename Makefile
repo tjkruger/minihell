@@ -13,10 +13,18 @@ HISTORY		=	history.c
 TOKENS		=	token/tokens.c \
 				token/token_utils.c
 
-BUILDINS		=	buildins/echo.c
+BUILTINS		=	builtins/echo.c \
+					builtins/cd.c \
+					builtins/export.c \
+					builtins/pwd.c \
+					builtins/unset.c \
+					execution/execution.c \
+					utils/utils_hkaraogl.c \
+					environment.c \
+
 
 # Combine all source groups here
-SRC			=	$(MAIN) $(HISTORY) $(TOKENS) $(BUILDINS)
+SRC			=	$(MAIN) $(HISTORY) $(TOKENS) $(BUILTINS)
 
 # === Libft sources ===
 SRCSLIBFT	=	ft_bzero.c \
@@ -60,7 +68,7 @@ OBJ			=	$(addprefix $(OBJ_DIR)/, $(SRC:.c=.o)) \
 
 # === Compiler flags ===
 CC			=	cc
-CFLAGS		=	-Wall -Werror -Wextra -I$(INC_DIR)
+CFLAGS		=	 -I$(INC_DIR)
 READLINE	=	-lreadline
 
 # === Rules ===
