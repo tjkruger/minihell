@@ -6,59 +6,37 @@
 /*   By: hkaraogl <hkaraogl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/28 15:03:52 by hkaraogl          #+#    #+#             */
-/*   Updated: 2025/10/28 19:47:58 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2025/11/10 18:34:32 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int fork_and_execute(char **cmd, char **envp)
-{
-	pid_t pid;
-	int status;
-	pid = fork();
+//Validierung
+//cmd_lst leer?
+//sind cmds NULL?
 
-	if(pid < 0)
-	{
-		perror("fork failed");
-		return 1;
-	}
-	else if(pid == 0)
-	{
-		//child process
-		execve(cmd[0], cmd, envp);
-		perror("execve  failed");
-		exit(127);
-	}
-	else
-	{
-		//pruefe wie Child beendet wurde
-		waitpid(pid, &status, 0);
-		if(WIFEXITED(status)) //normal beendet mit exit()
-			return (WEXITSTATUS(status)); //extrahiere exit code (0 -255)
-		if(WIFSIGNALED(status)) //durch Signal beendet (zB ctrol + C)
-			return (128 + WTERMSIG(status)); //bash convention
-	}
-	return 0;
+void	(execute_builtin(t_cmd_node *cmd, t_env_list *env_lst))
+{
+	return;
 }
 
-int execute_single_command(t_cmd_node *cmd, char **envp)
+void	execute_with_pipes(t_cmd_list *cmd_lst, t_env_list *env_lst)
 {
-	//todo Buildin check
-	//todo Redirection setup
-	//todo: fork and exec
+	return;
 }
 
-int execute_commands(t_cmd_list *cmd_list, char **envp)
+void	execute_pipeline(t_cmd_list *cmd_lst, t_env_list *env_lst)
 {
 	t_cmd_node *current;
-	int status;
+	
+	current = cmd_lst->head;
 
-	if(!cmd_list || cmd_list->size == 0)
-		return 0;
-	
-	current = cmd_list->head;
-	
-	//for now: 1 single cmd, later loop through all nodes
-	status = execute_single_command(current, envp);
+	if(cmd_lst->size == 1 && current->cmd_type == BUILTIN)
+	{
+		execute_builtin(current, env_lst);
+		return;
+	}
+	execute_with_pipes(cmd_lst, env_lst);
 }
+

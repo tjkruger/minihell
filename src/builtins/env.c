@@ -1,37 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cd.c                                               :+:      :+:    :+:   */
+/*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hkaraogl <hkaraogl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/10/24 15:50:25 by hkaraogl          #+#    #+#             */
-/*   Updated: 2025/11/03 17:45:32 by hkaraogl         ###   ########.fr       */
+/*   Created: 2025/11/06 16:21:46 by hkaraogl          #+#    #+#             */
+/*   Updated: 2025/11/06 16:31:39 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include    "minishell.h"
+#include "minishell.h"
 
-
-int    buildin_cd(char **args, t_env_list *env)
+int run_env(t_env_list *env)
 {
-	char *path;
-	char cwd[PATH_MAX];
+	t_env_node *current;
 
-	if(!args[1])
-		path = get_env_value(env, "HOME");
-	else
-		path = args[1];
-	if(getcwd(cwd, sizeof(cwd)))
-		set_env_value(env, "OLDPWD", cwd);
-	if(chdir(path) != 0)
+	current = env->head;
+	while(current)
 	{
-		perror("cd failed");
-		exit(1);
-	}
-	if(getcwd(cwd, sizeof(cwd)))
-	{
-		set_env_value(env, "PWD", cwd);
+		printf("%s=%s\n", current->key, current->value);
+		current = current->next;
 	}
 	return 0;
 }

@@ -19,6 +19,7 @@ BUILTINS		=	builtins/echo.c \
 					builtins/pwd.c \
 					builtins/unset.c \
 					builtins/exit.c \
+					builtins/env.c \
 					execution/execution.c \
 					utils/utils_hkaraogl.c \
 					environment.c \
