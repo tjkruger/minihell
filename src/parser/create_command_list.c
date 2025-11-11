@@ -4,6 +4,7 @@
 
 t_one_command   create_new_command_node(void)
 {
+    t_one_command *new_command;
 
 }
 
@@ -14,8 +15,15 @@ void    add_word_to_cmd(t_one_command *curr_cmd, char *value)
 
 int is_redirection(t_token *token)
 {
+    if ((token->value[0] == '<' || token->value[0] == '>') && token->value[1] == '\0')
+        return 1;
 
+    if (ft_strncmp(token->value, "<<", 2) == 0 || ft_strncmp(token->value, ">>", 2) == 0)
+        return 1;
+
+    return 0;
 }
+
 
 void    add_file_to_cmd(t_one_command *curr_cmd, char *value)
 {
