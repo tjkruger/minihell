@@ -2,15 +2,34 @@
 
 #include "minishell.h"
 
-t_one_command   create_new_command_node(void)
+t_one_command   *create_new_command_node(void)
 {
     t_one_command *new_command;
-
+    new_command = malloc(sizeof(t_one_command));
+    if (!new_command)
+        return (NULL);
+    new_command->cmd_type = 0;
+    new_command->cmd = NULL;
+    new_command->files = NULL;
+    new_command->next = NULL;
+    return(new_command);
 }
 
 void    add_word_to_cmd(t_one_command *curr_cmd, char *value)
 {
+    int i;
+    int j;
 
+    j = 0;
+    i = 0;
+    char **new_cmd;
+    while(curr_cmd->cmd[i] != NULL)
+        i++;
+    new_cmd = malloc(sizeof(char *) * (i + 2));
+    while(j < i)
+        new_cmd[j] = curr_cmd[j];
+    new_cmd[i] = ft_strdup(value);
+    new_cmd[i + 1] = NULL;
 }
 
 int is_redirection(t_token *token)
@@ -32,7 +51,10 @@ void    add_file_to_cmd(t_one_command *curr_cmd, char *value)
 
 void    add_cmd_to_list(t_all_commands *cmd_list, t_one_command *curr_cmd)
 {
+    if (!curr_cmd)
+        return();
 
+    cmd_list
 }
 
 t_all_commands  build_commands(t_token *tokens)
