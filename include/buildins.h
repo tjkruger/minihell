@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   buildins.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
+/*   By: r2d2 <r2d2@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/24 15:32:15 by tjkruger          #+#    #+#             */
-/*   Updated: 2025/10/24 15:32:17 by tjkruger         ###   ########.fr       */
+/*   Updated: 2025/11/13 17:09:43 by r2d2             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 
 #ifndef ECHO_H
-#define ECHO_H
+# define ECHO_H
 
 
 int	run_echo(char **tokens);

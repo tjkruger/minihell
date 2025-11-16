@@ -48,16 +48,3 @@ void print_history(t_history *list)
 }
 
 
-void free_hist(t_history *history_list)
-{
-    t_history *tmp;
-
-    while (history_list)
-    {
-        tmp = history_list->next;
-        free(history_list->command);
-        free(history_list);
-        history_list = tmp;
-    }
-    rl_clear_history();
-}

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
+/*   By: r2d2 <r2d2@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/24 15:32:03 by tjkruger          #+#    #+#             */
-/*   Updated: 2025/10/24 15:32:03 by tjkruger         ###   ########.fr       */
+/*   Updated: 2025/11/13 17:37:05 by r2d2             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,10 @@
 #include "history.h"
 #include "libft.h"
 #include "buildins.h"
-#include "tokens.h"
+#include "lexer.h"
+#include "all_free.h"
+#include "structs.h"
+#include "parser.h"
 
 
 

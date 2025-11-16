@@ -6,7 +6,7 @@
 /*   By: r2d2 <r2d2@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/24 15:32:21 by tjkruger          #+#    #+#             */
-/*   Updated: 2025/11/02 23:54:02 by r2d2             ###   ########.fr       */
+/*   Updated: 2025/11/13 17:02:28 by r2d2             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,16 +61,4 @@ t_token tokenize(char  *input)
     return(head);
 }
 
-void free_token_list(t_token *head)
-{
-    t_token *tmp;
-
-    while (head)
-    {
-        tmp = head->next;
-        free(head->value);
-        free(head);
-        head = tmp;
-    }
-}
 
