@@ -49,6 +49,7 @@ void add_file_to_cmd(t_one_command *curr_cmd, char *value, int redir_type)
 
 int find_cmd_type(char *cmd)
 {
+    (void) cmd;
     //bunch of else if statements with strcmp or so ...
     //bis zum ersten ' ' suchen und dann den command comparen zu den buildins no ?
     //also 1 for buildin and 0 for external ?
@@ -80,6 +81,7 @@ t_all_commands  *build_commands(t_token *tokens)
         if (tokens && tokens->type == TOKEN_PIPE)
             tokens = tokens->next;
     }
+    return(curr_cmd);
 }
-// cmd type muss noch herausgefunden werden
+
 

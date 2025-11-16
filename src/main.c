@@ -32,9 +32,12 @@ int main(void)
 				
 			}
 		}
+		(void) cmds;
 		free(input);
+		free_cmd_list(cmds);
+		free_token_list(token_list);
 	}
-
+	free_hist(history_list);
 	//free everything
 	return 0;
 }
