@@ -2,18 +2,7 @@
 
 #include "minishell.h"
 
-int is_redirection(t_token *token)// find the special symbols
-{
-    if ((token->value[0] == '<' || token->value[0] == '>') && token->value[1] == '\0')
-        return 1;
-
-    if (ft_strncmp(token->value, "<<", 2) == 0 || ft_strncmp(token->value, ">>", 2) == 0)
-        return 1;
-
-    return 0;
-}
-
-t_file_list init_file_list(void)
+t_file_list *init_file_list(void)
 {
     t_file_list *list = malloc(sizeof(t_file_list));
     if (!list)
@@ -24,7 +13,7 @@ t_file_list init_file_list(void)
     return list;
 }
 
-t_file_node create_file_node(char *value, enum redir_type)
+t_file_node *create_file_node(char *value, enum redir_type)
 {
     t_file_node *node = malloc(sizeof(t_file_node));
     if (!node)
@@ -58,7 +47,14 @@ void add_file_to_cmd(t_one_command *curr_cmd, char *value, int redir_type)
 }
 
 
-t_all_commands  build_commands(t_token *tokens)
+int find_cmd_type(char *cmd)
+{
+    //bunch of else if statements with strcmp or so ...
+    //bis zum ersten ' ' suchen und dann den command comparen zu den buildins no ?
+    //also 1 for buildin and 0 for external ?
+}
+
+t_all_commands  *build_commands(t_token *tokens)
 {
     while (tokens)
     {
@@ -68,14 +64,17 @@ t_all_commands  build_commands(t_token *tokens)
         {
             if (tokens->type == TOKEN_WORD)
                 add_word_to_cmd(curr_cmd, tokens->value);
-            else if (is_redirection(tokens))
+            else if (tokens->type == TOKEN_REDIRECT_IN
+                    || tokens->type == TOKEN_REDIRECT_OUT
+                    || tokens->type == TOKEN_APPEND
+                    || tokens->type == TOKEN_HEREDOC)
             {
+                add_file_to_cmd(curr_cmd, tokens->next->value, tokens->type);
                 tokens = tokens->next;
-                add_file_to_cmd(curr_cmd, tokens->value, redir_type); 
             }
             tokens = tokens->next;
         }
-
+        curr_cmd->cmd_type = find_cmd_type(curr_cmd->cmd);//1 oder 0 zurueck depending on buildin or not
         add_cmd_to_list(cmd_list, curr_cmd);
 
         if (tokens && tokens->type == TOKEN_PIPE)

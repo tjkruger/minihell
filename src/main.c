@@ -35,7 +35,7 @@ int main(void)
 		free(input);
 	}
 
-	//free_hist(history_list);
+	//free everything
 	return 0;
 }
 

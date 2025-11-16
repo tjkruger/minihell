@@ -26,6 +26,7 @@ typedef struct s_file_list
     t_file_node *tail;
     ssize_t size;
 } t_file_list;
+
 typedef struct s_token
 {
     char            *value;

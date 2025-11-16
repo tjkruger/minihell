@@ -6,7 +6,7 @@
 /*   By: r2d2 <r2d2@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/24 15:32:21 by tjkruger          #+#    #+#             */
-/*   Updated: 2025/11/13 17:02:28 by r2d2             ###   ########.fr       */
+/*   Updated: 2025/11/16 14:32:25 by r2d2             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,13 +25,15 @@ t_token_type get_token_type(char *str)
     else if (strcmp(str, ">") == 0)
         return TOKEN_REDIRECT_OUT;
     else if (strcmp(str, ">>") == 0)
-        return TOKEN_APPEND;
+        return TOKEN_REDIRECT_APPEND;
+    else if (strcmp(str, "<<") == 0)
+        return TOKEN_REDIRECT_HEREDOC;
     else
         return TOKEN_WORD;
 }
 
 
-t_token tokenize(char  *input)
+t_token *tokenize(char  *input)
 {
     t_token *head = NULL;
     t_token *tail = NULL;
