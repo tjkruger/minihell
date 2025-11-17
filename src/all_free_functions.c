@@ -1,9 +1,9 @@
 #include "minishell.h"
 
 
-void free_cmd_list(t_cmd_list *cmds)
+void free_cmd_list(t_all_commands *cmds)
 {
-    t_cmd_node *tmp;
+    t_one_command *tmp;
 
     while (cmds && cmds->head)
     {

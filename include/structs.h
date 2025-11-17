@@ -37,7 +37,7 @@ typedef struct s_token
 typedef struct s_one_command
 {
     struct s_one_command *next;
-    int cmd_type;
+    int cmd_type;// 1 for buildin, 0 for external
     char **cmd;
     t_file_list *files;
 } t_one_command;

@@ -1,102 +1,69 @@
-NAME		=	minishell
+# === Project Name ===
+NAME        = minishell
 
 # === Directories ===
-SRC_DIR		=	src
-LIBFT_DIR	=	libft
-OBJ_DIR		=	obj
-INC_DIR		=	include
+SRC_DIR     = src
+OBJ_DIR     = obj
+INC_DIR     = include
+LIBFT_DIR   = libft
 
 # === Source groups ===
-MAIN		=	main.c
-HISTORY		=	history.c
-FREE		=	all_free_functions.c
+MAIN        = main.c
+HISTORY     = history.c
+FREE        = all_free_functions.c
 
-PARSER		=	parser/create_command_list.c \
-				parser/command_list_helper.c
+PARSER      = parser/create_command_list.c \
+              parser/command_list_helper.c
 
-LEXER		=	lexer/token.c \
-				lexer/token_utils.c
+LEXER       = lexer/tokens.c \
+              lexer/token_utils.c
 
-BUILDINS	=	buildins/echo.c
+BUILDINS    = buildins/echo.c
 
-# Combine all source groups here
-SRC			=	$(MAIN) $(HISTORY) $(LEXER) $(BUILDINS) $(PARSER) $(FREE)
+# Combine all source groups
+SRC         = $(MAIN) $(HISTORY) $(LEXER) $(BUILDINS) $(PARSER) $(FREE)
 
-# === Libft sources ===
-SRCSLIBFT	=	ft_bzero.c \
-				ft_isalnum.c \
-				ft_isalpha.c \
-				ft_isascii.c \
-				ft_isdigit.c \
-				ft_isprint.c \
-				ft_memset.c \
-				ft_strlen.c \
-				ft_memcpy.c \
-				ft_memmove.c \
-				ft_strlcpy.c \
-				ft_strlcat.c \
-				ft_toupper.c \
-				ft_tolower.c \
-				ft_strchr.c \
-				ft_strrchr.c \
-				ft_strncmp.c \
-				ft_memchr.c \
-				ft_memcmp.c \
-				ft_strnstr.c \
-				ft_atoi.c \
-				ft_calloc.c \
-				ft_strdup.c \
-				ft_substr.c \
-				ft_strjoin.c \
-				ft_strtrim.c \
-				ft_split.c \
-				ft_itoa.c \
-				ft_strmapi.c \
-				ft_striteri.c \
-				ft_putchar_fd.c \
-				ft_putstr_fd.c \
-				ft_putendl_fd.c \
-				ft_putnbr_fd.c
-
-# === Object lists ===
-OBJ			=	$(addprefix $(OBJ_DIR)/, $(SRC:.c=.o)) \
-				$(addprefix $(OBJ_DIR)/, $(notdir $(SRCSLIBFT:.c=.o)))
+# === Object list (preserve directories) ===
+OBJ         = $(patsubst %.c,$(OBJ_DIR)/%.o,$(SRC))
 
 # === Compiler flags ===
-CC			=	cc
-CFLAGS		=	-Wall -Werror -Wextra -I$(INC_DIR)
-READLINE	=	-lreadline
+CC          = cc
+CFLAGS      = -Wall -Werror -Wextra -I$(INC_DIR)
+READLINE    = -lreadline
 
-# === Rules ===
+# === Default target ===
 all: $(NAME)
 
+# === Build minishell ===
 $(NAME): $(OBJ)
-	@$(CC) $(CFLAGS) $(OBJ) $(READLINE) -o $(NAME)
+	$(MAKE) -C $(LIBFT_DIR)        # build libft.a
+	$(CC) $(CFLAGS) $(OBJ) $(LIBFT_DIR)/libft.a $(READLINE) -o $(NAME)
 	@echo "✨ $(NAME) built successfully!"
 
-# Rule to compile project .c files (handles subfolders!)
+# === Pattern rule for all .c files ===
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(OBJ_DIR)
 	@mkdir -p $(dir $@)
-	@$(CC) $(CFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) -c $< -o $@
 
-# Rule to compile libft .c files
-$(OBJ_DIR)/%.o: $(LIBFT_DIR)/%.c | $(OBJ_DIR)
-	@$(CC) $(CFLAGS) -c $< -o $@
-
+# === Ensure object folder exists ===
 $(OBJ_DIR):
 	@mkdir -p $(OBJ_DIR)
 
+# === Run ===
 run: $(NAME)
 	./$(NAME)
 
+# === Clean ===
 clean:
 	@rm -rf $(OBJ_DIR)
+	@$(MAKE) -C $(LIBFT_DIR) clean
 	@echo "🧹 Objects cleaned."
 
 fclean: clean
 	@rm -f $(NAME)
+	@$(MAKE) -C $(LIBFT_DIR) fclean
 	@echo "💥 Full clean done."
 
 re: fclean all
 
-.PHONY: all clean fclean re
+.PHONY: all clean fclean re run

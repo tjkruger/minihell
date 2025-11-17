@@ -1,5 +1,148 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/11/17 12:39:51 by tjkruger          #+#    #+#             */
+/*   Updated: 2025/11/17 15:31:13 by tjkruger         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 
 #include "minishell.h"
+
+
+#include <stdio.h>
+#include "minishell.h"
+#include <stdio.h>
+#include "minishell.h"
+
+/* ---------------- TOKEN PRINTING ---------------- */
+
+static void print_tokens(t_token *t)
+{
+    printf("\n=== TOKENS ===\n");
+
+    while (t)
+    {
+        printf("Type: %d  |  Value: %s\n",
+               t->type,
+               t->value ? t->value : "(null)");
+        t = t->next;
+    }
+}
+
+/* ---------------- FILE REDIRECT PRINTING ---------------- */
+
+static void print_file_nodes(t_file_list *fl)
+{
+    printf("Redirect list (size: %zd):\n", fl ? fl->size : 0);
+
+    if (!fl || !fl->head)
+    {
+        printf("   (no redirects)\n");
+        return;
+    }
+
+    t_file_node *n = fl->head;
+    while (n)
+    {
+        printf("   type: %d  -> file: %s\n",
+               n->redir_type,
+               n->filename ? n->filename : "(null)");
+        n = n->next;
+    }
+}
+
+/* ---------------- ONE COMMAND PRINTING ---------------- */
+
+static void print_one_cmd(t_one_command *cmd, int index)
+{
+    printf("\n--- COMMAND %d ---\n", index);
+
+    printf("cmd_type: %d\n", cmd->cmd_type);
+
+    /* Command arguments (cmd is your char **) */
+    printf("Arguments:\n");
+    if (!cmd->cmd)
+        printf("   (none)\n");
+    else
+    {
+        int i = 0;
+        while (cmd->cmd[i])
+        {
+            printf("   [%d] %s\n", i, cmd->cmd[i]);
+            i++;
+        }
+    }
+
+    /* Redirects list */
+    printf("Redirects:\n");
+    print_file_nodes(cmd->files);
+}
+
+/* ---------------- COMMAND LIST PRINTING ---------------- */
+
+static void print_all_commands(t_all_commands *cmds)
+{
+    printf("\n=== COMMAND LIST ===\n");
+
+    if (!cmds)
+    {
+        printf("(NULL commands struct)\n");
+        return;
+    }
+
+    printf("syntax_error: %d\n", cmds->syntax_error);
+    printf("size: %zd\n", cmds->size);
+
+    t_one_command *current = cmds->head;
+    int index = 0;
+
+    while (current)
+    {
+        print_one_cmd(current, index);
+        index++;
+        current = current->next;
+    }
+}
+
+/* ---------------- HISTORY PRINTING ---------------- */
+
+static void print_history_list(t_history *h)
+{
+    printf("\n=== HISTORY ===\n");
+
+    if (!h)
+    {
+        printf("(empty)\n");
+        return;
+    }
+
+    while (h)
+    {
+        printf("%s\n", h->command);
+        h = h->next;
+    }
+}
+
+/* ---------------- EVERYTHING PRINTING ---------------- */
+
+void print_everything(t_token *tokens, t_all_commands *cmds, t_history *history)
+{
+    printf("\n\n=========================\n");
+    printf("      DEBUG OUTPUT\n");
+    printf("=========================\n");
+
+    print_tokens(tokens);
+    print_all_commands(cmds);
+    print_history_list(history);
+
+    printf("=========================\n\n");
+}
+
 
 int main(void)
 {
@@ -10,7 +153,6 @@ int main(void)
 
 	while (1)
 	{
-		
 		input = readline("minishell> ");
 		if (!input)
 			break;
@@ -32,7 +174,7 @@ int main(void)
 				
 			}
 		}
-		(void) cmds;
+		print_everything(token_list, cmds, history_list);//for now to test
 		free(input);
 		free_cmd_list(cmds);
 		free_token_list(token_list);

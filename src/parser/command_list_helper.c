@@ -23,11 +23,17 @@ void    add_word_to_cmd(t_one_command *curr_cmd, char *value)
     j = 0;
     i = 0;
     char **new_cmd;
-    while(curr_cmd->cmd[i] != NULL)
-        i++;
+    if (curr_cmd->cmd)
+    {
+        while (curr_cmd->cmd[i] != NULL)
+            i++;
+    }
     new_cmd = malloc(sizeof(char *) * (i + 2));
     while(j < i)
-        new_cmd[j] = curr_cmd[j];
+    {
+        new_cmd[j] = curr_cmd->cmd[j];
+        j++;
+    }
     new_cmd[i] = ft_strdup(value);
     new_cmd[i + 1] = NULL;
 }

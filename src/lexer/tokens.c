@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokens.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: r2d2 <r2d2@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/24 15:32:21 by tjkruger          #+#    #+#             */
-/*   Updated: 2025/11/16 14:32:25 by r2d2             ###   ########.fr       */
+/*   Updated: 2025/11/17 13:28:45 by tjkruger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,13 +21,13 @@ t_token_type get_token_type(char *str)
     if (strcmp(str, "|") == 0)
         return TOKEN_PIPE;
     else if (strcmp(str, "<") == 0)
-        return TOKEN_REDIRECT_IN;
+        return TOKEN_REDIR_IN;
     else if (strcmp(str, ">") == 0)
-        return TOKEN_REDIRECT_OUT;
+        return TOKEN_REDIR_OUT;
     else if (strcmp(str, ">>") == 0)
-        return TOKEN_REDIRECT_APPEND;
+        return TOKEN_REDIR_APPEND;
     else if (strcmp(str, "<<") == 0)
-        return TOKEN_REDIRECT_HEREDOC;
+        return TOKEN_REDIR_HEREDOC;
     else
         return TOKEN_WORD;
 }
@@ -39,7 +39,7 @@ t_token *tokenize(char  *input)
     t_token *tail = NULL;
     char **list;
 
-    list = ft_split(*input);
+    list = ft_split(input , ' ');
     while(*list != NULL)
     {
         t_token *new = malloc(sizeof(t_token));
