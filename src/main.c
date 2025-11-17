@@ -6,7 +6,7 @@
 /*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 12:39:51 by tjkruger          #+#    #+#             */
-/*   Updated: 2025/11/17 15:31:13 by tjkruger         ###   ########.fr       */
+/*   Updated: 2025/11/17 17:05:03 by tjkruger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -184,3 +184,5 @@ int main(void)
 	return 0;
 }
 
+
+//need to take care of the '' "" in the command parsing also take care of the executable flag

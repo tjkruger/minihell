@@ -38,6 +38,7 @@ typedef struct s_one_command
 {
     struct s_one_command *next;
     int cmd_type;// 1 for buildin, 0 for external
+    int executable;// 1 if executable, 0 if not
     char **cmd;
     t_file_list *files;
 } t_one_command;
