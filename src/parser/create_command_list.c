@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   create_command_list.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
+/*   By: r2d2 <r2d2@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 13:31:35 by tjkruger          #+#    #+#             */
-/*   Updated: 2025/11/17 15:24:26 by tjkruger         ###   ########.fr       */
+/*   Updated: 2025/11/18 15:09:39 by r2d2             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,28 @@ int find_cmd_type(char **cmd)
     return (1);
 }
 
+int find_executable(char *str)
+{
+    int i;
+
+    i = 0;
+    if(str[i] == '.')
+        if(str[++i] == '/')
+            return (1);
+    return(0);
+}
+
+char    *trim_arg(char *str)
+{
+    char *str2;
+
+    printf("%s \n", str);
+    str2 = ft_strdup(str + 2);
+    printf("%s \n", str2);
+    free(str);
+    return(str2);
+}
+
 t_all_commands *create_new_commands_list(void)
 {
     t_all_commands *list = malloc(sizeof(t_all_commands));
@@ -108,6 +130,9 @@ t_all_commands *build_commands(t_token *tokens)
         }
 
         curr_cmd->cmd_type = find_cmd_type(curr_cmd->cmd); // determine buildin or not
+        curr_cmd->executable = find_executable(curr_cmd->cmd[0]);
+        if(curr_cmd->executable)
+            curr_cmd->cmd[0] = trim_arg(curr_cmd->cmd[0]);
         add_cmd_to_list(cmd_list, curr_cmd);
 
         if (tokens && tokens->type == TOKEN_PIPE)

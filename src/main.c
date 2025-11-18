@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
+/*   By: r2d2 <r2d2@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 12:39:51 by tjkruger          #+#    #+#             */
-/*   Updated: 2025/11/17 17:09:19 by tjkruger         ###   ########.fr       */
+/*   Updated: 2025/11/18 14:47:41 by r2d2             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,7 @@ static void print_one_cmd(t_one_command *cmd, int index)
     printf("\n--- COMMAND %d ---\n", index);
 
     printf("cmd_type: %d\n", cmd->cmd_type);
+    printf("executable: %d\n", cmd->executable);
 
     /* Command arguments (cmd is your char **) */
     printf("Arguments:\n");
