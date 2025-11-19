@@ -6,14 +6,14 @@
 /*   By: hkaraogl <hkaraogl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/24 15:50:25 by hkaraogl          #+#    #+#             */
-/*   Updated: 2025/11/03 17:45:32 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2025/11/11 16:54:26 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include    "minishell.h"
 
 
-int    buildin_cd(char **args, t_env_list *env)
+int    run_cd(char **args, t_env_list *env)
 {
 	char *path;
 	char cwd[PATH_MAX];

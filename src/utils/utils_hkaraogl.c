@@ -6,11 +6,25 @@
 /*   By: hkaraogl <hkaraogl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/29 13:40:50 by hkaraogl          #+#    #+#             */
-/*   Updated: 2025/11/04 15:27:44 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2025/11/11 16:53:09 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include    "minishell.h"
+
+int ft_strcmp(char *s1, char *s2)
+{
+	int i = 0;
+
+	while(s1[i]  != '\0' && s2[i] != '\0')
+	{
+		if(s1[i] != s2[i])
+			return s1[i] - s2[i];
+		i++;
+	}
+
+	return s1[i] - s2[i];
+}
 
 int	strncmp_strlen(char *s1, char *s2)
 {
@@ -49,11 +63,18 @@ int	is_valid_identifier(char *str)
 	if (!ft_isalpha(str[0]) && str[0] != '_')
 		return (0);
 	i = 1;
-	while (str[i])
+	while (str[i] && str[i] != '=')
 	{
-		if (!ft_isalnum(str[i] && str[i] != '_'))
+		if (!ft_isalnum(str[i]) && str[i] != '_')
 			return (0);
 		i++;
 	}
 	return (1);
+}
+
+char *has_equal(char *str)
+{
+	char *equal;
+	equal = ft_strchr(str, '=');
+	return equal;
 }

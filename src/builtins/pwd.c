@@ -6,11 +6,11 @@
 /*   By: hkaraogl <hkaraogl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/04 14:43:13 by hkaraogl          #+#    #+#             */
-/*   Updated: 2025/11/04 15:07:52 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2025/11/11 17:41:37 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include    "minishell.h"
+#include "minishell.h"
 
 int run_pwd(void)
 {
