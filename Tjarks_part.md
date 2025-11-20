@@ -13,7 +13,7 @@
 - [x] Build command structures from tokens ✅ (commands and arguments are correctly stored)
 - [ ] Syntax validation (malformed commands, e.g., consecutive pipes, empty commands)
 - [x] Pipes `|` → linked command chain ✅ (output shows 4 commands correctly linked)
-- [ ] Assign executable flag (identify builtins vs external/`./executable`)
+- [x] Assign executable flag (identify builtins vs external/`./executable`)
 
 ### Phase 3: Redirections
 - [x] Parse redirections `<`, `>`, `>>`, `<<` ✅ (all redirects appear in command struct)

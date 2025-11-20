@@ -27,7 +27,6 @@ void add_word_to_cmd(t_one_command *curr_cmd, char *value)
         while (curr_cmd->cmd[i] != NULL)
             i++;
     }
-
     new_cmd = malloc(sizeof(char *) * (i + 2));
     if (!new_cmd)
         return;
@@ -46,8 +45,6 @@ void add_word_to_cmd(t_one_command *curr_cmd, char *value)
 
     curr_cmd->cmd = new_cmd;
 }
-// need to make the executable switch somwhere around here too
-
 
 void add_cmd_to_list(t_all_commands *cmd_list, t_one_command *curr_cmd)
 {

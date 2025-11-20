@@ -6,7 +6,7 @@
 /*   By: r2d2 <r2d2@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 13:31:35 by tjkruger          #+#    #+#             */
-/*   Updated: 2025/11/18 15:09:39 by r2d2             ###   ########.fr       */
+/*   Updated: 2025/11/19 06:39:28 by r2d2             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,8 +63,8 @@ int find_cmd_type(char **cmd)
 {
     (void) cmd;
     //bunch of else if statements with strcmp or so ...
-    //bis zum ersten ' ' suchen und dann den command comparen zu den buildins no ?
-    //also 1 for buildin and 0 for external ?
+    //arg[0] comparen zu den buildins 
+    //1 for buildin and 0 for external
     return (1);
 }
 
@@ -77,17 +77,6 @@ int find_executable(char *str)
         if(str[++i] == '/')
             return (1);
     return(0);
-}
-
-char    *trim_arg(char *str)
-{
-    char *str2;
-
-    printf("%s \n", str);
-    str2 = ft_strdup(str + 2);
-    printf("%s \n", str2);
-    free(str);
-    return(str2);
 }
 
 t_all_commands *create_new_commands_list(void)
@@ -130,9 +119,7 @@ t_all_commands *build_commands(t_token *tokens)
         }
 
         curr_cmd->cmd_type = find_cmd_type(curr_cmd->cmd); // determine buildin or not
-        curr_cmd->executable = find_executable(curr_cmd->cmd[0]);
-        if(curr_cmd->executable)
-            curr_cmd->cmd[0] = trim_arg(curr_cmd->cmd[0]);
+        curr_cmd->executable = find_executable(curr_cmd->cmd[0]);//make executable flag maybe put somewhere else but later in cleanup part no ?
         add_cmd_to_list(cmd_list, curr_cmd);
 
         if (tokens && tokens->type == TOKEN_PIPE)

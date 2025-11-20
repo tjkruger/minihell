@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokens.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
+/*   By: r2d2 <r2d2@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/24 15:32:21 by tjkruger          #+#    #+#             */
-/*   Updated: 2025/11/17 13:28:45 by tjkruger         ###   ########.fr       */
+/*   Updated: 2025/11/19 07:20:00 by r2d2             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,13 +33,16 @@ t_token_type get_token_type(char *str)
 }
 
 
+
+
 t_token *tokenize(char  *input)
 {
     t_token *head = NULL;
     t_token *tail = NULL;
     char **list;
 
-    list = ft_split(input , ' ');
+    // list = ft_split(input , ' ');
+    list = ft_split_for_token(input);
     while(*list != NULL)
     {
         t_token *new = malloc(sizeof(t_token));
