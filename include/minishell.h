@@ -14,11 +14,27 @@
 
 
 // all other .h files
+struct s_file_list;
+struct s_file_list;
+struct s_cmd_node;
+struct s_file_node;
 
 int	execute_commands(t_cmd_list *cmd_lst, t_env_list *env_lst);
+int set_redirections(t_file_list *files);
 
 
 # define PATH_MAX 4096
+
+typedef enum e_error
+{
+	ERR_CMD_NOT_FOUND = 127,
+	ERR_PERM_DENIED = 126,
+	ERR_EXEC_FAIL = 126,
+	ERR_FORK = 1,
+	ERR_PIPE = 1,
+	ERR_MALLOC = 1,
+	ERR_SYNTAX = 258,
+}	t_error;
 
 
 typedef enum CMD_TYPE

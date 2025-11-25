@@ -6,54 +6,123 @@
 /*   By: hkaraogl <hkaraogl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/28 15:03:52 by hkaraogl          #+#    #+#             */
-/*   Updated: 2025/11/19 17:41:58 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2025/11/25 18:16:32 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-//Validierung
-//cmd_lst leer?
-//sind cmds NULL?
 
-// FD MANAGMENT REGEL:                                  ║
-// ║                                                        ║
-// ║  Jeder Prozess schließt:                              ║
-// ║  1. Alle Pipe-Enden die er NICHT benutzt             ║
-// ║  2. Die Pipe-Enden die er benutzt NACH dup2()        ║
-// ║                                                        ║
-// ║  Timing ist kritisch:                                 ║
-// ║  - Children: Nach dup2(), vor execve()                ║
-// ║  - Parent: Nach allen forks(), vor waitpid()  
-
-
-
-int **create_pipes(int count)
-{
-	//Allokation
-	//pipe erstellen
-	//cleanup bei fehler
-	//
-}
-
-void close_all_pipes(int **pipes, int count)
-{
-	//close(pipes[i][0])
-	//close(pipes[i][i])
-}
-
-void	free_pipes(int **pipes, int count)
+void	free_pipes(t_pipes *data)
 {
 	int i = 0;
 
-	if(!pipes)
+	if(!data->pipes)
 		return;
-	while(i < count)
+
+	while(i < data->pipe_count)
 	{
-		free(pipes[i]);
+		free(data->pipes[i]);
 		i++;
 	}
-	free(pipes);
+	free(data->pipes);
+	free(data->pids);
+
+}
+
+int	close_all_pipes(t_pipes *data)
+{
+	int i = 0;
+
+	while(i < data->pipe_count)
+	{
+		close(data->pipes[i][0]);
+		close(data->pipes[i][1]);
+		i++;
+	}
+	return 0;
+}
+
+//creates pipes array
+//exaample: pipes[0] = [read0, write0], pipes[1] = [read1, write1], 
+int **create_pipes(int count)
+{
+	int **pipes;
+	int i = 0;
+	pipes = malloc(count * sizeof(int *));
+	if(!pipes)
+		return NULL;
+	while(i < count)
+	{
+		pipes[i] = malloc(2 * sizeof(int));
+		if(!pipes[i])
+		{
+			//cleanup free(pipes)
+			return NULL;
+		}
+		if(pipe(pipes[i]) == -1)
+		{
+			perror("pipe");
+			//cleanup
+			return NULL;
+		}
+		i++;
+	}
+	return pipes;
+
+}
+
+// void	setup_pipe_fds(t_pipes *data, int index)
+// {
+// 	if(index > 0)
+// 	{
+// 		if(dup2(data->pipes[index -1][0], STDIN_FILENO) == -1)
+// 		{
+
+// 		}
+// 	}
+// }
+
+//0 false, 1 true
+int init_pipes(t_pipes *data, t_cmd_list *lst)
+{
+	data->command_count = lst->size;
+	data->pipe_count = lst->size - 1;
+	if(data->pipe_count > 0)
+	{
+		data->pipes = create_pipes(data->pipe_count);
+		if(!data->pipes)
+			return 0;
+	}
+
+	data->pids = malloc(sizeof(pid_t) * lst->size);
+	if(!data->pids)
+	{
+		free_pipes(data);
+		return 0;
+	}
+	return 1;
+}
+
+pid_t	fork_and_execute(t_cmd_node *cmd, t_pipes *data, t_env_list *env)
+{
+	pid_t pid;
+
+	pid = fork();
+	if(pid == -1)
+	{
+		perror("fork");
+		return -1; //welchen return Wert?
+	}
+	if(pid == 0)
+	{
+		// setup_pipe_fds(data, index);
+		close_all_pipes(data);
+		set_redirections(cmd->files);
+		execute_commands(cmd, env);
+		exit(1);
+	}
+	return pid;
 }
 
 int backup_fd(int fd)
@@ -105,15 +174,6 @@ static int	execute_builtin(t_cmd_node *node, t_env_list *env_lst)
 	return status;
 }
 
-int execute_pipeline(t_cmd_list *cmd_list, t_env_list *env_list)
-{
-
-	return 0;
-}
-
-
-
-
 int wait_process(int pid)
 {
 	int status;
@@ -123,56 +183,140 @@ int wait_process(int pid)
 	return 1;
 }
 
-int	execute_with_pipes(t_cmd_list *cmd_lst, t_env_list *env_lst)
+static int get_exit_status(int status)
+{
+	if(WIFEXITED(status))
+		return WEXITSTATUS(status);
+	return 1;
+}
+
+static int wait_all_children(t_pipes *data)
+{
+	int status;
+	int wait_status;
+	int i;
+
+	close_all_pipes(data);
+	status = 0;
+	i = 0;
+
+	while(i < data->command_count)
+	{
+		waitpid(data->pids[i], &wait_status, 0);
+		if(i == data->command_count - 1)
+		{
+			status = get_exit_status(wait_status);
+		}
+		i++;
+	}
+	free_pipes(data);
+	return status;
+}
+
+static void setup_child_pipes(t_pipes *data, int index)
 {
 
-	return;
+	if(index > 0)
+	{
+		if(dup2(data->pipes[index - 1][0], STDIN_FILENO) == -1)
+		{
+			ft_perror("dup2");
+			exit(1);
+		}
+	}
+	if(index < data->pipe_count)
+	{
+		if(dup2(data->pipes[index][1], STDOUT_FILENO) == -1)
+		{
+			ft_perror("dup2");
+			exit(1);
+		}
+	}
+	
+}
+
+static void execute_child(t_cmd_node *cmd, t_pipes *data, t_env_list *env, int index)
+{
+	setup_child_pipes(data, index);
+	close_all_pipes(data);
+	if(cmd->files && cmd->files->head)
+	{
+		if(!set_redirections(cmd->files->head))
+			exit(1);
+	}
+	if(cmd->cmd_type == BUILTIN)
+		exit(execute_builtin(cmd, env));
+	else
+		execute_external_command(cmd, env);
+}
+
+int	execute_with_pipes(t_cmd_list *cmd_lst, t_env_list *env_lst)
+{
+	t_pipes data;
+	t_cmd_node *current;
+	int i;
+
+	if(!init_pipes(&data, cmd_lst))
+		return (ft_perror("failed to initialize pipes"),1);
+
+	i = 0;
+	current = cmd_lst->head;
+	while(current)
+	{
+		data.pids[i] = fork();
+		{
+			ft_perror("fork");
+			close_all_pipes(&data);
+			return (free_pipes(&data),1);
+		}
+		if(data.pipes[i] == 0)
+			execute_child(current, &data, env_lst, i);
+		current = current->next;
+		i++;
+	}
+	return (wait_all_children(&data));
 }
 
 static int	execute_external_command(t_cmd_list *cmd_lst, t_env_list *env_lst)
 {
-	int status;
 	char **env;
 	t_cmd_node *cmd;
 	char *path;
-	pid_t pid;
 
 	cmd = cmd_lst->head;
+	env = env_list_array(env_lst);
 	path = find_command_path(cmd->cmd[0], env);
 	if(!path)
 	{
-		ft_putstr_fd("minishell: command nout found", 2);
-		ft_putendl_fd(cmd->cmd[0], 2);
-		return 127;
+		print_cmd_error(cmd->cmd[0], "command not found");
+		exit(ERR_CMD_NOT_FOUND);
 	}
-	pid = fork();
-	if(pid == -1)
-	{
-		perror("fork");
-		free(path);
-		return 1;
-	}
-	if(pid == 0)
-	{
-		env = env_list_array(env_lst);
-		execve(path, cmd->cmd, env);
-		perror("execve");
-		return 126;
-	}
+	execve(path, cmd->cmd, env);
+	ft_perror("execve");
 	free(path);
-	return (wait_process(pid));
+	exit(ERR_EXEC_FAIL);
 }
 
 static int	execute_single_command(t_cmd_list *cmd_lst, t_env_list *env_lst)
 {
 	t_cmd_node *current;
+	int fd_stdin_backup;
+	int fd_stdout_backup;
+
+	fd_stdin_backup = backup_fd(STDIN_FILENO);
+	fd_stdout_backup = backup_fd(STDOUT_FILENO);
+	if(fd_stdin_backup == -1 || fd_stdout_backup == -1)
+		return 1;
+
 	current = cmd_lst->head;
 	if(current->cmd_type)//BUILTIN
-	{
 		return execute_builtin(current, env_lst);
-	}
 	else
 		return execute_external_command(cmd_lst, env_lst);
+
+	restore_fd(STDIN_FILENO, fd_stdin_backup);
+	restore_fd(STDOUT_FILENO, fd_stdout_backup);
+	return 0;
 }
 
 int	execute_commands(t_cmd_list *cmd_lst, t_env_list *env_lst)

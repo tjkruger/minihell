@@ -6,7 +6,7 @@
 /*   By: hkaraogl <hkaraogl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 17:29:21 by hkaraogl          #+#    #+#             */
-/*   Updated: 2025/11/19 13:40:26 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2025/11/25 14:12:46 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ static int handle_output_redirections(char *filename)
 
 	if(!filename)
 		return 0;
-	fd = open(filename, O_WRONLY | O_CREAT | O_TRUNC);
+	fd = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if(fd == -1)
 	{
 		perror("open");

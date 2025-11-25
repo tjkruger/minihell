@@ -6,11 +6,37 @@
 /*   By: hkaraogl <hkaraogl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/29 13:40:50 by hkaraogl          #+#    #+#             */
-/*   Updated: 2025/11/11 16:53:09 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2025/11/25 14:17:52 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include    "minishell.h"
+
+int	error_exit(char *cmd, char*msg, int code)
+{
+	print_cmd_error(cmd, msg);
+	return code;
+}
+
+int	error_exit_perror(char *context, int code)
+{
+	print_perror(context);
+	return code;
+}
+
+void print_cmd_error(char *cmd, char *msg)
+{
+	ft_putstr_fd("minishell: ", 2);
+	ft_putstr_fd(cmd, 2);
+	ft_putstr_fd(": ", 2);
+	ft_putendl_fd(msg, 2);
+}
+
+void	ft_perror(char *msg)
+{
+	ft_putstr_fd("minishell: ", 2);
+	perror(msg);
+}
 
 int ft_strcmp(char *s1, char *s2)
 {
