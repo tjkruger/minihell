@@ -6,7 +6,7 @@
 /*   By: r2d2 <r2d2@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/24 15:32:25 by tjkruger          #+#    #+#             */
-/*   Updated: 2025/11/25 03:40:18 by r2d2             ###   ########.fr       */
+/*   Updated: 2025/11/25 18:26:18 by r2d2             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,20 +19,6 @@ int token_length(char *str_start, char *str_end)
     length = str_end - str_start;
     return(length);
 }
-
-// char *find_next_quote(char *start)
-// {
-//     char st_quote = *start; // either ' or "
-//     char *str = start + 1;
-
-//     while (*str && *str != st_quote)
-//         str++;
-
-//     if (*str == '\0')
-//         return (NULL); //quote error
-//     return (str);
-// }
-
 
 int ft_isspace(char c)// 1 for space 0 for char
 {
@@ -90,69 +76,77 @@ int how_many_token(char *str)
     return(count);
 }
 
-char *extracted_token(char *str)
+char **extracted_token(char *str)
 {
-    char *trim_str;
+    char **list;
+    char *token;
+    char *dna;
     char *token_end;
-    char *start;
-    int len;
+    int   len;
 
+    list = malloc(sizeof(char *) * 3);
     token_end = find_token_end(str);
-    if (!token_end)
-        return NULL;
     len = token_length(str, token_end);
-    trim_str = malloc(len + 1);
-    if (!trim_str)
-        return NULL;
-    start = trim_str;
+
+    token = malloc(len + 1);
+    dna   = malloc(len + 1);
+
+    char *tp = token;
+    char *dp = dna;
+
+    int mode = 0;
+
     while (str < token_end)
     {
-        if (*str == '"' || *str == '\'')
+        if ((*str == '\'' || *str == '"'))
         {
+            if (mode == 0)
+                mode = *str;
+            else if (mode == *str)
+                mode = 0;
+
             str++;
-            while (str < token_end && *str != '"' && *str != '\'')
-                *trim_str++ = *str++;
-            str++;
+            continue;
         }
-        else
-            *trim_str++ = *str++;
+
+        *tp++ = *str;
+        *dp++ = (mode == 0 ? 'N' : (mode == '\'' ? 'S' : 'D'));
+
+        str++;
     }
-    *trim_str = '\0';
-    return start;
+
+    *tp = '\0';
+    *dp = '\0';
+
+    list[0] = token;
+    list[1] = dna;
+    list[2] = NULL;
+
+    return list;
 }
 
 
-char **ft_split_for_token(char *input)
+
+
+t_pretoken  ft_split_for_token(char *input)
 {
-    char **token_list;
-    int num_tokens;
-    int j = 0;
-    char *str = input;
-    char *tmp;
+    t_pretoken  token_list;
+    int         i;
+    int         j;
+    int         arg_num;
+    char        *str;
 
-    num_tokens = how_many_token(str);
-    if (num_tokens < 0)
+    i = 0;
+    j = 0;
+    str = input;
+    arg_num = how_many_token(str);
+    token_list = malloc(sizeof(t_pretoken));//take the ** and feed it into their own **lists so i end up with **tokens and **dna
+    
+    while(*str && j < arg_num)
     {
-        token_error();
-        return(NULL);
+        //something in here idk yet.
     }
-    token_list = malloc(sizeof(char *) * (num_tokens + 1));
-    if (!token_list)
-        return NULL;
-    while (*str && j < num_tokens)
-    {
-
-        while (*str && ft_isspace(*str))
-            str++;
-        if (*str)
-        {
-            tmp = extracted_token(str);
-            token_list[j++] = tmp;
-            str = find_token_end(str);
-        }
-    }
-    token_list[j] = NULL;
-    return token_list;
+    return(token_list);//return the struct for this then
 }
 
 

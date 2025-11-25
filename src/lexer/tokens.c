@@ -6,7 +6,7 @@
 /*   By: r2d2 <r2d2@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/24 15:32:21 by tjkruger          #+#    #+#             */
-/*   Updated: 2025/11/25 03:39:58 by r2d2             ###   ########.fr       */
+/*   Updated: 2025/11/25 04:42:21 by r2d2             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,4 +68,4 @@ t_token *tokenize(char  *input)
     return(head);
 }
 
-
+//need to fix this case here: "hel'lo there" so the ' must be printed out with the rest curr gets skipped

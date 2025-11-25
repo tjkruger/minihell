@@ -58,5 +58,12 @@ typedef struct s_history
     struct s_history    *next;
 } t_history;
 
+typedef struct s_pretoken
+{
+    char    **token_list;
+    char    **token_dna;
+} t_pretoken;
+
+typedef t_extracted_token *t_extracted_token_ptr;
 
 #endif
