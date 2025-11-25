@@ -6,7 +6,7 @@
 /*   By: r2d2 <r2d2@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/24 15:32:21 by tjkruger          #+#    #+#             */
-/*   Updated: 2025/11/19 07:20:00 by r2d2             ###   ########.fr       */
+/*   Updated: 2025/11/25 03:39:58 by r2d2             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,8 @@ t_token *tokenize(char  *input)
 
     // list = ft_split(input , ' ');
     list = ft_split_for_token(input);
+    if(!list)
+        return(NULL);
     while(*list != NULL)
     {
         t_token *new = malloc(sizeof(t_token));

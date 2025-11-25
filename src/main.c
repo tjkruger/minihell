@@ -6,7 +6,7 @@
 /*   By: r2d2 <r2d2@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 12:39:51 by tjkruger          #+#    #+#             */
-/*   Updated: 2025/11/18 14:47:41 by r2d2             ###   ########.fr       */
+/*   Updated: 2025/11/25 04:34:13 by r2d2             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,7 +157,6 @@ int main(void)
 		input = readline("minishell> ");
 		if (!input)
 			break;
-
 		if (!is_empty_or_whitespace(input))
 		{
 			if (strcmp(input, "history") == 0)
@@ -169,13 +168,20 @@ int main(void)
 				// add_to_hist_list(&history_list, input);
 				// add_history(input);
 
-
 				token_list = tokenize(input);
+                if(!token_list)
+                {
+                    cmds = NULL;
+                    continue;
+                }
+                
+
 				cmds 	   = build_commands(token_list);
 				
 			}
 		}
 		print_everything(token_list, cmds, history_list);//for now to test
+        //print_tokens(token_list);
 		free(input);
 		free_cmd_list(cmds);
 		free_token_list(token_list);

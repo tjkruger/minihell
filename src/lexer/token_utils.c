@@ -6,7 +6,7 @@
 /*   By: r2d2 <r2d2@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/24 15:32:25 by tjkruger          #+#    #+#             */
-/*   Updated: 2025/11/20 02:00:58 by r2d2             ###   ########.fr       */
+/*   Updated: 2025/11/25 03:40:18 by r2d2             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,27 +17,24 @@ int token_length(char *str_start, char *str_end)
     int length;
 
     length = str_end - str_start;
-    return(length)
+    return(length);
 }
 
-char *pos_of_token_end(char *str, char delimiter)
-{
-    char *str_end;
-    int i;
+// char *find_next_quote(char *start)
+// {
+//     char st_quote = *start; // either ' or "
+//     char *str = start + 1;
 
-    i = 0;
-    str_end = str + 1;
-    while(str_end[i] != delimiter )
-    {
-        if(str[i] == '\0')
-            return(NULL);//throw error here bc no second ' or " 
-        if(str_end[i] == delimiter)
-            return(str_end + i);
-        i++;
-    }
-}
+//     while (*str && *str != st_quote)
+//         str++;
 
-int isspace(char c)// 1 for space 0 for char
+//     if (*str == '\0')
+//         return (NULL); //quote error
+//     return (str);
+// }
+
+
+int ft_isspace(char c)// 1 for space 0 for char
 {
     if (c == ' ' || c == '\t' || c == '\n'
     || c == '\v' || c == '\f' || c == '\r')
@@ -45,63 +42,118 @@ int isspace(char c)// 1 for space 0 for char
     return(0);
 }
 
+void    token_error(void)
+{
+    printf("pls think bevor wright stupid ... where second quote ???\n");
+}
+
+char *find_token_end(char *str)
+{
+    char quote;
+
+    while (*str && !ft_isspace(*str))
+    {
+        if (*str == '"' || *str == '\'')
+        {
+            quote = *str++;
+            while (*str && *str != quote)
+                str++;
+
+            if (*str == '\0')
+                return(NULL);
+            str++;
+        }
+        else
+            str++;
+    }
+    return (str);
+}
+
+
 int how_many_token(char *str)
 {
     int count;
-    int i;
-    char *end;
 
-    i = 0;
     count = 0;
-    while(str[i] != '\0')
+    while (*str && ft_isspace(*str))
+        str++;
+
+    while (*str)
     {
-        while(str[i] && isspace(str[i]))
-            i++;
-        if(str[i] == '"' || str[i] == '\'')
-            {
-                end = pos_of_token_end(str, str[i]);
-                i += token_length(str + i, end);
-                count++;
-            }
-        else
-        {
-            while(str[i] && !isspace(str[i]))
-            {
-                if(str[i] == '"' || str[i] == '\'')
-                {
-                    end = pos_of_token_end(str + i, str[i]);
-                    i += token_length(str + i, end);
-                }
-                else
-                {
-                    i++;
-                }
-            }
-            count++;
-        }
-        i++;
+        count++;
+        str = find_token_end(str);
+        if(!str)
+            return(-1);
+        while (*str && ft_isspace(*str))
+            str++;
     }
     return(count);
 }
 
-char    **ft_split_for_token(char *input);
+char *extracted_token(char *str)
 {
-    char **token_list;
-    int i;
-    char *str;
-    str = input;
-    i = how_many_token(str);
-    token_list = malloc(sizeof(char *) * (i + 1));
-    i = 0;
-    // now copy all the tokens into the designatet areas no ?
-    return(token_list);
+    char *trim_str;
+    char *token_end;
+    char *start;
+    int len;
+
+    token_end = find_token_end(str);
+    if (!token_end)
+        return NULL;
+    len = token_length(str, token_end);
+    trim_str = malloc(len + 1);
+    if (!trim_str)
+        return NULL;
+    start = trim_str;
+    while (str < token_end)
+    {
+        if (*str == '"' || *str == '\'')
+        {
+            str++;
+            while (str < token_end && *str != '"' && *str != '\'')
+                *trim_str++ = *str++;
+            str++;
+        }
+        else
+            *trim_str++ = *str++;
+    }
+    *trim_str = '\0';
+    return start;
 }
 
-//muss schauen wenn es kein 2 " gibt muss ich zum ' ' zurueck und danach trennen
+
+char **ft_split_for_token(char *input)
+{
+    char **token_list;
+    int num_tokens;
+    int j = 0;
+    char *str = input;
+    char *tmp;
+
+    num_tokens = how_many_token(str);
+    if (num_tokens < 0)
+    {
+        token_error();
+        return(NULL);
+    }
+    token_list = malloc(sizeof(char *) * (num_tokens + 1));
+    if (!token_list)
+        return NULL;
+    while (*str && j < num_tokens)
+    {
+
+        while (*str && ft_isspace(*str))
+            str++;
+        if (*str)
+        {
+            tmp = extracted_token(str);
+            token_list[j++] = tmp;
+            str = find_token_end(str);
+        }
+    }
+    token_list[j] = NULL;
+    return token_list;
+}
 
 
-// Correct boundaries for unquoted tokens
-// Missing substring copy logic
-// Recognize different token types
-// Unterminated quote detection
-// Reuse helpers across counting & splitting
+
