@@ -6,7 +6,7 @@
 /*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 12:39:51 by tjkruger          #+#    #+#             */
-/*   Updated: 2025/11/26 13:47:07 by tjkruger         ###   ########.fr       */
+/*   Updated: 2025/11/26 18:05:25 by tjkruger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -174,11 +174,10 @@ int main(void)
                 cmds = NULL;
                 continue;
             }
-
+            token_list = handle_expansions(token_list);//do this and then make >infile work
             cmds 	   = build_commands(token_list);
 		}
 		print_everything(token_list, cmds, history_list);//for now to test
-        //print_tokens(token_list);
 		free(input);
 		free_cmd_list(cmds);
 		free_token_list(token_list);
