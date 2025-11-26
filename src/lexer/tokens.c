@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokens.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: r2d2 <r2d2@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/24 15:32:21 by tjkruger          #+#    #+#             */
-/*   Updated: 2025/11/25 04:42:21 by r2d2             ###   ########.fr       */
+/*   Updated: 2025/11/26 11:59:06 by tjkruger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,15 +43,17 @@ t_token *tokenize(char  *input)
     t_pretoken  *pretoken;
 
     pretoken = ft_split_for_token(input);
-
+    if(!pretoken)
+        return(NULL);
     i = 0;
-    while(pretoken->token[i] != NULL)
+    while(pretoken->token[i])
     {
         t_token *new = malloc(sizeof(t_token));
         if (!new)
             return (NULL); // handle malloc fail
         new->value = ft_strdup(pretoken->token[i]);
-        new->type = get_token_type(pretoken->dna[i]);
+        new->dna = ft_strdup(pretoken->dna[i]);
+        new->type = get_token_type(pretoken->token[i]);
         new->next = NULL;
         if (!head)
         {
@@ -65,6 +67,7 @@ t_token *tokenize(char  *input)
         }
         i++;
     }
+    free_pretoken(pretoken);
     return(head);
 }
 

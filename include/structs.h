@@ -30,8 +30,8 @@ typedef struct s_file_list
 typedef struct s_token
 {
     char            *value;
+    char            *dna;
     t_token_type    type;
-    int             quote_type;//0 == no quote, 1 == single quote, 2 == double quote.
     struct  s_token *next;
 }   t_token;
 

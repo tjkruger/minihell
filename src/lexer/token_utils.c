@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: r2d2 <r2d2@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/24 15:32:25 by tjkruger          #+#    #+#             */
-/*   Updated: 2025/11/25 18:26:18 by r2d2             ###   ########.fr       */
+/*   Updated: 2025/11/26 11:58:20 by tjkruger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,14 +136,17 @@ t_pretoken  *ft_split_for_token(char *input)
     char        *str;
     char        **pair;
 
-
     j = 0;
     str = input;
     arg_num = how_many_token(str);
+    if(arg_num == -1)
+    {
+        token_error();
+        return(NULL);
+    }
     t_list = malloc(sizeof(t_pretoken));//take the ** and feed it into their own **lists so i end up with **tokens and **dna
     t_list->token = malloc(sizeof(char *) * (arg_num + 1));
     t_list->dna= malloc(sizeof(char *) * (arg_num + 1));
-
 
     while(*str && j < arg_num)
     {
@@ -158,6 +161,8 @@ t_pretoken  *ft_split_for_token(char *input)
 
         j++;
     }
+    t_list->token[j] = NULL;
+    t_list->dna[j]   = NULL;
     return(t_list);
 }
 

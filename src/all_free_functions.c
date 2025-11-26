@@ -4,7 +4,8 @@
 void free_cmd_list(t_all_commands *cmds)
 {
     t_one_command *tmp;
-
+    if(!cmds)
+        return;
     while (cmds && cmds->head)
     {
         tmp = cmds->head->next;
@@ -12,7 +13,9 @@ void free_cmd_list(t_all_commands *cmds)
         if (cmds->head->cmd)
         {
             for (int i = 0; cmds->head->cmd[i]; i++)
+            {
                 free(cmds->head->cmd[i]);
+            }
             free(cmds->head->cmd);
         }
 
@@ -42,7 +45,8 @@ void free_file_list(t_file_list *files)
 void free_token_list(t_token *head)
 {
     t_token *tmp;
-
+    if (!head)
+        return;
     while (head)
     {
         tmp = head->next;
@@ -64,5 +68,36 @@ void free_hist(t_history *history_list)
         free(history_list);
         history_list = tmp;
     }
-    rl_clear_history();// tf is this here ?
+    //rl_clear_history();// tf is this here ?
+}
+
+void free_pretoken(t_pretoken *pt)
+{
+    int i = 0;
+
+    if (!pt)
+        return;
+
+    if (pt->token)
+    {
+        while (pt->token[i])
+        {
+            free(pt->token[i]);
+            i++;
+        }
+        free(pt->token);
+    }
+
+    i = 0;
+    if (pt->dna)
+    {
+        while (pt->dna[i])
+        {
+            free(pt->dna[i]);
+            i++;
+        }
+        free(pt->dna);
+    }
+
+    free(pt);
 }

@@ -1,5 +1,4 @@
 
-// #include <ctype.h>
 #include "minishell.h"
 
 int is_empty_or_whitespace(const char *s)
@@ -33,7 +32,7 @@ t_history *add_to_hist_list(t_history **list, char *command_to_list)
             tmp = tmp->next;
         tmp->next = entry;
     }
-    return entry;
+    return(entry);
 }
 
 void print_history(t_history *list)
