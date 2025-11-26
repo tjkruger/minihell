@@ -20,13 +20,13 @@
 
 
 
-t_token *tokenize(char *input);
-int     token_length(char *str_start, char *str_end);
-char    *pos_of_token_end(char *str, char delimiter);
-int     ft_isspace(char c);
-void    token_error(void);
-int     how_many_token(char *str);
-char    **ft_split_for_token(char *input);
+t_token     *tokenize(char *input);
+int         token_length(char *str_start, char *str_end);
+char        *pos_of_token_end(char *str, char delimiter);
+int         ft_isspace(char c);
+void        token_error(void);
+int         how_many_token(char *str);
+t_pretoken  *ft_split_for_token(char *input);
 
 
 #endif

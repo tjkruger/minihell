@@ -60,10 +60,10 @@ typedef struct s_history
 
 typedef struct s_pretoken
 {
-    char    **token_list;
-    char    **token_dna;
+    char    **token;
+    char    **dna;
 } t_pretoken;
 
-typedef t_extracted_token *t_extracted_token_ptr;
+//typedef t_pretoken *t_pretoken_pointer;
 
 #endif

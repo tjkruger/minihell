@@ -37,21 +37,21 @@ t_token_type get_token_type(char *str)
 
 t_token *tokenize(char  *input)
 {
-    t_token *head = NULL;
-    t_token *tail = NULL;
-    char **list;
+    int         i;
+    t_token     *head = NULL;
+    t_token     *tail = NULL;
+    t_pretoken  *pretoken;
 
-    // list = ft_split(input , ' ');
-    list = ft_split_for_token(input);
-    if(!list)
-        return(NULL);
-    while(*list != NULL)
+    pretoken = ft_split_for_token(input);
+
+    i = 0;
+    while(pretoken->token[i] != NULL)
     {
         t_token *new = malloc(sizeof(t_token));
         if (!new)
             return (NULL); // handle malloc fail
-        new->value = ft_strdup(*list);
-        new->type = get_token_type(*list);
+        new->value = ft_strdup(pretoken->token[i]);
+        new->type = get_token_type(pretoken->dna[i]);
         new->next = NULL;
         if (!head)
         {
@@ -63,7 +63,7 @@ t_token *tokenize(char  *input)
             tail->next = new;
             tail = new;
         }
-        list++;
+        i++;
     }
     return(head);
 }

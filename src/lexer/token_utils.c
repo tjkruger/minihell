@@ -122,31 +122,43 @@ char **extracted_token(char *str)
     list[1] = dna;
     list[2] = NULL;
 
-    return list;
+    return(list);
 }
 
 
 
 
-t_pretoken  ft_split_for_token(char *input)
+t_pretoken  *ft_split_for_token(char *input)
 {
-    t_pretoken  token_list;
-    int         i;
+    t_pretoken  *t_list;
     int         j;
     int         arg_num;
     char        *str;
+    char        **pair;
 
-    i = 0;
+
     j = 0;
     str = input;
     arg_num = how_many_token(str);
-    token_list = malloc(sizeof(t_pretoken));//take the ** and feed it into their own **lists so i end up with **tokens and **dna
-    
+    t_list = malloc(sizeof(t_pretoken));//take the ** and feed it into their own **lists so i end up with **tokens and **dna
+    t_list->token = malloc(sizeof(char *) * (arg_num + 1));
+    t_list->dna= malloc(sizeof(char *) * (arg_num + 1));
+
+
     while(*str && j < arg_num)
     {
-        //something in here idk yet.
+        pair = extracted_token(str);
+        t_list->token[j] = malloc(sizeof(char) * (ft_strlen(pair[0]) + 1));
+        t_list->dna[j]   = malloc(sizeof(char) * (ft_strlen(pair[1]) + 1));
+        ft_strlcpy(t_list->token[j], pair[0], ft_strlen(pair[0]) + 1);
+        ft_strlcpy(t_list->dna[j], pair[1], ft_strlen(pair[1]) + 1);
+        str = find_token_end(str);
+        while (*str && ft_isspace(*str))
+            str++;
+
+        j++;
     }
-    return(token_list);//return the struct for this then
+    return(t_list);
 }
 
 
