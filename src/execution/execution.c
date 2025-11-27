@@ -6,7 +6,7 @@
 /*   By: hkaraogl <hkaraogl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/28 15:03:52 by hkaraogl          #+#    #+#             */
-/*   Updated: 2025/11/27 17:31:12 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2025/11/27 19:49:15 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,6 +125,12 @@ int init_pipes(t_pipes *data, t_all_commands *lst)
 // 	return pid;
 // }
 
+void init_fd_backups(int *fd_backups)
+{
+	fd_backups[0] = -1;
+	fd_backups[1] = -1;
+}
+
 int backup_fd(int fd)
 {
 	int backup;
@@ -139,7 +145,10 @@ int backup_fd(int fd)
 
 void restore_fd(int fd, int backup)
 {
-	dup2(backup, fd);
+	if(backup == -1)
+		return;
+	if(dup2(backup, fd) == -1)
+		ft_perror("dup2");
 	close(backup);
 }
 
@@ -151,15 +160,23 @@ void close_fd(int fd)
 	}
 }
 
+static void restore_fds(int *fd_backups)
+{
+	restore_fd(STDIN_FILENO, fd_backups[0]);
+	restore_fd(STDOUT_FILENO, fd_backups[1]);
+}
 
-//backup fds, set redirections, execute builtin, restore fds
-static int	execute_builtin(t_one_command *node, t_env_list *env_lst)
+static void backup_fds(int *fd_backups)
+{
+	fd_backups[0] = backup_fd(STDIN_FILENO);
+	fd_backups[1] = backup_fd(STDOUT_FILENO);
+}
+
+int process_builtin(t_one_command *node, t_env_list *env_lst)
 {
 	int status;
-	int backup_stdin = backup_fd(STDIN_FILENO);
-	int backup_stdout = backup_fd(STDOUT_FILENO);
 
-	set_redirections(node->files);
+	status = 0;
 	if(ft_strcmp(node->cmd[0], "cd") == 0)
 		status = run_cd(node->cmd, env_lst);
 	else if(ft_strcmp(node->cmd[0], "echo") == 0)
@@ -174,9 +191,30 @@ static int	execute_builtin(t_one_command *node, t_env_list *env_lst)
 		status = run_pwd();
 	else if(ft_strcmp(node->cmd[0], "unset") == 0)
 		status = run_unset(node->cmd, env_lst);
-	restore_fd(STDIN_FILENO, backup_stdin);
-	restore_fd(STDOUT_FILENO, backup_stdout);
 	return status;
+}
+
+//backup fds, set redirections, execute builtin, restore fds
+static int	execute_builtin(t_one_command *node, t_env_list *env_lst)
+{
+	int status;
+	int fd_backups[2];
+
+	init_fd_backups(fd_backups);
+	if(node->files && node->files->head)
+	{
+		backup_fds(fd_backups);
+		if(fd_backups[0] == -1 || fd_backups[1] == -1)
+			return 1;
+		if(!set_redirections(node->files))
+		{
+			restore_fds(fd_backups);
+			return 1;
+		}
+	}
+	status = process_builtin(node, env_lst);
+	restore_fds(fd_backups);
+	return (status);
 }
 
 static int get_exit_status(int status)
@@ -237,7 +275,7 @@ static void execute_child(t_one_command *cmd, t_pipes *data, t_env_list *env, in
 	close_all_pipes(data);
 	if(cmd->files && cmd->files->head)
 	{
-		if(!set_redirections(cmd->files->head))
+		if(!set_redirections(cmd->files))
 			exit(1);
 	}
 	if(cmd->cmd_type == BUILTIN)
@@ -260,6 +298,7 @@ int	execute_with_pipes(t_all_commands *cmd_lst, t_env_list *env_lst)
 	while(current)
 	{
 		data.pids[i] = fork();
+		if(data.pids[i] == -1)
 		{
 			ft_perror("fork");
 			close_all_pipes(&data);

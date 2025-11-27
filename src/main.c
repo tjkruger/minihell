@@ -6,7 +6,7 @@
 /*   By: hkaraogl <hkaraogl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 12:39:51 by tjkruger          #+#    #+#             */
-/*   Updated: 2025/11/27 17:38:53 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2025/11/27 17:55:04 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -179,6 +179,7 @@ int main(void)
             }
             //handle_expansions(token_list);//do this and then make >infile work
             cmds 	   = build_commands(token_list);
+            //execute_commands()
 		}
 		//print_everything(token_list, cmds, history_list);//for now to test
 		free(input);

@@ -6,7 +6,7 @@
 /*   By: hkaraogl <hkaraogl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 17:29:21 by hkaraogl          #+#    #+#             */
-/*   Updated: 2025/11/27 17:35:17 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2025/11/27 19:21:25 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ static int handle_input_redir(char *filename)
 	return 1;
 }
 
-static int handle_output_redirections(char *filename)
+static int handle_output_redir(char *filename)
 {
 	int fd;
 
@@ -85,7 +85,7 @@ int set_redirections(t_file_list *files)
 {
 	t_file_node *current;
 
-	if(!files | !files->head)
+	if(!files || !files->head)
 		return 1;
 	current = files->head;
 	while(current)
