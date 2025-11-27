@@ -1,21 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   buildins.h                                         :+:      :+:    :+:   */
+/*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hkaraogl <hkaraogl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/10/24 15:32:15 by tjkruger          #+#    #+#             */
-/*   Updated: 2025/10/24 15:32:17 by tjkruger         ###   ########.fr       */
+/*   Created: 2025/11/06 16:21:46 by hkaraogl          #+#    #+#             */
+/*   Updated: 2025/11/06 16:31:39 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "minishell.h"
 
-#ifndef ECHO_H
-#define ECHO_H
+int run_env(t_env_list *env)
+{
+	t_env_node *current;
 
-
-int	run_echo(char **tokens);
-
-
-#endif
+	current = env->head;
+	while(current)
+	{
+		printf("%s=%s\n", current->key, current->value);
+		current = current->next;
+	}
+	return 0;
+}

@@ -1,14 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cd.c                                               :+:      :+:    :+:   */
+/*   pwd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hkaraogl <hkaraogl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/10/24 15:50:25 by hkaraogl          #+#    #+#             */
-/*   Updated: 2025/10/24 16:02:20 by hkaraogl         ###   ########.fr       */
+/*   Created: 2025/11/04 14:43:13 by hkaraogl          #+#    #+#             */
+/*   Updated: 2025/11/11 17:41:37 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include    "minishell.h"
+#include "minishell.h"
 
+int run_pwd(void)
+{
+	char cwd[PATH_MAX];
+
+	if(!getcwd(cwd, sizeof(cwd)))
+	{
+		perror("pwd");
+		return 1;
+	}
+	printf("%s\n", cwd);
+	return 0;
+}
