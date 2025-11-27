@@ -33,7 +33,7 @@ char    *ft_expand(char *arg)
 {
     char *new;
 
-    new = execv(some shit in here);
+    new = execve(some shit in here);
     //find out if the variable exists or so i dont know somehow also put this in a loop idek
     
     return(new);
