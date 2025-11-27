@@ -1,0 +1,74 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   tokens.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/10/24 15:32:21 by tjkruger          #+#    #+#             */
+/*   Updated: 2025/11/26 11:59:06 by tjkruger         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+
+#include "minishell.h"
+
+
+t_token_type get_token_type(char *str)
+{
+    if (!str)
+        return TOKEN_WORD;
+    if (strcmp(str, "|") == 0)
+        return TOKEN_PIPE;
+    else if (strcmp(str, "<") == 0)
+        return TOKEN_REDIR_IN;
+    else if (strcmp(str, ">") == 0)
+        return TOKEN_REDIR_OUT;
+    else if (strcmp(str, ">>") == 0)
+        return TOKEN_REDIR_APPEND;
+    else if (strcmp(str, "<<") == 0)
+        return TOKEN_REDIR_HEREDOC;
+    else
+        return TOKEN_WORD;
+}
+
+
+
+
+t_token *tokenize(char  *input)
+{
+    int         i;
+    t_token     *head = NULL;
+    t_token     *tail = NULL;
+    t_pretoken  *pretoken;
+
+    pretoken = ft_split_for_token(input);
+    if(!pretoken)
+        return(NULL);
+    i = 0;
+    while(pretoken->token[i])
+    {
+        t_token *new = malloc(sizeof(t_token));
+        if (!new)
+            return (NULL); // handle malloc fail
+        new->value = ft_strdup(pretoken->token[i]);
+        new->dna = ft_strdup(pretoken->dna[i]);
+        new->type = get_token_type(pretoken->token[i]);
+        new->next = NULL;
+        if (!head)
+        {
+            head = new;
+            tail = new;
+        }
+        else
+        {
+            tail->next = new;
+            tail = new;
+        }
+        i++;
+    }
+    free_pretoken(pretoken);
+    return(head);
+}
+
+//need to fix this case here: "hel'lo there" so the ' must be printed out with the rest curr gets skipped

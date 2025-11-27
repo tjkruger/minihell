@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: r2d2 <r2d2@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 17:28:21 by tjkruger          #+#    #+#             */
-/*   Updated: 2025/10/22 17:23:31 by r2d2             ###   ########.fr       */
+/*   Updated: 2025/11/17 13:28:04 by tjkruger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 // #include <stdlib.h>
 // #include <stdio.h>
 
-static int	wordcount(const char *s, char c)
+static int	wordcount(char *s, char c)
 {
 	int i;
 	int count;
@@ -35,7 +35,7 @@ static int	wordcount(const char *s, char c)
 	return (count);
 }
 
-static char	*worddup(const char *s, int start, int end)
+static char	*worddup(char *s, int start, int end)
 {
 	char *word;
 	int i;
@@ -50,7 +50,7 @@ static char	*worddup(const char *s, int start, int end)
 	return (word);
 }
 
-char	**ft_split(char const *s, char c)
+char	**ft_split(char *s, char c)
 {
 	char	**result;
 	int		i;
