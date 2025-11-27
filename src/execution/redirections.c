@@ -6,7 +6,7 @@
 /*   By: hkaraogl <hkaraogl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 17:29:21 by hkaraogl          #+#    #+#             */
-/*   Updated: 2025/11/25 14:12:46 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2025/11/27 17:35:17 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,13 +70,13 @@ static int handle_heredoc_redir(char *filename)
 
 static int apply_redirections(t_file_node *file)
 {
-	if(file->redir_type == REDIR_INPUT)
+	if(file->redir_type == TOKEN_REDIR_IN)
 		return (handle_input_redir(file->filename));
-	else if(file->redir_type == REDIR_OUTPUT)
+	else if(file->redir_type == TOKEN_REDIR_OUT)
 		return (handle_output_redir(file->filename));
-	else if(file->redir_type == REDIR_APPEND)
+	else if(file->redir_type == TOKEN_REDIR_APPEND)
 		return (handle_append_redir(file->filename));
-	else if(file->redir_type == REDIR_HEREDOC)
+	else if(file->redir_type == TOKEN_REDIR_HEREDOC)
 		return (handle_heredoc_redir(file->filename));
 	return 1;
 }

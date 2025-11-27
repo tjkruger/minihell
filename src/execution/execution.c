@@ -6,7 +6,7 @@
 /*   By: hkaraogl <hkaraogl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/28 15:03:52 by hkaraogl          #+#    #+#             */
-/*   Updated: 2025/11/27 14:20:04 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2025/11/27 17:31:12 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ int **create_pipes(int count)
 // }
 
 //0 false, 1 true
-int init_pipes(t_pipes *data, t_cmd_list *lst)
+int init_pipes(t_pipes *data, t_all_commands *lst)
 {
 	data->command_count = lst->size;
 	data->pipe_count = lst->size - 1;
@@ -104,7 +104,7 @@ int init_pipes(t_pipes *data, t_cmd_list *lst)
 	return 1;
 }
 
-// pid_t	fork_and_execute(t_cmd_node *cmd, t_pipes *data, t_env_list *env)
+// pid_t	fork_and_execute(t_one_command *cmd, t_pipes *data, t_env_list *env)
 // {
 // 	pid_t pid;
 
@@ -153,7 +153,7 @@ void close_fd(int fd)
 
 
 //backup fds, set redirections, execute builtin, restore fds
-static int	execute_builtin(t_cmd_node *node, t_env_list *env_lst)
+static int	execute_builtin(t_one_command *node, t_env_list *env_lst)
 {
 	int status;
 	int backup_stdin = backup_fd(STDIN_FILENO);
@@ -231,7 +231,7 @@ static void setup_child_pipes(t_pipes *data, int index)
 	
 }
 
-static void execute_child(t_cmd_node *cmd, t_pipes *data, t_env_list *env, int index)
+static void execute_child(t_one_command *cmd, t_pipes *data, t_env_list *env, int index)
 {
 	setup_child_pipes(data, index);
 	close_all_pipes(data);
@@ -246,10 +246,10 @@ static void execute_child(t_cmd_node *cmd, t_pipes *data, t_env_list *env, int i
 		execute_external_command(cmd, env);
 }
 
-int	execute_with_pipes(t_cmd_list *cmd_lst, t_env_list *env_lst)
+int	execute_with_pipes(t_all_commands *cmd_lst, t_env_list *env_lst)
 {
 	t_pipes data;
-	t_cmd_node *current;
+	t_one_command *current;
 	int i;
 
 	if(!init_pipes(&data, cmd_lst))
@@ -274,10 +274,10 @@ int	execute_with_pipes(t_cmd_list *cmd_lst, t_env_list *env_lst)
 }
 
 //fork muss noch implementiert werden
-static int	execute_external_command(t_cmd_list *cmd_lst, t_env_list *env_lst)
+static int	execute_external_command(t_all_commands *cmd_lst, t_env_list *env_lst)
 {
 	char **env;
-	t_cmd_node *cmd;
+	t_one_command *cmd;
 	char *path;
 
 	cmd = cmd_lst->head;
@@ -294,9 +294,9 @@ static int	execute_external_command(t_cmd_list *cmd_lst, t_env_list *env_lst)
 	exit(ERR_EXEC_FAIL);
 }
 
-static int	execute_single_command(t_cmd_list *cmd_lst, t_env_list *env_lst)
+static int	execute_single_command(t_all_commands *cmd_lst, t_env_list *env_lst)
 {
-	t_cmd_node *current;
+	t_one_command *current;
 	int fd_stdin_backup;
 	int fd_stdout_backup;
 
@@ -316,9 +316,9 @@ static int	execute_single_command(t_cmd_list *cmd_lst, t_env_list *env_lst)
 	return 0;
 }
 
-int	execute_commands(t_cmd_list *cmd_lst, t_env_list *env_lst)
+int	execute_commands(t_all_commands *cmd_lst, t_env_list *env_lst)
 {
-	t_cmd_node *current;
+	t_one_command *current;
 
 	if(!cmd_lst || !cmd_lst->head)
 		return 1;

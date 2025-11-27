@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hkaraogl <hkaraogl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 12:39:51 by tjkruger          #+#    #+#             */
-/*   Updated: 2025/11/27 14:42:29 by tjkruger         ###   ########.fr       */
+/*   Updated: 2025/11/27 17:38:53 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -180,7 +180,7 @@ int main(void)
             //handle_expansions(token_list);//do this and then make >infile work
             cmds 	   = build_commands(token_list);
 		}
-		print_everything(token_list, cmds, history_list);//for now to test
+		//print_everything(token_list, cmds, history_list);//for now to test
 		free(input);
 		free_cmd_list(cmds);
 		free_token_list(token_list);

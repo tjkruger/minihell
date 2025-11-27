@@ -6,7 +6,7 @@
 /*   By: hkaraogl <hkaraogl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/24 15:31:21 by hkaraogl          #+#    #+#             */
-/*   Updated: 2025/10/28 19:47:57 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2025/11/27 17:37:52 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ static int validate_flag(char *flag)
 	return 1;
 }
 
-int	run_echo(t_cmd_node *cmd_node)
+int	run_echo(t_one_command *cmd_node)
 {
 	int i;
 	int newline = 1;

@@ -3,6 +3,23 @@
 #ifndef STRUCTS_H
 # define STRUCTS_H
 
+typedef enum CMD_TYPE
+{
+	BUILTIN,
+	CMD,
+}	t_CMD_TYPE;
+
+typedef enum e_error
+{
+	ERR_CMD_NOT_FOUND = 127,
+	ERR_PERM_DENIED = 126,
+	ERR_EXEC_FAIL = 126,
+	ERR_FORK = 1,
+	ERR_PIPE = 1,
+	ERR_MALLOC = 1,
+	ERR_SYNTAX = 258,
+}	t_error;
+
 typedef enum    e_token_type
 {
     TOKEN_WORD,
@@ -12,6 +29,28 @@ typedef enum    e_token_type
     TOKEN_REDIR_APPEND,//<<
     TOKEN_REDIR_HEREDOC,// >>
 } t_token_type;
+
+typedef struct s_env_node
+{
+	char *key;
+	char *value;
+	struct s_env_node	*next;
+} t_env_node;
+
+typedef	struct s_env_list
+{
+	t_env_node	*head;
+	t_env_node	*tail;
+	ssize_t	size;
+}	t_env_list;
+
+typedef struct s_pipes
+{
+	int **pipes;
+	pid_t *pids;
+	int pipe_count;
+	int command_count;
+}	t_pipes;
 
 typedef struct s_file_node 
 {
@@ -35,6 +74,7 @@ typedef struct s_token
     struct  s_token *next;
 }   t_token;
 
+//muss executer uebernehemen (t_command_node)
 typedef struct s_one_command
 {
     struct s_one_command *next;
@@ -44,6 +84,7 @@ typedef struct s_one_command
     t_file_list *files;
 } t_one_command;
 
+//muss executer uebernehemen (t_command_list)
 typedef struct s_all_commands
 {
     int syntax_error;
