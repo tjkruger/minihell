@@ -6,7 +6,7 @@
 /*   By: hkaraogl <hkaraogl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/28 15:03:52 by hkaraogl          #+#    #+#             */
-/*   Updated: 2025/11/25 18:16:32 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2025/11/27 14:20:04 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,26 +104,26 @@ int init_pipes(t_pipes *data, t_cmd_list *lst)
 	return 1;
 }
 
-pid_t	fork_and_execute(t_cmd_node *cmd, t_pipes *data, t_env_list *env)
-{
-	pid_t pid;
+// pid_t	fork_and_execute(t_cmd_node *cmd, t_pipes *data, t_env_list *env)
+// {
+// 	pid_t pid;
 
-	pid = fork();
-	if(pid == -1)
-	{
-		perror("fork");
-		return -1; //welchen return Wert?
-	}
-	if(pid == 0)
-	{
-		// setup_pipe_fds(data, index);
-		close_all_pipes(data);
-		set_redirections(cmd->files);
-		execute_commands(cmd, env);
-		exit(1);
-	}
-	return pid;
-}
+// 	pid = fork();
+// 	if(pid == -1)
+// 	{
+// 		perror("fork");
+// 		return -1; //welchen return Wert?
+// 	}
+// 	if(pid == 0)
+// 	{
+// 		// setup_pipe_fds(data, index);
+// 		close_all_pipes(data);
+// 		set_redirections(cmd->files);
+// 		execute_commands(cmd, env);
+// 		exit(1);
+// 	}
+// 	return pid;
+// }
 
 int backup_fd(int fd)
 {
@@ -152,11 +152,14 @@ void close_fd(int fd)
 }
 
 
-
+//backup fds, set redirections, execute builtin, restore fds
 static int	execute_builtin(t_cmd_node *node, t_env_list *env_lst)
 {
 	int status;
-	// set_redirection();
+	int backup_stdin = backup_fd(STDIN_FILENO);
+	int backup_stdout = backup_fd(STDOUT_FILENO);
+
+	set_redirections(node->files);
 	if(ft_strcmp(node->cmd[0], "cd") == 0)
 		status = run_cd(node->cmd, env_lst);
 	else if(ft_strcmp(node->cmd[0], "echo") == 0)
@@ -171,16 +174,9 @@ static int	execute_builtin(t_cmd_node *node, t_env_list *env_lst)
 		status = run_pwd();
 	else if(ft_strcmp(node->cmd[0], "unset") == 0)
 		status = run_unset(node->cmd, env_lst);
+	restore_fd(STDIN_FILENO, backup_stdin);
+	restore_fd(STDOUT_FILENO, backup_stdout);
 	return status;
-}
-
-int wait_process(int pid)
-{
-	int status;
-	waitpid(pid, &status, 0);
-	if(WIFEXITED(status))
-		return WEXITSTATUS(status);
-	return 1;
 }
 
 static int get_exit_status(int status)
@@ -269,7 +265,7 @@ int	execute_with_pipes(t_cmd_list *cmd_lst, t_env_list *env_lst)
 			close_all_pipes(&data);
 			return (free_pipes(&data),1);
 		}
-		if(data.pipes[i] == 0)
+		if(data.pids[i] == 0)
 			execute_child(current, &data, env_lst, i);
 		current = current->next;
 		i++;
@@ -277,6 +273,7 @@ int	execute_with_pipes(t_cmd_list *cmd_lst, t_env_list *env_lst)
 	return (wait_all_children(&data));
 }
 
+//fork muss noch implementiert werden
 static int	execute_external_command(t_cmd_list *cmd_lst, t_env_list *env_lst)
 {
 	char **env;
