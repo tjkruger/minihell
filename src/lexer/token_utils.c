@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
+/*   By: r2d2 <r2d2@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/24 15:32:25 by tjkruger          #+#    #+#             */
-/*   Updated: 2025/11/26 11:58:20 by tjkruger         ###   ########.fr       */
+/*   Updated: 2025/11/27 12:32:43 by r2d2             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ char *find_token_end(char *str)
 {
     char quote;
 
-    while (*str && !ft_isspace(*str))
+    while (*str && !ft_isspace(*str))//also plug in something for it to stop when finding > < >> <<
     {
         if (*str == '"' || *str == '\'')
         {
@@ -110,9 +110,15 @@ char **extracted_token(char *str)
         }
 
         *tp++ = *str;
-        *dp++ = (mode == 0 ? 'N' : (mode == '\'' ? 'S' : 'D'));
+        if (mode == 0)
+            *dp++ = 'N';
+        else if (mode == '\'')
+            *dp++ = 'S';
+        else
+            *dp++ = 'D';
 
         str++;
+        //somewhere in here take care of the < > << >> operators in here check for '' and then act upon not being in ''
     }
 
     *tp = '\0';

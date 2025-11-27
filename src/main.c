@@ -6,7 +6,7 @@
 /*   By: r2d2 <r2d2@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 12:39:51 by tjkruger          #+#    #+#             */
-/*   Updated: 2025/11/27 03:17:41 by r2d2             ###   ########.fr       */
+/*   Updated: 2025/11/27 11:56:23 by r2d2             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -177,7 +177,7 @@ int main(void)
                 cmds = NULL;
                 continue;
             }
-            handle_expansions(token_list);//do this and then make >infile work
+            //handle_expansions(token_list);//do this and then make >infile work
             cmds 	   = build_commands(token_list);
 		}
 		print_everything(token_list, cmds, history_list);//for now to test
