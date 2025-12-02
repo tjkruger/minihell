@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hkaraogl <hkaraogl@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 12:39:51 by tjkruger          #+#    #+#             */
-/*   Updated: 2025/11/27 17:38:53 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2025/12/02 12:34:54 by tjkruger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,16 +145,14 @@ void print_everything(t_token *tokens, t_all_commands *cmds, t_history *history)
     printf("=========================\n\n");
 }
 
-
-
-
-
 int main(void)
 {
 	t_token	*token_list;
 	t_all_commands *cmds;
 	t_history *history_list = NULL;
 	char *input;
+
+
 
 	while (1)
 	{
@@ -181,7 +179,7 @@ int main(void)
             cmds 	   = build_commands(token_list);
 		}
 		//print_everything(token_list, cmds, history_list);//for now to test
-        print_tokens(token_list);
+        //print_tokens(token_list);
 		free(input);
 		free_cmd_list(cmds);
 		free_token_list(token_list);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hkaraogl <hkaraogl@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/24 15:32:03 by tjkruger          #+#    #+#             */
-/*   Updated: 2025/11/27 17:35:23 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2025/12/02 13:04:53 by tjkruger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@
 # include "structs.h"
 # include "lexer.h"
 # include "all_free.h"
+# include "signals.h"
 
 
 // all other .h files
@@ -42,6 +43,8 @@ struct s_file_list;
 struct s_file_list;
 struct s_cmd_node;
 struct s_file_node;
+
+extern int g_exit_status;
 
 
 # define PATH_MAX 4096
