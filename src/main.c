@@ -6,7 +6,7 @@
 /*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/12/02 13:40:19 by tjkruger         ###   ########.fr       */
+/*   Updated: 2025/12/02 14:08:27 by tjkruger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,7 +142,25 @@ void print_everything(t_token *tokens, t_all_commands *cmds, t_history *history)
     printf("=========================\n\n");
 }
 
+void free_all_environment(t_env_list *env_lst)
+{
+    t_env_node *current;
+    t_env_node *next;
 
+    if (!env_lst)
+        return;
+
+    current = env_lst->head;
+    while (current)
+    {
+        next = current->next;
+        free(current->key);
+        free(current->value);
+        free(current);
+        current = next;
+    }
+    free(env_lst);
+}
 
 
 
@@ -156,6 +174,7 @@ int main(int argc, char **argv, char **env)
     (void)argc;
     (void)argv;
     env_lst = init_environment(env);
+    int i;
 
 
 
@@ -167,7 +186,11 @@ int main(int argc, char **argv, char **env)
 		if (!is_empty_or_whitespace(input))
 		{
 			if (strcmp(input, "history") == 0)
-				print_history(history_list);
+            {
+                print_history(history_list);
+                //fflush(stdout);
+                continue;
+            }
 
 			else
 			{
@@ -180,15 +203,17 @@ int main(int argc, char **argv, char **env)
                 cmds = NULL;
                 continue;
             }
-            //handle_expansions(token_list);//do this and then make >infile work
+           
             cmds 	   = build_commands(token_list);
-            //execute_commands()
+
+            i = execute_commands(cmds, env_lst);
 		}
 		//print_everything(token_list, cmds, history_list);//for now to test
         //print_tokens(token_list);
 		free(input);
 		free_cmd_list(cmds);
 		free_token_list(token_list);
+        free_all_environment(env_lst);
 	}
 	free_hist(history_list);
 	return 0;
