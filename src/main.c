@@ -6,7 +6,7 @@
 /*   By: hkaraogl <hkaraogl@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 12:39:51 by tjkruger          #+#    #+#             */
-/*   Updated: 2025/12/02 13:03:34 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2025/12/02 14:03:25 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,6 +151,7 @@ int main(int argc, char **argv, char **env)
 	t_all_commands *cmds;
 	t_history *history_list = NULL;
     t_env_list *env_lst;
+    int i;
 	char *input;
     (void)argc;
     (void)argv;
@@ -181,6 +182,8 @@ int main(int argc, char **argv, char **env)
             }
             //handle_expansions(token_list);//do this and then make >infile work
             cmds 	   = build_commands(token_list);
+            i = execute_commands(cmds, env_lst);
+
             //execute_commands()
 		}
 		//print_everything(token_list, cmds, history_list);//for now to test

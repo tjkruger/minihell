@@ -29,9 +29,9 @@ BUILTINS    = builtins/echo.c \
 					execution/redirections.c \
 					utils/utils_hkaraogl.c \
 					environment.c \
-					pipes.c \
-					child.c \
-					fd.c \
+					execution/pipes.c \
+					execution/child.c \
+					execution/fd.c \
 
 
 # Combine all source groups
