@@ -6,7 +6,7 @@
 /*   By: hkaraogl <hkaraogl@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 12:39:51 by tjkruger          #+#    #+#             */
-/*   Updated: 2025/12/02 14:12:48 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2025/12/02 16:41:59 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,15 +135,26 @@ void print_everything(t_token *tokens, t_all_commands *cmds, t_history *history)
     printf("      DEBUG OUTPUT\n");
     printf("=========================\n");
 
-    print_tokens(tokens);
     print_all_commands(cmds);
-    print_history_list(history);
 
     printf("=========================\n\n");
 }
 
 
+void free_env_list(t_env_list *env_lst)
+{
+    t_env_node *current;
 
+    current = env_lst->head;
+    while (current)
+    {
+        free(current->key);
+        free(current->value);
+        free(current);
+        current = current->next;
+    }
+    free(env_lst);
+}
 
 
 int main(int argc, char **argv, char **env)
@@ -187,12 +198,13 @@ int main(int argc, char **argv, char **env)
 
             //execute_commands()
 		}
-		//print_everything(token_list, cmds, history_list);//for now to test
-        //print_tokens(token_list);
+		// print_everything(token_list, cmds, history_list);//for now to test
+        // print_tokens(token_list);
 		free(input);
 		free_cmd_list(cmds);
 		free_token_list(token_list);
 	}
+    free_env_list(env_lst);
 	free_hist(history_list);
 	return 0;
 }
