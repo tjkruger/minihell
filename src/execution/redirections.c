@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirections.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hkaraogl <hkaraogl@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hkaraogl <hkaraogl@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 17:29:21 by hkaraogl          #+#    #+#             */
-/*   Updated: 2025/11/27 19:21:25 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2025/12/02 13:01:23 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ int set_redirections(t_file_list *files)
 	current = files->head;
 	while(current)
 	{
-		if(!apply_redirection(current))
+		if(!apply_redirections(current))
 			return 0;
 		current = current->next;
 	}

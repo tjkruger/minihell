@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   environment.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hkaraogl <hkaraogl@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hkaraogl <hkaraogl@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/29 11:52:25 by hkaraogl          #+#    #+#             */
-/*   Updated: 2025/11/03 14:46:18 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2025/12/01 17:25:58 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@
 char **env_list_array(t_env_list *env)
 {
 	char **ret;
-	char *tmp;
 	int i = 0;
 	t_env_node *current;
 	int len;
@@ -149,7 +148,7 @@ static int	is_absolut_path(char *cmd)
 // NULL
 // }
 // return "/usr/bin/cat" if cmd is valid || NULL if invalid cmd
-char	*find_command_path(char *cmd, char **env)
+char	*find_command_path(char *cmd)
 {
 	char	*path;
 	char	**path_dirs;

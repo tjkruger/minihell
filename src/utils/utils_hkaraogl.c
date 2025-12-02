@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils_hkaraogl.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hkaraogl <hkaraogl@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hkaraogl <hkaraogl@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/29 13:40:50 by hkaraogl          #+#    #+#             */
-/*   Updated: 2025/11/25 14:17:52 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2025/12/01 17:25:17 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,6 @@
 int	error_exit(char *cmd, char*msg, int code)
 {
 	print_cmd_error(cmd, msg);
-	return code;
-}
-
-int	error_exit_perror(char *context, int code)
-{
-	print_perror(context);
 	return code;
 }
 
@@ -36,6 +30,12 @@ void	ft_perror(char *msg)
 {
 	ft_putstr_fd("minishell: ", 2);
 	perror(msg);
+}
+
+int	error_exit_perror(char *context, int code)
+{
+	ft_perror(context);
+	return code;
 }
 
 int ft_strcmp(char *s1, char *s2)

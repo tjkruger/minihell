@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hkaraogl <hkaraogl@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hkaraogl <hkaraogl@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/04 13:01:43 by hkaraogl          #+#    #+#             */
-/*   Updated: 2025/11/11 15:16:32 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2025/12/01 17:22:39 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,10 @@
 //Es gibt Unterschiede zwischen export und env Builtin!!
 
 
-static void sort_env(t_env_list *env)
-{
-	return;
-}
+// static void sort_env(t_env_list *env)
+// {
+// 	return;
+// }
 
 //env must be sorted
 static void print_export(t_env_list *env)

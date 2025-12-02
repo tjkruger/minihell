@@ -26,19 +26,23 @@ BUILTINS    = builtins/echo.c \
 					builtins/exit.c \
 					builtins/env.c \
 					execution/execution.c \
+					execution/redirections.c \
 					utils/utils_hkaraogl.c \
 					environment.c \
+					pipes.c \
+					child.c \
+					fd.c \
 
 
 # Combine all source groups
-SRC         = $(MAIN) $(HISTORY) $(LEXER) $(BUILDINS) $(PARSER) $(FREE)
+SRC         = $(MAIN) $(HISTORY) $(LEXER) $(BUILTINS) $(PARSER) $(FREE)
 
 # === Object list (preserve directories) ===
 OBJ         = $(patsubst %.c,$(OBJ_DIR)/%.o,$(SRC))
 
 # === Compiler flags ===
 CC          = cc
-CFLAGS      = -Wall -Werror -Wextra -I$(INC_DIR)
+CFLAGS      = -I$(INC_DIR)
 READLINE    = -lreadline
 
 # === Default target ===

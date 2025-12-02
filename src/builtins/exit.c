@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hkaraogl <hkaraogl@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hkaraogl <hkaraogl@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/05 20:39:00 by hkaraogl          #+#    #+#             */
-/*   Updated: 2025/11/06 15:20:24 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2025/12/01 17:22:55 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,6 @@ static int is_valid_nbr(char *nbr)
 //**cmd = {exit, 1, 2, NULL} */
 int run_exit(char **cmd, int last_exit_code)
 {
-	int i = 0;
 	int exit_code;
 
 	ft_putendl_fd("exit", 1);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   create_command_list.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: r2d2 <r2d2@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: hkaraogl <hkaraogl@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 13:31:35 by tjkruger          #+#    #+#             */
-/*   Updated: 2025/11/25 03:37:28 by r2d2             ###   ########.fr       */
+/*   Updated: 2025/12/02 11:59:31 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,11 +61,25 @@ void add_file_to_cmd(t_one_command *curr_cmd, char *value, int redir_type)
 
 int find_cmd_type(char **cmd)
 {
-    (void) cmd;
-    //bunch of else if statements with strcmp or so ...
-    //arg[0] comparen zu den buildins 
-    //1 for buildin and 0 for external
-    return (1);
+    if (!cmd)
+        return 0;
+    
+    if (ft_strcmp(cmd[0], "echo") == 0)
+        return 1;
+    if (ft_strcmp(cmd[0], "cd") == 0)
+        return 1;
+    if (ft_strcmp(cmd[0], "pwd") == 0)
+        return 1;
+    if (ft_strcmp(cmd[0], "export") == 0)
+        return 1;
+    if (ft_strcmp(cmd[0], "unset") == 0)
+        return 1;
+    if (ft_strcmp(cmd[0], "env") == 0)
+        return 1;
+    if (ft_strcmp(cmd[0], "exit") == 0)
+        return 1;
+    
+    return 0;
 }
 
 int find_executable(char *str)

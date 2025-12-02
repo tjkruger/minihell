@@ -3,21 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hkaraogl <hkaraogl@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hkaraogl <hkaraogl@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 12:39:51 by tjkruger          #+#    #+#             */
-/*   Updated: 2025/11/27 17:55:04 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2025/12/02 13:03:34 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 
 #include "minishell.h"
-
-
 #include <stdio.h>
-#include "minishell.h"
 #include <stdio.h>
-#include "minishell.h"
 
 /* ---------------- TOKEN PRINTING ---------------- */
 
@@ -35,7 +31,7 @@ static void print_tokens(t_token *t)
     }
 }
 
-/* ---------------- FILE REDIRECT PRINTING ---------------- */
+// /* ---------------- FILE REDIRECT PRINTING ---------------- */
 
 static void print_file_nodes(t_file_list *fl)
 {
@@ -57,7 +53,7 @@ static void print_file_nodes(t_file_list *fl)
     }
 }
 
-/* ---------------- ONE COMMAND PRINTING ---------------- */
+// /* ---------------- ONE COMMAND PRINTING ---------------- */
 
 static void print_one_cmd(t_one_command *cmd, int index)
 {
@@ -85,7 +81,7 @@ static void print_one_cmd(t_one_command *cmd, int index)
     print_file_nodes(cmd->files);
 }
 
-/* ---------------- COMMAND LIST PRINTING ---------------- */
+// /* ---------------- COMMAND LIST PRINTING ---------------- */
 
 static void print_all_commands(t_all_commands *cmds)
 {
@@ -111,7 +107,7 @@ static void print_all_commands(t_all_commands *cmds)
     }
 }
 
-/* ---------------- HISTORY PRINTING ---------------- */
+// /* ---------------- HISTORY PRINTING ---------------- */
 
 static void print_history_list(t_history *h)
 {
@@ -130,7 +126,7 @@ static void print_history_list(t_history *h)
     }
 }
 
-/* ---------------- EVERYTHING PRINTING ---------------- */
+// /* ---------------- EVERYTHING PRINTING ---------------- */
 
 void print_everything(t_token *tokens, t_all_commands *cmds, t_history *history)
 {
@@ -149,12 +145,18 @@ void print_everything(t_token *tokens, t_all_commands *cmds, t_history *history)
 
 
 
-int main(void)
+int main(int argc, char **argv, char **env)
 {
 	t_token	*token_list;
 	t_all_commands *cmds;
 	t_history *history_list = NULL;
+    t_env_list *env_lst;
 	char *input;
+    (void)argc;
+    (void)argv;
+    env_lst = init_environment(env);
+
+
 
 	while (1)
 	{

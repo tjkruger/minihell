@@ -26,7 +26,6 @@ void free_cmd_list(t_all_commands *cmds)
     free(cmds);
 }
 
-
 void free_file_list(t_file_list *files)
 {
     t_file_node *tmp;
@@ -55,7 +54,6 @@ void free_token_list(t_token *head)
         head = tmp;
     }
 }
-
 
 void free_hist(t_history *history_list)
 {
