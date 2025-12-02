@@ -6,9 +6,10 @@
 /*   By: hkaraogl <hkaraogl@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 12:39:51 by tjkruger          #+#    #+#             */
-/*   Updated: 2025/12/02 14:03:25 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2025/12/02 14:12:48 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 
 #include "minishell.h"
@@ -187,6 +188,7 @@ int main(int argc, char **argv, char **env)
             //execute_commands()
 		}
 		//print_everything(token_list, cmds, history_list);//for now to test
+        //print_tokens(token_list);
 		free(input);
 		free_cmd_list(cmds);
 		free_token_list(token_list);

@@ -94,21 +94,33 @@ char **extracted_token(char *str)
     char *tp = token;
     char *dp = dna;
 
-    int mode = 0;
+    int mode = 0; // 0 = outside quotes, '\'' = single quote, '"' = double quote
 
     while (str < token_end)
     {
-        if ((*str == '\'' || *str == '"'))
+        // starting quotes, only if outside any quote
+        if (*str == '\'' && mode == 0)
         {
-            if (mode == 0)
-                mode = *str;
-            else if (mode == *str)
-                mode = 0;
-
+            mode = '\'';
+            str++;
+            continue;
+        }
+        if (*str == '"' && mode == 0)
+        {
+            mode = '"';
             str++;
             continue;
         }
 
+        // closing quote of current mode
+        if (*str == mode && mode != 0)
+        {
+            mode = 0;
+            str++;
+            continue;
+        }
+
+        // normal char or quote inside different type → append
         *tp++ = *str;
         if (mode == 0)
             *dp++ = 'N';
@@ -118,7 +130,6 @@ char **extracted_token(char *str)
             *dp++ = 'D';
 
         str++;
-        //somewhere in here take care of the < > << >> operators in here check for '' and then act upon not being in ''
     }
 
     *tp = '\0';
@@ -128,8 +139,9 @@ char **extracted_token(char *str)
     list[1] = dna;
     list[2] = NULL;
 
-    return(list);
+    return list;
 }
+
 
 
 
@@ -150,7 +162,7 @@ t_pretoken  *ft_split_for_token(char *input)
         token_error();
         return(NULL);
     }
-    t_list = malloc(sizeof(t_pretoken));//take the ** and feed it into their own **lists so i end up with **tokens and **dna
+    t_list = malloc(sizeof(t_pretoken));
     t_list->token = malloc(sizeof(char *) * (arg_num + 1));
     t_list->dna= malloc(sizeof(char *) * (arg_num + 1));
 

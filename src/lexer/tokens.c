@@ -32,43 +32,164 @@ t_token_type get_token_type(char *str)
         return TOKEN_WORD;
 }
 
-
-
-
-t_token *tokenize(char  *input)
+int is_op(char c)
 {
-    int         i;
-    t_token     *head = NULL;
-    t_token     *tail = NULL;
-    t_pretoken  *pretoken;
+    return (c == '>' || c == '<' || c == '|');
+}
 
-    pretoken = ft_split_for_token(input);
-    if(!pretoken)
-        return(NULL);
+
+char *ft_strjoin_free(char *s1, char c)
+{
+    int len;
+    char *new_str;
+    int i;
+
     i = 0;
-    while(pretoken->token[i])
+    len = 0;
+    while (s1 && s1[len] != '\0')
+        len++;
+
+    new_str = malloc(len + 2);
+    if (!new_str)
+        return NULL;
+
+    while(i < len)
     {
-        t_token *new = malloc(sizeof(t_token));
-        if (!new)
-            return (NULL); // handle malloc fail
-        new->value = ft_strdup(pretoken->token[i]);
-        new->dna = ft_strdup(pretoken->dna[i]);
-        new->type = get_token_type(pretoken->token[i]);
-        new->next = NULL;
-        if (!head)
+        new_str[i] = s1[i];
+        i++;
+    }
+
+    new_str[len] = c;
+    new_str[len + 1] = '\0';
+
+    if (s1)
+        free(s1);
+
+    return new_str;
+}
+
+char *append_char(char *s, char c)
+{
+    return ft_strjoin_free(s, c);   // later chars → join
+}
+
+void push_token(t_token **head, char *value, char *dna)
+{
+    t_token *new = malloc(sizeof(t_token));
+    t_token *tmp;
+
+    if (!new)
+        return ;
+    new->value = value;
+    new->dna = dna;
+    new->type = get_token_type(value);
+    new->next = NULL;
+
+    if (!*head)
+    {
+        *head = new;
+        return ;
+    }
+    tmp = *head;
+    while (tmp->next)
+        tmp = tmp->next;
+    tmp->next = new;
+}
+
+
+void flush_word(t_token **head, char **txt_buf, char **dna_buf)
+{
+    if (*txt_buf == NULL || (*txt_buf)[0] == '\0')
+        return ;
+    push_token(head, *txt_buf, *dna_buf);
+
+    *txt_buf = NULL;
+    *dna_buf = NULL;
+}
+
+
+void make_op_token(t_token **head, char op, char dna)
+{
+    char *v = malloc(2);
+    char *d = malloc(2);
+
+    v[0] = op;
+    v[1] = '\0';
+
+    d[0] = dna;
+    d[1] = '\0';
+
+    push_token(head, v, d);
+}
+
+
+t_token *split_pretoken(char *text, char *dna)
+{
+    t_token *head = NULL;
+    char    *txt_buf;
+    char    *dna_buf;
+    int     i = 0;
+
+    txt_buf = NULL;
+    dna_buf = NULL;
+    while (text[i])
+    {
+        if (dna[i] == 'N' && is_op(text[i]))
         {
-            head = new;
-            tail = new;
+            flush_word(&head, &txt_buf, &dna_buf);
+            make_op_token(&head, text[i], dna[i]);
         }
         else
         {
-            tail->next = new;
-            tail = new;
+            txt_buf = append_char(txt_buf, text[i]);
+            dna_buf = append_char(dna_buf, dna[i]);
         }
         i++;
     }
-    free_pretoken(pretoken);
-    return(head);
+    flush_word(&head, &txt_buf, &dna_buf);
+    return (head);
 }
+
+
+t_token *tokenize(char *input)
+{
+    t_pretoken  *pretoken;
+    t_token     *head = NULL;
+    t_token     *tail = NULL;
+    t_token     *sub;
+    int         i;
+    pretoken = ft_split_for_token(input);
+    if (!pretoken)
+        return (NULL);
+
+    i = 0;
+    while (pretoken->token[i])
+    {
+        // split each pretoken into real tokens
+        sub = split_pretoken(pretoken->token[i], pretoken->dna[i]);
+
+        // append the resulting mini-list to the main list
+        while (sub)
+        {
+            if (!head)
+            {
+                head = sub;
+                tail = sub;
+            }
+            else
+            {
+                tail->next = sub;
+                tail = sub;
+            }
+            sub = sub->next;
+        }
+
+        i++;
+    }
+
+    free_pretoken(pretoken);
+    return (head);
+}
+
 
 //need to fix this case here: "hel'lo there" so the ' must be printed out with the rest curr gets skipped
