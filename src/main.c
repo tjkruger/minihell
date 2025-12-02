@@ -181,6 +181,7 @@ int main(void)
             cmds 	   = build_commands(token_list);
 		}
 		//print_everything(token_list, cmds, history_list);//for now to test
+        print_tokens(token_list);
 		free(input);
 		free_cmd_list(cmds);
 		free_token_list(token_list);

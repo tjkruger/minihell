@@ -118,7 +118,6 @@ char **extracted_token(char *str)
             *dp++ = 'D';
 
         str++;
-        //somewhere in here take care of the < > << >> operators in here check for '' and then act upon not being in ''
     }
 
     *tp = '\0';
@@ -150,7 +149,7 @@ t_pretoken  *ft_split_for_token(char *input)
         token_error();
         return(NULL);
     }
-    t_list = malloc(sizeof(t_pretoken));//take the ** and feed it into their own **lists so i end up with **tokens and **dna
+    t_list = malloc(sizeof(t_pretoken));
     t_list->token = malloc(sizeof(char *) * (arg_num + 1));
     t_list->dna= malloc(sizeof(char *) * (arg_num + 1));
 
