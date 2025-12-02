@@ -37,21 +37,41 @@ int is_op(char c)
     return (c == '>' || c == '<' || c == '|');
 }
 
-char *append_char(char *s, char c)
+
+char *ft_strjoin_free(char *s1, char c)
 {
-    char temp[2];
+    int len;
+    char *new_str;
+    int i;
 
-    temp[0] = c;
-    temp[1] = '\0';
+    i = 0;
+    len = 0;
+    while (s1 && s1[len] != '\0')
+        len++;
 
-    if (!s)
-        return ft_strdup(temp);   // first char → simple dup
+    new_str = malloc(len + 2);
+    if (!new_str)
+        return NULL;
 
-    return ft_strjoin(s, temp);   // later chars → join
+    while(i < len)
+    {
+        new_str[i] = s1[i];
+        i++;
+    }
+
+    new_str[len] = c;
+    new_str[len + 1] = '\0';
+
+    if (s1)
+        free(s1);
+
+    return new_str;
 }
 
-
-
+char *append_char(char *s, char c)
+{
+    return ft_strjoin_free(s, c);   // later chars → join
+}
 
 void push_token(t_token **head, char *value, char *dna)
 {
@@ -139,8 +159,6 @@ t_token *tokenize(char *input)
     t_token     *sub;
     int         i;
     pretoken = ft_split_for_token(input);
-    printf("gotcha bitch\n");
-    fflush(stdout);
     if (!pretoken)
         return (NULL);
 

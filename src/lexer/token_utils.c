@@ -94,21 +94,33 @@ char **extracted_token(char *str)
     char *tp = token;
     char *dp = dna;
 
-    int mode = 0;
+    int mode = 0; // 0 = outside quotes, '\'' = single quote, '"' = double quote
 
     while (str < token_end)
     {
-        if ((*str == '\'' || *str == '"'))
+        // starting quotes, only if outside any quote
+        if (*str == '\'' && mode == 0)
         {
-            if (mode == 0)
-                mode = *str;
-            else if (mode == *str)
-                mode = 0;
-
+            mode = '\'';
+            str++;
+            continue;
+        }
+        if (*str == '"' && mode == 0)
+        {
+            mode = '"';
             str++;
             continue;
         }
 
+        // closing quote of current mode
+        if (*str == mode && mode != 0)
+        {
+            mode = 0;
+            str++;
+            continue;
+        }
+
+        // normal char or quote inside different type → append
         *tp++ = *str;
         if (mode == 0)
             *dp++ = 'N';
@@ -127,8 +139,9 @@ char **extracted_token(char *str)
     list[1] = dna;
     list[2] = NULL;
 
-    return(list);
+    return list;
 }
+
 
 
 
