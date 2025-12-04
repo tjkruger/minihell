@@ -6,7 +6,7 @@
 /*   By: hkaraogl <hkaraogl@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 12:39:51 by tjkruger          #+#    #+#             */
-/*   Updated: 2025/12/02 16:41:59 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2025/12/04 16:58:21 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,6 +127,22 @@ static void print_history_list(t_history *h)
     }
 }
 
+void print_array(char **arr)
+{
+    if (!arr)
+    {
+        printf("(null array)\n");
+        return;
+    }
+
+    int i = 0;
+    while (arr[i])
+    {
+        printf("arr[%d]: %s\n", i, arr[i]);
+        i++;
+    }
+}
+
 // /* ---------------- EVERYTHING PRINTING ---------------- */
 
 void print_everything(t_token *tokens, t_all_commands *cmds, t_history *history)
@@ -171,6 +187,7 @@ int main(int argc, char **argv, char **env)
 
 
 
+
 	while (1)
 	{
 		input = readline("minishell> ");
@@ -194,6 +211,7 @@ int main(int argc, char **argv, char **env)
             }
             //handle_expansions(token_list);//do this and then make >infile work
             cmds 	   = build_commands(token_list);
+            setup_all_heredoc(cmds, env_lst);
             i = execute_commands(cmds, env_lst);
 
             //execute_commands()

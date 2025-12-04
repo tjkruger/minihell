@@ -6,7 +6,7 @@
 /*   By: hkaraogl <hkaraogl@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 17:29:21 by hkaraogl          #+#    #+#             */
-/*   Updated: 2025/12/02 13:01:23 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2025/12/03 16:10:34 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ static int handle_append_redir(char *filename)
 	return 1;
 }
 //heredoc: temp file muss ich main erstellt werden
-static int handle_heredoc_redir(char *filename)
+int handle_heredoc_redir(char *filename)
 {
 	return (handle_input_redir(filename));
 }
