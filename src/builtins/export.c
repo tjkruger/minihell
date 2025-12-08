@@ -6,7 +6,7 @@
 /*   By: hkaraogl <hkaraogl@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/04 13:01:43 by hkaraogl          #+#    #+#             */
-/*   Updated: 2025/12/01 17:22:39 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2025/12/05 12:38:06 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,13 +21,48 @@
 // 	return;
 // }
 
+static void	swap_content(t_env_node *node1, t_env_node *node2)
+{
+	char *tmp_key;
+	char *tmp_value;
+
+	tmp_key = node1->key;
+	tmp_value = node1->value;
+
+	node1->key = node2->key;
+	node1->value = node2->value;
+
+	node2->key = tmp_key;
+	node2->value = tmp_value;
+}
+
 //env must be sorted
+static void sort_env(t_env_list *env)
+{
+	t_env_node *current;
+	t_env_node *compare;
+	char *tmp;
+
+	current = env->head;
+
+	while(current)
+	{
+		compare = current->next;
+		while(compare)
+		{
+			if(current->key[0] > compare->key[0])
+				swap_content(current, compare);
+			compare = compare->next;
+		}
+		current = current->next;
+	}
+}
+
 static void print_export(t_env_list *env)
 {
 	t_env_node *current;
 
 	current = env->head;
-
 	while(current)
 	{
 		printf("declare -x %s=\"%s\"\n", current->key, current->value);
@@ -44,6 +79,7 @@ int	run_export(t_env_list *env, char **cmd)
 	char *value;
 	if(!cmd[1])
 	{
+		sort_env(env);
 		print_export(env);
 		return 0;
 	}

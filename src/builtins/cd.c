@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hkaraogl <hkaraogl@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hkaraogl <hkaraogl@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/24 15:50:25 by hkaraogl          #+#    #+#             */
-/*   Updated: 2025/11/11 16:54:26 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2025/12/08 12:52:34 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ int    run_cd(char **args, t_env_list *env)
 	if(chdir(path) != 0)
 	{
 		perror("cd failed");
-		exit(1);
+		return 1;
 	}
 	if(getcwd(cwd, sizeof(cwd)))
 	{
