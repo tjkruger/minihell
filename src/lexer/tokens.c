@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokens.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hkaraogl <hkaraogl@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/24 15:32:21 by tjkruger          #+#    #+#             */
-/*   Updated: 2025/12/08 12:58:24 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2025/12/08 13:07:26 by tjkruger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,13 +108,35 @@ void flush_word(t_token **head, char **txt_buf, char **dna_buf)
 }
 
 
-void make_op_token(t_token **head, char op, char dna)
+int make_op_token(t_token **head,char *str,char *dna, int i)
 {
-    char *v = malloc(2);
-    char *d = malloc(2);
+    char *op;
+    char *opd;
+    int flag;
 
-    v[0] = op;
-    v[1] = '\0';
+    flag = 0;
+
+    if(str[i] == str[i + 1])
+    {
+        op = malloc(3);
+        opd = malloc(3);
+        
+        op[0] = str[i];
+        op[1] = str[i];
+        op[2] = '\0';
+
+        opd[0] = dna[i];
+        opd[1] = dna[i];
+        opd[2] = '\0';
+        flag = 1;
+    }
+    else
+    {
+        op = malloc(2);
+        opd = malloc(2);
+
+        op[0] = str[i];
+        op[1] = '\0';
 
     d[0] = dna;
     d[1] = '\0';
@@ -128,6 +150,7 @@ t_token *split_pretoken(char *text, char *dna)
     char    *txt_buf;
     char    *dna_buf;
     int     i = 0;
+    int     flag = 0;
 
     txt_buf = NULL;
     dna_buf = NULL;
@@ -136,7 +159,9 @@ t_token *split_pretoken(char *text, char *dna)
         if (dna[i] == 'N' && is_op(text[i]))
         {
             flush_word(&head, &txt_buf, &dna_buf);
-            make_op_token(&head, text[i], dna[i]);
+            flag = make_op_token(&head, text, dna, i);
+            if (flag)
+                i++;
         }
         else
         {

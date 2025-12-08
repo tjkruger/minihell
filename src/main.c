@@ -6,15 +6,13 @@
 /*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/12/08 13:04:56 by tjkruger         ###   ########.fr       */
+/*   Updated: 2025/12/08 13:07:17 by tjkruger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 
 
 #include "minishell.h"
-#include <stdio.h>
-#include <stdio.h>
 
 /* ---------------- TOKEN PRINTING ---------------- */
 
@@ -180,8 +178,8 @@ void free_all_environment(t_env_list *env_lst)
 
 int main(int argc, char **argv, char **env)
 {
-	t_token	*token_list;
-	t_all_commands *cmds;
+	t_token	*token_list = NULL;
+	t_all_commands *cmds = NULL;
 	t_history *history_list = NULL;
     t_env_list *env_lst;
     int i;
@@ -203,7 +201,6 @@ int main(int argc, char **argv, char **env)
 			if (strcmp(input, "history") == 0)
             {
                 print_history(history_list);
-                //fflush(stdout);
                 continue;
             }
 
@@ -218,7 +215,6 @@ int main(int argc, char **argv, char **env)
                 cmds = NULL;
                 continue;
             }
-           
             cmds 	   = build_commands(token_list);
 
             i = execute_commands(cmds, env_lst);
@@ -227,8 +223,11 @@ int main(int argc, char **argv, char **env)
         // print_tokens(token_list);
 		free(input);
 		free_cmd_list(cmds);
-		free_token_list(token_list);
-        free_all_environment(env_lst);
+        cmds = NULL;
+        free_token_list(token_list);
+        token_list = NULL;
+
+        //free_all_environment(env_lst);
 	}
     free_env_list(env_lst);
 	free_hist(history_list);
