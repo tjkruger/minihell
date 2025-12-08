@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: r2d2 <r2d2@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/12/08 04:28:11 by r2d2             ###   ########.fr       */
+/*   Updated: 2025/12/08 12:43:45 by tjkruger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -202,10 +202,10 @@ int main(int argc, char **argv, char **env)
             }
             cmds 	   = build_commands(token_list);
 
-            //i = execute_commands(cmds, env_lst);
+            i = execute_commands(cmds, env_lst);
 		}
 		//print_everything(token_list, cmds, history_list);//for now to test
-        print_tokens(token_list);
+        //print_tokens(token_list);
 		free(input);
 		free_cmd_list(cmds);
         cmds = NULL;
