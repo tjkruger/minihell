@@ -32,6 +32,7 @@ BUILTINS    = builtins/echo.c \
 					execution/pipes.c \
 					execution/child.c \
 					execution/fd.c \
+					execution/heredoc.c \
 
 
 # Combine all source groups

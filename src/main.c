@@ -6,7 +6,7 @@
 /*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/12/02 14:08:27 by tjkruger         ###   ########.fr       */
+/*   Updated: 2025/12/08 13:04:56 by tjkruger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,6 +127,22 @@ static void print_history_list(t_history *h)
     }
 }
 
+void print_array(char **arr)
+{
+    if (!arr)
+    {
+        printf("(null array)\n");
+        return;
+    }
+
+    int i = 0;
+    while (arr[i])
+    {
+        printf("arr[%d]: %s\n", i, arr[i]);
+        i++;
+    }
+}
+
 // /* ---------------- EVERYTHING PRINTING ---------------- */
 
 void print_everything(t_token *tokens, t_all_commands *cmds, t_history *history)
@@ -135,9 +151,7 @@ void print_everything(t_token *tokens, t_all_commands *cmds, t_history *history)
     printf("      DEBUG OUTPUT\n");
     printf("=========================\n");
 
-    print_tokens(tokens);
     print_all_commands(cmds);
-    print_history_list(history);
 
     printf("=========================\n\n");
 }
@@ -170,6 +184,7 @@ int main(int argc, char **argv, char **env)
 	t_all_commands *cmds;
 	t_history *history_list = NULL;
     t_env_list *env_lst;
+    int i;
 	char *input;
     (void)argc;
     (void)argv;
@@ -208,13 +223,14 @@ int main(int argc, char **argv, char **env)
 
             i = execute_commands(cmds, env_lst);
 		}
-		//print_everything(token_list, cmds, history_list);//for now to test
-        //print_tokens(token_list);
+		// print_everything(token_list, cmds, history_list);//for now to test
+        // print_tokens(token_list);
 		free(input);
 		free_cmd_list(cmds);
 		free_token_list(token_list);
         free_all_environment(env_lst);
 	}
+    free_env_list(env_lst);
 	free_hist(history_list);
 	return 0;
 }
