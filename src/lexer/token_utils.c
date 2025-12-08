@@ -6,7 +6,7 @@
 /*   By: r2d2 <r2d2@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/24 15:32:25 by tjkruger          #+#    #+#             */
-/*   Updated: 2025/11/27 12:32:43 by r2d2             ###   ########.fr       */
+/*   Updated: 2025/12/08 02:54:21 by r2d2             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,7 +120,7 @@ char **extracted_token(char *str)
             continue;
         }
 
-        // normal char or quote inside different type → append
+        // normal char or quote inside different type
         *tp++ = *str;
         if (mode == 0)
             *dp++ = 'N';

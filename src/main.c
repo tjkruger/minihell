@@ -3,18 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
+/*   By: r2d2 <r2d2@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/12/02 14:08:27 by tjkruger         ###   ########.fr       */
+/*   Updated: 2025/12/08 04:28:11 by r2d2             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 
 
 #include "minishell.h"
-#include <stdio.h>
-#include <stdio.h>
 
 /* ---------------- TOKEN PRINTING ---------------- */
 
@@ -166,8 +164,8 @@ void free_all_environment(t_env_list *env_lst)
 
 int main(int argc, char **argv, char **env)
 {
-	t_token	*token_list;
-	t_all_commands *cmds;
+	t_token	*token_list = NULL;
+	t_all_commands *cmds = NULL;
 	t_history *history_list = NULL;
     t_env_list *env_lst;
 	char *input;
@@ -188,7 +186,6 @@ int main(int argc, char **argv, char **env)
 			if (strcmp(input, "history") == 0)
             {
                 print_history(history_list);
-                //fflush(stdout);
                 continue;
             }
 
@@ -203,17 +200,19 @@ int main(int argc, char **argv, char **env)
                 cmds = NULL;
                 continue;
             }
-           
             cmds 	   = build_commands(token_list);
 
-            i = execute_commands(cmds, env_lst);
+            //i = execute_commands(cmds, env_lst);
 		}
 		//print_everything(token_list, cmds, history_list);//for now to test
-        //print_tokens(token_list);
+        print_tokens(token_list);
 		free(input);
 		free_cmd_list(cmds);
-		free_token_list(token_list);
-        free_all_environment(env_lst);
+        cmds = NULL;
+        free_token_list(token_list);
+        token_list = NULL;
+
+        //free_all_environment(env_lst);
 	}
 	free_hist(history_list);
 	return 0;

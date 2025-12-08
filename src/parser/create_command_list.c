@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   create_command_list.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hkaraogl <hkaraogl@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: r2d2 <r2d2@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 13:31:35 by tjkruger          #+#    #+#             */
-/*   Updated: 2025/12/02 11:59:31 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2025/12/08 04:14:38 by r2d2             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,6 @@ t_all_commands *create_new_commands_list(void)
 t_all_commands *build_commands(t_token *tokens)
 {
     t_all_commands *cmd_list = create_new_commands_list(); // function to init head/tail
-
     while (tokens)
     {
         t_one_command *curr_cmd = create_new_command_node();
@@ -131,11 +130,9 @@ t_all_commands *build_commands(t_token *tokens)
             }
             tokens = tokens->next;
         }
-
         curr_cmd->cmd_type = find_cmd_type(curr_cmd->cmd); // determine buildin or not
         curr_cmd->executable = find_executable(curr_cmd->cmd[0]);//make executable flag maybe put somewhere else but later in cleanup part no ?
         add_cmd_to_list(cmd_list, curr_cmd);
-
         if (tokens && tokens->type == TOKEN_PIPE)
             tokens = tokens->next;
     }
