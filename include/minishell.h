@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hkaraogl <hkaraogl@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/24 15:32:03 by tjkruger          #+#    #+#             */
-/*   Updated: 2025/12/08 13:07:02 by tjkruger         ###   ########.fr       */
+/*   Updated: 2025/12/09 15:30:25 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,8 @@
 # include <sys/types.h>
 # include <sys/wait.h>
 #include <fcntl.h>
+#include <signal.h>
+
 
 //header files
 # include "history.h"
@@ -45,7 +47,7 @@ struct s_file_list;
 struct s_cmd_node;
 struct s_file_node;
 
-extern int g_exit_status;
+extern volatile sig_atomic_t g_signal_status;
 
 
 # define PATH_MAX 4096

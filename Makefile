@@ -33,6 +33,7 @@ BUILTINS    = builtins/echo.c \
 					execution/child.c \
 					execution/fd.c \
 					execution/heredoc.c \
+					signals/signals.c \
 
 
 # Combine all source groups

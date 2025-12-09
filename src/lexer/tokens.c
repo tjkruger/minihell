@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokens.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hkaraogl <hkaraogl@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/24 15:32:21 by tjkruger          #+#    #+#             */
-/*   Updated: 2025/12/08 13:07:26 by tjkruger         ###   ########.fr       */
+/*   Updated: 2025/12/08 13:46:36 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,10 +138,11 @@ int make_op_token(t_token **head,char *str,char *dna, int i)
         op[0] = str[i];
         op[1] = '\0';
 
-    d[0] = dna;
-    d[1] = '\0';
+        opd[0] = dna;
+        opd[1] = '\0';
+    }
 
-    push_token(head, v, d);
+    push_token(head, op, opd);
 }
 
 t_token *split_pretoken(char *text, char *dna)
