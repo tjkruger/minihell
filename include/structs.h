@@ -55,6 +55,7 @@ typedef struct s_pipes
 typedef struct s_file_node 
 {
 	char *filename;
+	char *delimiter;
 	int redir_type;
 	struct s_file_node *next;
 } t_file_node;

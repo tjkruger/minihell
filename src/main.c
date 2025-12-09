@@ -6,7 +6,7 @@
 /*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/12/08 13:07:17 by tjkruger         ###   ########.fr       */
+/*   Updated: 2025/12/08 13:30:03 by tjkruger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -187,7 +187,6 @@ int main(int argc, char **argv, char **env)
     (void)argc;
     (void)argv;
     env_lst = init_environment(env);
-    int i;
 
 
 
@@ -215,6 +214,7 @@ int main(int argc, char **argv, char **env)
                 cmds = NULL;
                 continue;
             }
+            handle_expansions(token_list, env_lst);
             cmds 	   = build_commands(token_list);
 
             i = execute_commands(cmds, env_lst);
@@ -227,9 +227,9 @@ int main(int argc, char **argv, char **env)
         free_token_list(token_list);
         token_list = NULL;
 
-        //free_all_environment(env_lst);
+
 	}
-    free_env_list(env_lst);
+    //free_all_environment(env_lst);
 	free_hist(history_list);
 	return 0;
 }

@@ -16,7 +16,8 @@ PARSER      = parser/create_command_list.c \
               parser/command_list_helper.c
 
 LEXER       = lexer/tokens.c \
-              lexer/token_utils.c
+              lexer/token_utils.c \
+			  lexer/expansions.c
 
 BUILTINS    = builtins/echo.c \
 					builtins/cd.c \

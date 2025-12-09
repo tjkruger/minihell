@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   create_command_list.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: r2d2 <r2d2@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 13:31:35 by tjkruger          #+#    #+#             */
-/*   Updated: 2025/12/08 04:14:38 by r2d2             ###   ########.fr       */
+/*   Updated: 2025/12/08 13:19:57 by tjkruger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,17 @@ t_file_node *create_file_node(char *value, t_token_type redir_type)
     t_file_node *node = malloc(sizeof(t_file_node));
     if (!node)
         return NULL;
-    node->filename = ft_strdup(value);
+    if(redir_type == TOKEN_REDIR_HEREDOC)
+    {
+        node->filename = NULL;
+        node->delimiter = ft_strdup(value);
+    }
+    else
+    {
+        node->filename = ft_strdup(value);
+        node->delimiter = NULL;
+    }
+
     node->redir_type = redir_type;  // store enum value
     node->next = NULL;
     return node;

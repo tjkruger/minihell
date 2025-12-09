@@ -6,7 +6,7 @@
 /*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/24 15:31:51 by tjkruger          #+#    #+#             */
-/*   Updated: 2025/11/27 14:45:46 by tjkruger         ###   ########.fr       */
+/*   Updated: 2025/12/08 13:29:47 by tjkruger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ int         ft_isspace(char c);
 void        token_error(void);
 int         how_many_token(char *str);
 t_pretoken  *ft_split_for_token(char *input);
+void    handle_expansions(t_token *token_list, t_env_list *env);
 
 
 #endif
