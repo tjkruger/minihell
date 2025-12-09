@@ -34,6 +34,7 @@ void free_file_list(t_file_list *files)
     {
         tmp = files->head->next;
         free(files->head->filename);
+        free(files->head->delimiter);
         free(files->head);
         files->head = tmp;
     }
@@ -50,6 +51,7 @@ void free_token_list(t_token *head)
     {
         tmp = head->next;
         free(head->value);
+        free(head->dna);
         free(head);
         head = tmp;
     }
