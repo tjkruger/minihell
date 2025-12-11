@@ -9,16 +9,19 @@ int is_var_char(char c)
 
 char *ft_argument(char *str)
 {
-    char *new;
+    if (str[0] == '?')
+        return strdup("?");
+
     int len = 0;
-    while (is_var_char(str[len]))
+    while (str[len] && (isalnum(str[len]) || str[len] == '_'))
         len++;
-    new = malloc(sizeof(char) * (len + 1));
-    for (int i = 0; i < len; i++)
-        new[i] = str[i];
-    new[len] = '\0';
-    return new;
+
+    char *var = malloc(len + 1);
+    strncpy(var, str, len);
+    var[len] = '\0';
+    return var;
 }
+
 
 
 char    *ft_expand(char *arg, t_env_list *env)
