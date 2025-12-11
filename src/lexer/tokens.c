@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokens.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
+/*   By: r2d2 <r2d2@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/24 15:32:21 by tjkruger          #+#    #+#             */
-/*   Updated: 2025/12/09 14:01:15 by tjkruger         ###   ########.fr       */
+/*   Updated: 2025/12/11 16:57:31 by r2d2             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,17 +116,17 @@ int make_op_token(t_token **head,char *str,char *dna, int i)
 
     flag = 0;
 
-    if(str[i] == str[i + 1])
+    if (str[i] == str[i + 1] && str[i] != '|')
     {
         op = malloc(3);
         opd = malloc(3);
         
-        op[0] = str[0];
-        op[1] = str[1];
+        op[0] = str[i];
+        op[1] = str[i + 1];
         op[2] = '\0';
 
-        opd[0] = dna[0];
-        opd[1] = dna[1];
+        opd[0] = dna[i];
+        opd[1] = dna[i + 1];
         opd[2] = '\0';
         flag = 1;
     }
@@ -135,10 +135,10 @@ int make_op_token(t_token **head,char *str,char *dna, int i)
         op = malloc(2);
         opd = malloc(2);
 
-        op[0] = str[0];
+        op[0] = str[i];
         op[1] = '\0';
 
-        opd[0] = dna[0];
+        opd[0] = dna[i];
         opd[1] = '\0';
     }
 
@@ -176,6 +176,33 @@ t_token *split_pretoken(char *text, char *dna)
     return (head);
 }
 
+int validate_token(t_token  *head)
+{
+    t_token *prev = NULL;
+    
+    while(head)
+    {
+        if(!prev && head->type == TOKEN_PIPE)//first must be a word
+            return(0);
+        else if(!head->next && head->type == TOKEN_PIPE)//last must be a word
+            return(0);
+        else if(prev && prev->type == TOKEN_PIPE && head->type == TOKEN_PIPE)//no double pipes
+            return(0);
+        else if (prev && (
+                prev->type == TOKEN_REDIR_IN ||
+                prev->type == TOKEN_REDIR_OUT ||
+                prev->type == TOKEN_REDIR_APPEND ||
+                prev->type == TOKEN_REDIR_HEREDOC))
+        {
+            if (head->type != TOKEN_WORD)
+                return 0;
+        }
+        prev = head;
+        head = head->next;
+    }
+    return(1);
+}
+// > h should work but doesnt atm
 
 t_token *tokenize(char *input)
 {
@@ -212,10 +239,8 @@ t_token *tokenize(char *input)
 
         i++;
     }
-
+    if(!validate_token(head))
+        return(NULL);
     free_pretoken(pretoken);
     return (head);
 }
-
-
-//need to fix this case here: "hel'lo there" so the ' must be printed out with the rest curr gets skipped

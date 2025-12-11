@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   create_command_list.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
+/*   By: r2d2 <r2d2@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 13:31:35 by tjkruger          #+#    #+#             */
-/*   Updated: 2025/12/08 13:19:57 by tjkruger         ###   ########.fr       */
+/*   Updated: 2025/12/11 03:21:14 by r2d2             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,11 +135,15 @@ t_all_commands *build_commands(t_token *tokens)
                      || tokens->type == TOKEN_REDIR_APPEND
                      || tokens->type == TOKEN_REDIR_HEREDOC)
             {
+                if(tokens->next == NULL || tokens->next->type != TOKEN_WORD) 
+                    return(NULL);
                 add_file_to_cmd(curr_cmd, tokens->next->value, tokens->type);
                 tokens = tokens->next; // skip filename
             }
             tokens = tokens->next;
         }
+        if (curr_cmd->cmd == NULL) 
+            return(NULL);
         curr_cmd->cmd_type = find_cmd_type(curr_cmd->cmd); // determine buildin or not
         curr_cmd->executable = find_executable(curr_cmd->cmd[0]);//make executable flag maybe put somewhere else but later in cleanup part no ?
         add_cmd_to_list(cmd_list, curr_cmd);

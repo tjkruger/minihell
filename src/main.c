@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
+/*   By: r2d2 <r2d2@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/12/09 14:15:35 by tjkruger         ###   ########.fr       */
+/*   Updated: 2025/12/11 16:40:59 by r2d2             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -216,11 +216,11 @@ int main(int argc, char **argv, char **env)
             }
             handle_expansions(token_list, env_lst);
             cmds 	   = build_commands(token_list);
-		    print_everything(token_list, cmds, history_list);//for now to test
 
             i = execute_commands(cmds, env_lst);
 		}
-        // print_tokens(token_list);
+		//print_everything(token_list, cmds, history_list);//for now to test
+        print_tokens(token_list);
 		free(input);
 		free_cmd_list(cmds);
         cmds = NULL;
