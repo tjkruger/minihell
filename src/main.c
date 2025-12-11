@@ -6,7 +6,7 @@
 /*   By: r2d2 <r2d2@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/12/11 16:40:59 by r2d2             ###   ########.fr       */
+/*   Updated: 2025/12/11 19:47:29 by r2d2             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -218,9 +218,10 @@ int main(int argc, char **argv, char **env)
             cmds 	   = build_commands(token_list);
 
             i = execute_commands(cmds, env_lst);
+            env_lst->last_exit = i;
 		}
 		//print_everything(token_list, cmds, history_list);//for now to test
-        print_tokens(token_list);
+        //print_tokens(token_list);
 		free(input);
 		free_cmd_list(cmds);
         cmds = NULL;
