@@ -6,12 +6,11 @@
 /*   By: hkaraogl <hkaraogl@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/02 12:34:28 by tjkruger          #+#    #+#             */
-/*   Updated: 2025/12/09 16:41:18 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2025/12/11 18:04:27 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
 
 volatile sig_atomic_t g_signal_status = 0;
 
@@ -37,6 +36,7 @@ void handle_sigint(int sig)
 	write(STDOUT_FILENO, "\n", 1);
 	rl_on_new_line();
 	rl_replace_line("", 0);
+	rl_redisplay();
 }
 
 //do nothing

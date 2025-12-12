@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   create_command_list.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: r2d2 <r2d2@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: hkaraogl <hkaraogl@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 13:31:35 by tjkruger          #+#    #+#             */
-/*   Updated: 2025/12/08 04:14:38 by r2d2             ###   ########.fr       */
+/*   Updated: 2025/12/10 15:33:09 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,6 +125,13 @@ t_all_commands *build_commands(t_token *tokens)
                      || tokens->type == TOKEN_REDIR_APPEND
                      || tokens->type == TOKEN_REDIR_HEREDOC)
             {
+                if (!tokens->next || !tokens->next->value)
+                {
+                    cmd_list->syntax_error = 1;
+                    // Optionally free partially built command list here
+                    return cmd_list;
+                }
+
                 add_file_to_cmd(curr_cmd, tokens->next->value, tokens->type);
                 tokens = tokens->next; // skip filename
             }

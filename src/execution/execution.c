@@ -6,7 +6,7 @@
 /*   By: hkaraogl <hkaraogl@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/28 15:03:52 by hkaraogl          #+#    #+#             */
-/*   Updated: 2025/12/09 15:52:51 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2025/12/11 18:52:33 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ static int init_pipes(t_pipes *data, t_all_commands *lst)
 	data->pids = malloc(sizeof(pid_t) * lst->size);
 	if(!data->pids)
 	{
-		free_pipes(data);
+		cleanup_pipes_partial(data->pipes, data->pipe_count);
 		return 0;
 	}
 	return 1;
@@ -97,12 +97,14 @@ int	execute_external_command(t_one_command *cmd, t_env_list *env_lst)
 	path = find_command_path(cmd->cmd[0]);
 	if(!path)
 	{
+		free_str_arr(env);
 		print_cmd_error(cmd->cmd[0], "command not found");
 		exit(ERR_CMD_NOT_FOUND);
 	}
 	execve(path, cmd->cmd, env);
 	ft_perror("execve");
 	free(path);
+	free_str_arr(env);
 	exit(ERR_EXEC_FAIL);
 }
 
@@ -127,6 +129,7 @@ static int	execute_with_pipes(t_all_commands *cmd_lst, t_env_list *env_lst)
 		{
 			ft_perror("fork");
 			close_all_pipes(&data);
+			wait_started_children(&data, i);
 			setup_signals_interactive();
 			return (free_pipes(&data),1);
 		}
@@ -138,6 +141,7 @@ static int	execute_with_pipes(t_all_commands *cmd_lst, t_env_list *env_lst)
 		current = current->next;
 		i++;
 	}
+	close_all_pipes(&data);
 	setup_signals_interactive();
 	return wait_all_children(&data);
 }
@@ -146,10 +150,14 @@ int	execute_commands(t_all_commands *cmd_lst, t_env_list *env_lst)
 {
 	t_one_command *current;
 
+	print_all_cmd(cmd_lst);
+	fflush(stdout);
 	if(!cmd_lst || !cmd_lst->head)
 		return 1;
 	current = cmd_lst->head;
 
+	if(!validate_command(current))
+		return 1;
 	if(cmd_lst->size == 1 && current->cmd_type == BUILTIN)
 		return execute_builtin(current, env_lst);
 
