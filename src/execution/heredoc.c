@@ -6,7 +6,7 @@
 /*   By: hkaraogl <hkaraogl@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/02 18:18:13 by hkaraogl          #+#    #+#             */
-/*   Updated: 2025/12/04 14:36:00 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2025/12/12 16:46:56 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,7 @@ void	cleanup_all_heredoc_files(t_all_commands *cmd_lst)
 //save tmp file
 int	setup_heredoc(t_file_node *file, t_env_list *env_lst)
 {
+	t_token *temp_token_heredoc;
 	char *tmp_file;
 	char *line;
 	int fd = 0;
@@ -96,20 +97,71 @@ int	setup_heredoc(t_file_node *file, t_env_list *env_lst)
 		if(!line)
 			break;
 		
-		if(ft_strcmp(line, file->filename) == 0)
+		if(ft_strcmp(line, file->delimiter) == 0)
 		{
 			free(line);
 			break;
 		}
 		//expand if needed
-		write(fd, line, ft_strlen(line));
+		temp_token_heredoc = tokenize(line);
+		if(!temp_token_heredoc)
+		{
+			free(line);
+			close(fd);
+			return (perror("heredoc tokenize failed"), 0);
+		}
+		handle_expansions(temp_token_heredoc, env_lst);
+		while(temp_token_heredoc)
+		{
+			write(fd, temp_token_heredoc->value, ft_strlen(temp_token_heredoc->value));
+			write(fd, " ", 1);
+			temp_token_heredoc = temp_token_heredoc->next;
+		}
+		// write(fd, line, ft_strlen(line));
 		write(fd, "\n", 1);
 		free(line);
+		free_token_list(temp_token_heredoc);
 	}
 	close(fd);
 	file->filename = tmp_file;
 	return 1;
 }
+
+// char *handle_expansions(char *str, t_env_list *env)
+// {
+//     char *ex_str;
+//     char *arg;
+//     int   i;
+//     char *new;
+
+
+// 	i = 0;
+
+// 	while (str[i] != '\0')
+// 	{
+// 		if (str[i] == '$' && check_for_single())//schauen ob single quotes oder nicht
+// 		{
+// 			arg = ft_argument(str + i + 1);
+// 			if (arg && arg[0] == '?' && arg[1] == '\0')
+// 				ex_str = exit_state_to_str(env->last_exit);
+// 			else
+// 				ex_str = ft_expand(arg, env);
+// 			if (!ex_str)
+// 				ex_str = "";
+
+// 			new = insert_expandet(str, ex_str, i, ft_strlen(arg) + 1);
+// 			free(str);
+			
+// 			// Move i to just after the inserted expansion
+// 			i += ft_strlen(ex_str) - 1; // -1 because i++ will happen
+			
+// 			if (arg)
+// 				free(arg);
+// 		}
+// 		i++;
+// 	}
+// 	return(new);
+// }
 
 int setup_all_heredoc(t_all_commands *cmd_lst, t_env_list *env_lst)
 {
