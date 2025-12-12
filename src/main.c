@@ -6,7 +6,7 @@
 /*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/12/09 17:19:45 by tjkruger         ###   ########.fr       */
+/*   Updated: 2025/12/12 14:09:46 by tjkruger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -227,12 +227,12 @@ int main(int argc, char **argv, char **env)
             }
             handle_expansions(token_list, env_lst);
             cmds 	   = build_commands(token_list);
-		    print_everything(token_list, cmds, history_list);//for now to test
 
 			exit_status = execute_commands(cmds, env_lst);
 			printf("%d\n", exit_status);
 		}
-        // print_tokens(token_list);
+		//print_everything(token_list, cmds, history_list);//for now to test
+        //print_tokens(token_list);
 		free(input);
 		free_cmd_list(cmds);
 		cmds = NULL;

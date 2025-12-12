@@ -6,7 +6,7 @@
 /*   By: r2d2 <r2d2@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/24 15:32:25 by tjkruger          #+#    #+#             */
-/*   Updated: 2025/12/08 02:54:21 by r2d2             ###   ########.fr       */
+/*   Updated: 2025/12/11 03:22:49 by r2d2             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,12 @@ int ft_isspace(char c)// 1 for space 0 for char
     return(0);
 }
 
+int is_specialchar(char c)
+{
+    return (c == '|' || c == '<' || c == '>');
+}
+
+
 void    token_error(void)
 {
     printf("pls think bevor wright stupid ... where second quote ???\n");
@@ -37,7 +43,7 @@ char *find_token_end(char *str)
 {
     char quote;
 
-    while (*str && !ft_isspace(*str))//also plug in something for it to stop when finding > < >> <<
+    while (*str && !ft_isspace(*str))
     {
         if (*str == '"' || *str == '\'')
         {

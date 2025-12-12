@@ -42,6 +42,7 @@ typedef	struct s_env_list
 	t_env_node	*head;
 	t_env_node	*tail;
 	ssize_t	size;
+	int	last_exit;
 }	t_env_list;
 
 typedef struct s_pipes
