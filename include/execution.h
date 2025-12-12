@@ -6,7 +6,7 @@
 /*   By: hkaraogl <hkaraogl@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 14:55:36 by hkaraogl          #+#    #+#             */
-/*   Updated: 2025/12/04 13:51:58 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2025/12/11 16:26:20 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,12 +26,14 @@ int handle_heredoc_redir(char *filename);
 int wait_all_children(t_pipes *data);
 void setup_child_pipes(t_pipes *data, int index);
 void execute_child(t_one_command *cmd, t_pipes *data, t_env_list *env, int index);
+int wait_started_children(t_pipes *data, int count);
 
 
 //pipes.c
 int **create_pipes(int count);
 void	free_pipes(t_pipes *data);
 int	close_all_pipes(t_pipes *data);
+void cleanup_pipes_partial(int **pipes, int count);
 
 //fd.c
 void backup_fds(int *fd_backups);

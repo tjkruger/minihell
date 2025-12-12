@@ -6,7 +6,7 @@
 /*   By: hkaraogl <hkaraogl@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/29 13:40:50 by hkaraogl          #+#    #+#             */
-/*   Updated: 2025/12/01 17:25:17 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2025/12/11 18:51:21 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,8 @@ void	free_str_arr(char **arr)
 {
 	int i;
 
+	if(!arr)
+		return ;
 	i = 0;
 	while(arr[i])
 	{
@@ -103,4 +105,28 @@ char *has_equal(char *str)
 	char *equal;
 	equal = ft_strchr(str, '=');
 	return equal;
+}
+
+void print_all_cmd(t_all_commands *cmd_lst)
+{
+	t_one_command *current = cmd_lst->head;
+	int index = 0;
+
+	while (current)
+	{
+		printf("Command %d:\n", index);
+		for (int i = 0; current->cmd[i] != NULL; i++)
+		{
+			printf("  arg[%d]: %s\n", i, current->cmd[i]);
+		}
+		current = current->next;
+		index++;
+	}
+}
+
+int validate_command(t_one_command *cmd)
+{
+	if (!cmd || !cmd->cmd || !cmd->cmd[0])
+		return 0;
+	return 1;
 }

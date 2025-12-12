@@ -45,7 +45,7 @@ OBJ         = $(patsubst %.c,$(OBJ_DIR)/%.o,$(SRC))
 
 # === Compiler flags ===
 CC          = cc
-CFLAGS      = -I$(INC_DIR)
+CFLAGS      = -I$(INC_DIR)  -g -O0 -fno-omit-frame-pointer
 READLINE    = -lreadline
 
 # === Default target ===
