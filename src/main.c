@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hkaraogl <hkaraogl@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/12/12 14:15:35 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2025/12/12 14:38:21 by tjkruger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -232,7 +232,7 @@ int main(int argc, char **argv, char **env)
 			printf("%d\n", exit_status);
 		}
 		//print_everything(token_list, cmds, history_list);//for now to test
-        //print_tokens(token_list);
+        print_tokens(token_list);
 		free(input);
 		free_cmd_list(cmds);
 		cmds = NULL;
