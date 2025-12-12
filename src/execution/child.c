@@ -6,30 +6,11 @@
 /*   By: hkaraogl <hkaraogl@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/02 13:04:23 by hkaraogl          #+#    #+#             */
-/*   Updated: 2025/12/11 16:22:56 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2025/12/02 13:06:15 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-int wait_started_children(t_pipes *data, int count)
-{
-	int i;
-	int status;
-	int last_status;
-
-	i = 0;
-	last_status = 0;
-	while(i < count)
-	{
-		if(waitpid(data->pids[i], &status, 0) > 0)
-		{
-			last_status = get_exit_status(status);
-		}
-		i++;
-	}
-	return (last_status);
-}
 
 int wait_all_children(t_pipes *data)
 {

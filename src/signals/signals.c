@@ -3,14 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hkaraogl <hkaraogl@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/02 12:34:28 by tjkruger          #+#    #+#             */
-/*   Updated: 2025/12/12 14:18:38 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2025/12/09 17:19:33 by tjkruger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
 
 volatile sig_atomic_t g_signal_status = 0;
 
@@ -36,7 +37,6 @@ void handle_sigint(int sig)
 	write(STDOUT_FILENO, "\n", 1);
 	rl_on_new_line();
 	rl_replace_line("", 0);
-	rl_redisplay();
 }
 
 //do nothing

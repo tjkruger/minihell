@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokens.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hkaraogl <hkaraogl@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/24 15:32:21 by tjkruger          #+#    #+#             */
-/*   Updated: 2025/12/12 14:15:55 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2025/12/12 14:09:36 by tjkruger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,17 +116,11 @@ int make_op_token(t_token **head,char *str,char *dna, int i)
 
     flag = 0;
 
-    if (str[i] == str[i + 1])
+    if (str[i] == str[i + 1] && str[i] != '|')
     {
         op = malloc(3);
         opd = malloc(3);
-        if (!op || !opd)
-        {
-            free(op);
-            free(opd);
-            return 0;
-        }
-
+        
         op[0] = str[i];
         op[1] = str[i + 1];
         op[2] = '\0';
@@ -140,24 +134,16 @@ int make_op_token(t_token **head,char *str,char *dna, int i)
     {
         op = malloc(2);
         opd = malloc(2);
-        if (!op || !opd)
-        {
-            free(op);
-            free(opd);
-            return 0;
-        }
 
         op[0] = str[i];
         op[1] = '\0';
 
-        /* FIX: use dna[i] (char), not dna (pointer) */
         opd[0] = dna[i];
         opd[1] = '\0';
-        flag = 0;
     }
 
     push_token(head, op, opd);
-    return flag;
+    return (flag);
 }
 
 t_token *split_pretoken(char *text, char *dna)

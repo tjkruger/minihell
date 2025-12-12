@@ -6,36 +6,11 @@
 /*   By: hkaraogl <hkaraogl@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/02 13:08:42 by hkaraogl          #+#    #+#             */
-/*   Updated: 2025/12/11 15:07:12 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2025/12/02 13:11:15 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-static void free_single_pipe(int *pipe_fd)
-{
-	if(pipe_fd)
-	{
-		close(pipe_fd[0]);
-		close(pipe_fd[1]);
-		free(pipe_fd);
-	}
-}
-
-void cleanup_pipes_partial(int **pipes, int count)
-{
-	int i;
-
-	i = 0;
-	if(!pipes)
-		return;
-	while(i < count)
-	{
-		free_single_pipe(pipes[i]);
-		i++;
-	}
-	free(pipes);
-}
 
 void	free_pipes(t_pipes *data)
 {
@@ -80,14 +55,13 @@ int **create_pipes(int count)
 		pipes[i] = malloc(2 * sizeof(int));
 		if(!pipes[i])
 		{
-			cleanup_pipes_partial(pipes, i);
+			//cleanup free(pipes)
 			return NULL;
 		}
 		if(pipe(pipes[i]) == -1)
 		{
 			perror("pipe");
-			free(pipes[i]);
-			cleanup_pipes_partial(pipes, i);
+			//cleanup
 			return NULL;
 		}
 		i++;
