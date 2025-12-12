@@ -6,7 +6,7 @@
 /*   By: hkaraogl <hkaraogl@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/28 15:03:52 by hkaraogl          #+#    #+#             */
-/*   Updated: 2025/12/02 13:19:05 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2025/12/09 15:52:51 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,6 +115,9 @@ static int	execute_with_pipes(t_all_commands *cmd_lst, t_env_list *env_lst)
 	if(!init_pipes(&data, cmd_lst))
 		return (ft_perror("failed to initialize pipes"),1);
 
+	signal(SIGINT, SIG_IGN);
+	signal(SIGQUIT, SIG_IGN);
+
 	i = 0;
 	current = cmd_lst->head;
 	while(current)
@@ -124,13 +127,18 @@ static int	execute_with_pipes(t_all_commands *cmd_lst, t_env_list *env_lst)
 		{
 			ft_perror("fork");
 			close_all_pipes(&data);
+			setup_signals_interactive();
 			return (free_pipes(&data),1);
 		}
 		if(data.pids[i] == 0)
+		{
+			reset_signals_default();
 			execute_child(current, &data, env_lst, i);
+		}
 		current = current->next;
 		i++;
 	}
+	setup_signals_interactive();
 	return wait_all_children(&data);
 }
 

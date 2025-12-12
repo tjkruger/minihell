@@ -6,13 +6,95 @@
 /*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/02 12:34:28 by tjkruger          #+#    #+#             */
-/*   Updated: 2025/12/09 14:32:59 by tjkruger         ###   ########.fr       */
+/*   Updated: 2025/12/09 17:19:33 by tjkruger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int g_exit_status = 0;
+
+volatile sig_atomic_t g_signal_status = 0;
+
+// Grundlegende Signale
+// SIGINT (Ctrl+C)
+
+// Wird gesendet, wenn der User Ctrl+C drückt
+// Sollte die aktuelle Zeile abbrechen und eine neue Prompt anzeigen
+// Im interaktiven Modus: neue Zeile, neue Prompt
+// Während ein Command läuft: den Command beenden
+
+// SIGQUIT (Ctrl+\)
+
+// Wird normalerweise gesendet bei Ctrl+\
+// In der Shell selbst (interaktiv): sollte ignoriert werden
+// Nur wenn ein Programm läuft: sollte das Programm beendet werden können
+
+//interrupt and write newline 
+void handle_sigint(int sig)
+{
+	(void)sig;
+	g_signal_status = 130;
+	write(STDOUT_FILENO, "\n", 1);
+	rl_on_new_line();
+	rl_replace_line("", 0);
+}
+
+//do nothing
+void handle_sigquit(int sig)
+{
+	(void)sig;
+}
+
+void handle_sigint_child(int sig)
+{
+	(void)sig;
+	g_signal_status = 130;
+}
+
+void handle_sigquit_child(int sig)
+{
+	(void)sig;
+	g_signal_status = 131;
+	write(STDOUT_FILENO, "Quit (core dumped)\n", 19);
+}
+
+void setup_signals_interactive(void)
+{
+	struct sigaction sa_input;
+	struct sigaction sa_quit;
+
+	sa_input.sa_handler = handle_sigint;
+	sigemptyset(&sa_input.sa_mask);
+	sa_input.sa_flags = SA_RESTART;
+	sigaction(SIGINT, &sa_input, NULL);
+
+	sa_quit.sa_handler = SIG_IGN;
+	sigemptyset(&sa_quit.sa_mask);
+	sa_quit.sa_flags = 0;
+	sigaction(SIGQUIT, &sa_quit, NULL);
+}
+
+void setup_signals_child(void)
+{
+	struct sigaction sa_int;
+	struct sigaction sa_quit;
+
+	sa_int.sa_handler = handle_sigint_child;
+	sigemptyset(&sa_int.sa_mask);
+	sa_int.sa_flags = 0;
+	sigaction(SIGINT, &sa_int, NULL);
+
+	sa_quit.sa_handler = handle_sigquit_child;
+	sigemptyset(&sa_quit.sa_mask);
+	sa_quit.sa_flags = 0;
+	sigaction(SIGQUIT, &sa_quit, NULL);
+}
+
+void reset_signals_default(void)
+{
+	signal(SIGINT, SIG_DFL);
+	signal(SIGQUIT, SIG_DFL);
+}
 
 /* ************************************************************************** */
 /*  HANDLERS                                                                  */
