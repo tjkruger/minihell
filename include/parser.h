@@ -6,7 +6,7 @@
 /*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/02 13:03:26 by tjkruger          #+#    #+#             */
-/*   Updated: 2025/12/02 13:03:31 by tjkruger         ###   ########.fr       */
+/*   Updated: 2025/12/13 16:03:11 by tjkruger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ t_one_command   *create_new_command_node(void);
 void    add_word_to_cmd(t_one_command *curr_cmd, char *value);
 void add_cmd_to_list(t_all_commands *cmd_list, t_one_command *curr_cmd);
 int is_redirection(t_token *token);
-void add_file_to_cmd(t_one_command *curr_cmd, char *value, int redir_type);
+void add_file_to_cmd(t_one_command *curr_cmd, char *value, int redir_type, char *dna);
 t_all_commands  *build_commands(t_token *tokens);
 
 #endif

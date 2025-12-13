@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hkaraogl <hkaraogl@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/02 18:18:13 by hkaraogl          #+#    #+#             */
-/*   Updated: 2025/12/12 16:46:56 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2025/12/13 16:02:55 by tjkruger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,17 @@ void	cleanup_all_heredoc_files(t_all_commands *cmd_lst)
 	}
 }
 
-
+int	no_qoutes(char *str)
+{
+	int i = 0;
+	while(str[i])
+	{
+		if(str[i] == '\'' || str[i] == '\"')
+			return 0;
+		i++;
+	}
+	return 1;
+}
 
 //this function will executed only if heredoc *file exists
 //create tmp file,
@@ -110,7 +120,8 @@ int	setup_heredoc(t_file_node *file, t_env_list *env_lst)
 			close(fd);
 			return (perror("heredoc tokenize failed"), 0);
 		}
-		handle_expansions(temp_token_heredoc, env_lst);
+		if(!file->qoutes_in_heredoc)
+			handle_expansions(temp_token_heredoc, env_lst);
 		while(temp_token_heredoc)
 		{
 			write(fd, temp_token_heredoc->value, ft_strlen(temp_token_heredoc->value));

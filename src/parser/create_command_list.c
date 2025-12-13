@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   create_command_list.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: r2d2 <r2d2@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 13:31:35 by tjkruger          #+#    #+#             */
-/*   Updated: 2025/12/11 17:41:34 by r2d2             ###   ########.fr       */
+/*   Updated: 2025/12/13 16:02:06 by tjkruger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,29 +24,31 @@ t_file_list *init_file_list(void)
     return list;
 }
 
-t_file_node *create_file_node(char *value, t_token_type redir_type)
+t_file_node *create_file_node(char *value, char *dna, t_token_type redir_type)
 {
     t_file_node *node = malloc(sizeof(t_file_node));
     if (!node)
         return NULL;
+    node->qoutes_in_heredoc = 0;
     if(redir_type == TOKEN_REDIR_HEREDOC)
     {
         node->filename = NULL;
         node->delimiter = ft_strdup(value);
+        if(ft_strchr(dna, 'D') || ft_strchr(dna, 'S'))
+            node->qoutes_in_heredoc = 1;
     }
     else
     {
         node->filename = ft_strdup(value);
         node->delimiter = NULL;
     }
-
     node->redir_type = redir_type;  // store enum value
     node->next = NULL;
     return node;
 }
 
 
-void add_file_to_cmd(t_one_command *curr_cmd, char *value, int redir_type)
+void add_file_to_cmd(t_one_command *curr_cmd, char *value, int redir_type, char *dna)
 {
     if (!curr_cmd || !value)
         return;
@@ -54,7 +56,7 @@ void add_file_to_cmd(t_one_command *curr_cmd, char *value, int redir_type)
     if (!curr_cmd->files)
         curr_cmd->files = init_file_list();
 
-    t_file_node *new_file = create_file_node(value, redir_type);
+    t_file_node *new_file = create_file_node(value, dna, redir_type);
     if (!new_file)
         return;
 
@@ -137,7 +139,7 @@ t_all_commands *build_commands(t_token *tokens)
             {
                 if(tokens->next == NULL || tokens->next->type != TOKEN_WORD) 
                     return(NULL);
-                add_file_to_cmd(curr_cmd, tokens->next->value, tokens->type);
+                add_file_to_cmd(curr_cmd, tokens->next->value, tokens->type, tokens->next->dna);
                 tokens = tokens->next; // skip filename
             }
             tokens = tokens->next;
