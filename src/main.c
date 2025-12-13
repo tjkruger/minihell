@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hkaraogl <hkaraogl@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/12/12 16:56:32 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2025/12/13 17:02:50 by tjkruger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -221,7 +221,7 @@ int main(int argc, char **argv, char **env)
 				add_to_hist_list(&history_list, input);
 				add_history(input);
 			}
-            token_list = tokenize(input);
+            token_list = tokenize(input, cmds);
             if(!token_list)
             {
                 cmds = NULL;

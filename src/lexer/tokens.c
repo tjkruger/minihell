@@ -6,7 +6,7 @@
 /*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/24 15:32:21 by tjkruger          #+#    #+#             */
-/*   Updated: 2025/12/12 14:09:36 by tjkruger         ###   ########.fr       */
+/*   Updated: 2025/12/13 16:59:02 by tjkruger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -204,14 +204,14 @@ int validate_token(t_token  *head)
 }
 // > h should work but doesnt atm
 
-t_token *tokenize(char *input)
+t_token *tokenize(char *input, t_all_commands *cmds)
 {
     t_pretoken  *pretoken;
     t_token     *head = NULL;
     t_token     *tail = NULL;
     t_token     *sub;
     int         i;
-    pretoken = ft_split_for_token(input);
+    pretoken = ft_split_for_token(input, cmds);
     if (!pretoken)
         return (NULL);
 

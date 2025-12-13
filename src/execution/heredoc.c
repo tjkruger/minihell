@@ -6,7 +6,7 @@
 /*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/02 18:18:13 by hkaraogl          #+#    #+#             */
-/*   Updated: 2025/12/13 16:02:55 by tjkruger         ###   ########.fr       */
+/*   Updated: 2025/12/13 17:04:21 by tjkruger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ int	no_qoutes(char *str)
 //collect input,
 //expand if needed
 //save tmp file
-int	setup_heredoc(t_file_node *file, t_env_list *env_lst)
+int	setup_heredoc(t_file_node *file, t_env_list *env_lst, t_all_commands *cmds)
 {
 	t_token *temp_token_heredoc;
 	char *tmp_file;
@@ -113,7 +113,7 @@ int	setup_heredoc(t_file_node *file, t_env_list *env_lst)
 			break;
 		}
 		//expand if needed
-		temp_token_heredoc = tokenize(line);
+		temp_token_heredoc = tokenize(line, cmds);
 		if(!temp_token_heredoc)
 		{
 			free(line);
@@ -189,7 +189,7 @@ int setup_all_heredoc(t_all_commands *cmd_lst, t_env_list *env_lst)
 			{
 				if(file->redir_type == TOKEN_REDIR_HEREDOC)
 				{
-					if(!setup_heredoc(file, env_lst))
+					if(!setup_heredoc(file, env_lst, cmd_lst))
 						return 0;
 				}
 				file = file->next;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: r2d2 <r2d2@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/24 15:32:25 by tjkruger          #+#    #+#             */
-/*   Updated: 2025/12/11 03:22:49 by r2d2             ###   ########.fr       */
+/*   Updated: 2025/12/13 17:16:55 by tjkruger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,30 +39,34 @@ void    token_error(void)
     printf("pls think bevor wright stupid ... where second quote ???\n");
 }
 
-char *find_token_end(char *str)
+char *find_token_end(char *str, t_all_commands *cmds)
 {
     char quote;
-
-    while (*str && !ft_isspace(*str))
+    quote = NULL;
+    if(!cmds)
     {
-        if (*str == '"' || *str == '\'')
+        while (*str && !ft_isspace(*str))
         {
-            quote = *str++;
-            while (*str && *str != quote)
-                str++;
+            if (*str == '"' || *str == '\'')
+            {
+                quote = *str++;
+                while (*str && *str != quote)
+                    str++;
 
-            if (*str == '\0')
-                return(NULL);
-            str++;
-        }
-        else
-            str++;
+                if (*str == '\0')
+                    return(NULL);
+                str++;
+            }
+            else
+                str++;
+        }   
     }
+    
     return (str);
 }
 
 
-int how_many_token(char *str)
+int how_many_token(char *str, t_all_commands *cmds)
 {
     int count;
 
@@ -73,7 +77,7 @@ int how_many_token(char *str)
     while (*str)
     {
         count++;
-        str = find_token_end(str);
+        str = find_token_end(str, cmds);
         if(!str)
             return(-1);
         while (*str && ft_isspace(*str))
@@ -82,7 +86,7 @@ int how_many_token(char *str)
     return(count);
 }
 
-char **extracted_token(char *str)
+char **extracted_token(char *str, t_all_commands *cmds)
 {
     char **list;
     char *token;
@@ -91,7 +95,7 @@ char **extracted_token(char *str)
     int   len;
 
     list = malloc(sizeof(char *) * 3);
-    token_end = find_token_end(str);
+    token_end = find_token_end(str, cmds);
     len = token_length(str, token_end);
 
     token = malloc(len + 1);
@@ -105,13 +109,13 @@ char **extracted_token(char *str)
     while (str < token_end)
     {
         // starting quotes, only if outside any quote
-        if (*str == '\'' && mode == 0)
+        if (*str == '\'' && mode == 0 && !cmds)
         {
             mode = '\'';
             str++;
             continue;
         }
-        if (*str == '"' && mode == 0)
+        if (*str == '"' && mode == 0 && !cmds)
         {
             mode = '"';
             str++;
@@ -152,7 +156,7 @@ char **extracted_token(char *str)
 
 
 
-t_pretoken  *ft_split_for_token(char *input)
+t_pretoken  *ft_split_for_token(char *input, t_all_commands *cmds)
 {
     t_pretoken  *t_list;
     int         j;
@@ -162,7 +166,7 @@ t_pretoken  *ft_split_for_token(char *input)
 
     j = 0;
     str = input;
-    arg_num = how_many_token(str);
+    arg_num = how_many_token(str, cmds);
     if(arg_num == -1)
     {
         token_error();
@@ -174,12 +178,12 @@ t_pretoken  *ft_split_for_token(char *input)
 
     while(*str && j < arg_num)
     {
-        pair = extracted_token(str);
+        pair = extracted_token(str, cmds);
         t_list->token[j] = malloc(sizeof(char) * (ft_strlen(pair[0]) + 1));
         t_list->dna[j]   = malloc(sizeof(char) * (ft_strlen(pair[1]) + 1));
         ft_strlcpy(t_list->token[j], pair[0], ft_strlen(pair[0]) + 1);
         ft_strlcpy(t_list->dna[j], pair[1], ft_strlen(pair[1]) + 1);
-        str = find_token_end(str);
+        str = find_token_end(str, cmds);
         while (*str && ft_isspace(*str))
             str++;
 
