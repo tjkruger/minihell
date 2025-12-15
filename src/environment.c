@@ -6,37 +6,82 @@
 /*   By: hkaraogl <hkaraogl@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/29 11:52:25 by hkaraogl          #+#    #+#             */
-/*   Updated: 2025/12/01 17:25:58 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2025/12/15 14:59:23 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+static int count_exported_vars(t_env_list *env)
+{
+	t_env_node *current;
+	int count;
+
+	count = 0;
+	current = env->head;
+	while (current)
+	{
+		if (current->exported)
+			count++;
+		current = current->next;
+	}
+	return (count);
+}
+
+static char *create_env_string(char *key, char *value)
+{
+	char *str;
+	int len;
+
+	len = ft_strlen(key) + ft_strlen(value);
+	str = malloc(len + 2);
+	if (!str)
+		return (NULL);
+	ft_strlcpy(str, key, len + 2);
+	ft_strlcat(str, "=", len + 2);
+	ft_strlcat(str, value, len + 2);
+	return (str);
+}
+
+static int fill_env_array(char **arr, t_env_list *env)
+{
+	t_env_node *current;
+	int i;
+
+	i = 0;
+	current = env->head;
+	while (current)
+	{
+		if (current->exported)
+		{
+			arr[i] = create_env_string(current->key, current->value);
+			if (!arr[i])
+				return (0);
+			i++;
+		}
+		current = current->next;
+	}
+	arr[i] = NULL;
+	return (1);
+}
 
 //convert linkedlist to an array for execve which needs a **env
 //**ret needs to be freed by user 
 char **env_list_array(t_env_list *env)
 {
 	char **ret;
-	int i = 0;
-	t_env_node *current;
-	int len;
-	ret = malloc(sizeof(char *) * (env->size + 1));
-	if(!ret)
-		return NULL;
-	current = env->head;
-	while(current)
+	int count;
+
+	count = count_exported_vars(env);
+	ret = malloc(sizeof(char *) * (count + 1));
+	if (!ret)
+		return (NULL);
+	if (!fill_env_array(ret, env))
 	{
-		len = ft_strlen(current->key) + ft_strlen(current->value);
-		ret[i] = malloc(len + 2);
-		if(!ret[i])
-			return NULL;
-		ft_strlcpy(ret[i], current->key, len + 2);
-		ft_strlcat(ret[i], "=", len + 2);
-		ft_strlcat(ret[i], current->value, len + 2);
-		current = current->next;
-		i++;
+		free_str_arr(ret);
+		return (NULL);
 	}
-	ret[i] = NULL;
+	
 	return ret;
 }
 
@@ -71,18 +116,25 @@ int	unset_env_value(t_env_list *env, char *key)
 }
 
 //add a note which has key and value to the end (tail)
-int	set_env_value(t_env_list *env, char *key, char *value)
+int	set_env_value(t_env_list *env, char *key, char *value, int exported)
 {
 	t_env_node	*node;
 
 	node = find_env_node(env, key);
 	if (node)
 	{
-		free(node->value);
-		node->value = ft_strdup(value);
+		if(exported)
+		{
+			free(node->value);
+			node->value = ft_strdup(value);
+			node->exported = 1;
+		}
 		return (0);
 	}
-	add_env_node(env, ft_strdup(key), ft_strdup(value));
+	if(exported)
+		add_env_node(env, ft_strdup(key), ft_strdup(value), 1);
+	else
+		add_env_node(env, ft_strdup(key), NULL, 0);
 	return (0);
 }
 // bekomme env linked list und key
@@ -176,7 +228,7 @@ char	*find_command_path(char *cmd)
 	return (free_str_arr(path_dirs), NULL);
 }
 
-void	add_env_node(t_env_list *env, char *key, char *value)
+void	add_env_node(t_env_list *env, char *key, char *value, int exported)
 {
 	t_env_node	*node;
 
@@ -185,6 +237,7 @@ void	add_env_node(t_env_list *env, char *key, char *value)
 		return ;
 	node->key = key;
 	node->value = value;
+	node->exported = exported;
 	node->next = NULL;
 	if (!env->tail)
 	{
@@ -221,7 +274,7 @@ t_env_list	*init_environment(char **system_env)
 		{
 			key = ft_substr(system_env[i], 0, equal - system_env[i]);
 			value = ft_strdup(equal + 1);
-			add_env_node(list, key, value);
+			add_env_node(list, key, value, 1);
 		}
 		i++;
 	}

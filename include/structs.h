@@ -34,6 +34,7 @@ typedef struct s_env_node
 {
 	char *key;
 	char *value;
+	int exported;
 	struct s_env_node	*next;
 } t_env_node;
 

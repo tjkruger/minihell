@@ -6,7 +6,7 @@
 /*   By: hkaraogl <hkaraogl@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/24 15:50:25 by hkaraogl          #+#    #+#             */
-/*   Updated: 2025/12/08 12:52:34 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2025/12/15 14:21:56 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int    run_cd(char **args, t_env_list *env)
 	else
 		path = args[1];
 	if(getcwd(cwd, sizeof(cwd)))
-		set_env_value(env, "OLDPWD", cwd);
+		set_env_value(env, "OLDPWD", cwd, 1);
 	if(chdir(path) != 0)
 	{
 		perror("cd failed");
@@ -31,7 +31,7 @@ int    run_cd(char **args, t_env_list *env)
 	}
 	if(getcwd(cwd, sizeof(cwd)))
 	{
-		set_env_value(env, "PWD", cwd);
+		set_env_value(env, "PWD", cwd, 1);
 	}
 	return 0;
 }
