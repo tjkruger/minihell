@@ -6,7 +6,7 @@
 /*   By: hkaraogl <hkaraogl@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/17 12:47:24 by hkaraogl          #+#    #+#             */
-/*   Updated: 2025/12/17 12:57:31 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2025/12/17 16:03:45 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ static char	*worddup(t_trash *trash ,char *s, int start, int end)
 	return (word);
 }
 
-char	**gc_split(t_trash *trash, const char *s, char c)
+char	**gc_split(t_trash *trash, char *s, char c)
 {
 	char	**result;
 	int		i;
