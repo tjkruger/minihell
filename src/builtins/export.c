@@ -6,7 +6,7 @@
 /*   By: hkaraogl <hkaraogl@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/04 13:01:43 by hkaraogl          #+#    #+#             */
-/*   Updated: 2025/12/17 15:27:33 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2025/12/15 15:39:14 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ static void print_export(t_env_list *env)
 	}
 }
 
-int	run_export(t_trash *trash, t_env_list *env, char **cmd)
+int	run_export(t_env_list *env, char **cmd)
 {
 	int i = 1;
 	int exit_code = 0;
@@ -97,13 +97,13 @@ int	run_export(t_trash *trash, t_env_list *env, char **cmd)
 		equal = has_equal(cmd[i]);
 		if(equal)
 		{
-			key = gc_substr(trash, cmd[i], 0, equal - cmd[i]);
+			key = ft_substr(cmd[i], 0, equal - cmd[i]);
 			value = equal + 1;
-			set_env_value(trash, env, key, value, 1);
+			set_env_value(env, key, value, 1);
 			free(key);
 		}
 		else
-			set_env_value(trash, env, cmd[i], NULL, 0);
+			set_env_value(env, cmd[i], NULL, 0);
 		i++;
 	}
 	return exit_code;

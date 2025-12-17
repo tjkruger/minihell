@@ -6,7 +6,7 @@
 /*   By: hkaraogl <hkaraogl@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/28 15:03:52 by hkaraogl          #+#    #+#             */
-/*   Updated: 2025/12/17 15:28:14 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2025/12/16 15:24:36 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,13 +34,13 @@ static int init_pipes(t_pipes *data, t_all_commands *lst)
 	return 1;
 }
 
-int process_builtin(t_trash *trash, t_one_command *node, t_env_list *env_lst)
+int process_builtin(t_one_command *node, t_env_list *env_lst)
 {
 	int status;
 
 	status = 1;
 	if(ft_strcmp(node->cmd[0], "cd") == 0)
-		status = run_cd(trash, node->cmd, env_lst);
+		status = run_cd(node->cmd, env_lst);
 	else if(ft_strcmp(node->cmd[0], "echo") == 0)
 		status = run_echo(node);
 	else if(ft_strcmp(node->cmd[0], "env") == 0)
@@ -48,7 +48,7 @@ int process_builtin(t_trash *trash, t_one_command *node, t_env_list *env_lst)
 	else if(ft_strcmp(node->cmd[0], "exit") == 0)
 		status = run_exit(node->cmd, 1);
 	else if(ft_strcmp(node->cmd[0], "export") == 0)
-		status = run_export(trash, env_lst, node->cmd);
+		status = run_export(env_lst, node->cmd);
 	else if(ft_strcmp(node->cmd[0], "pwd") == 0)
 		status = run_pwd();
 	else if(ft_strcmp(node->cmd[0], "unset") == 0)
@@ -57,7 +57,7 @@ int process_builtin(t_trash *trash, t_one_command *node, t_env_list *env_lst)
 }
 
 // backup fds, set redirections, execute builtin, restore fds
-static int	execute_builtin(t_trash *trash, t_one_command *node, t_env_list *env_lst)
+static int	execute_builtin(t_one_command *node, t_env_list *env_lst)
 {
 	int status;
 	int fd_backups[2];
@@ -75,7 +75,7 @@ static int	execute_builtin(t_trash *trash, t_one_command *node, t_env_list *env_
 		}
 	}
 
-	status = process_builtin(trash, node, env_lst);
+	status = process_builtin(node, env_lst);
 	if(node->files && node->files->head)
 		restore_fds(fd_backups);
 	return (status);
@@ -88,12 +88,12 @@ int get_exit_status(int status)
 	return 1;
 }
 
-int	execute_external_command(t_trash *trash, t_one_command *cmd, t_env_list *env_lst)
+int	execute_external_command(t_one_command *cmd, t_env_list *env_lst)
 {
 	char **env;
 	char *path;
 
-	env = env_list_array(trash, env_lst);
+	env = env_list_array(env_lst);
 	path = find_command_path(cmd->cmd[0]);
 	if(!path)
 	{
@@ -106,7 +106,7 @@ int	execute_external_command(t_trash *trash, t_one_command *cmd, t_env_list *env
 	exit(ERR_EXEC_FAIL);
 }
 
-static int	execute_with_pipes(t_trash *trash, t_all_commands *cmd_lst, t_env_list *env_lst)
+static int	execute_with_pipes(t_all_commands *cmd_lst, t_env_list *env_lst)
 {
 	t_pipes data;
 	t_one_command *current;
@@ -132,7 +132,7 @@ static int	execute_with_pipes(t_trash *trash, t_all_commands *cmd_lst, t_env_lis
 		if(data.pids[i] == 0)
 		{
 			setup_signals_child();
-			execute_child(trash, current, &data, env_lst, i);
+			execute_child(current, &data, env_lst, i);
 		}
 		current = current->next;
 		i++;
@@ -140,7 +140,7 @@ static int	execute_with_pipes(t_trash *trash, t_all_commands *cmd_lst, t_env_lis
 	return wait_all_children(&data);
 }
 
-int	execute_commands(t_trash *trash, t_all_commands *cmd_lst, t_env_list *env_lst)
+int	execute_commands(t_all_commands *cmd_lst, t_env_list *env_lst)
 {
 	t_one_command *current;
 
@@ -149,7 +149,7 @@ int	execute_commands(t_trash *trash, t_all_commands *cmd_lst, t_env_list *env_ls
 	current = cmd_lst->head;
 
 	if(cmd_lst->size == 1 && current->cmd_type == BUILTIN)
-		return execute_builtin(trash, current, env_lst);
+		return execute_builtin(current, env_lst);
 
-	return execute_with_pipes(trash, cmd_lst, env_lst);
+	return execute_with_pipes(cmd_lst, env_lst);
 }
