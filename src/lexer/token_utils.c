@@ -6,7 +6,7 @@
 /*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/24 15:32:25 by tjkruger          #+#    #+#             */
-/*   Updated: 2025/12/13 17:16:55 by tjkruger         ###   ########.fr       */
+/*   Updated: 2025/12/17 15:42:16 by tjkruger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,6 @@ void    token_error(void)
 char *find_token_end(char *str, t_all_commands *cmds)
 {
     char quote;
-    quote = NULL;
     if(!cmds)
     {
         while (*str && !ft_isspace(*str))
