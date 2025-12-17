@@ -6,7 +6,7 @@
 /*   By: r2d2 <r2d2@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/12/17 22:58:23 by r2d2             ###   ########.fr       */
+/*   Updated: 2025/12/17 23:09:06 by r2d2             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -238,9 +238,9 @@ int main(int argc, char **argv, char **env)
 
 			exit_status = execute_commands(&trash, cmds, env_lst);
 			env_lst->last_exit = exit_status;
-			gc_print(&trash);
+			//gc_print(&trash);
 			gc_cleanup(&trash);
-			gc_print(&trash);
+			//gc_print(&trash);
 		}
 		// print_everything(token_list, cmds, history_list);//for now to test
 		// print_tokens(token_list);

@@ -6,7 +6,7 @@
 /*   By: r2d2 <r2d2@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/02 18:18:13 by hkaraogl          #+#    #+#             */
-/*   Updated: 2025/12/17 22:36:06 by r2d2             ###   ########.fr       */
+/*   Updated: 2025/12/17 23:12:51 by r2d2             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,17 +16,17 @@
 //must be freed by user
 static char *generate_tmpfile_name(t_trash *trash)
 {
-	static int counter = 0;
-	char *appendix;
-	char *temp;
+    static int counter = 0;
+    char *appendix;
+    char *temp;
 
-	appendix = ft_itoa(counter);
-	if(!appendix)
-		return NULL;
-	temp = gc_strjoin(trash, "/tmp/.minishell_heredoc_", appendix);
-	// free(appendix);
-	counter++;
-	return temp;
+    appendix = ft_itoa(counter);
+    if(!appendix)
+        return NULL;
+    temp = gc_strjoin(trash, "/tmp/.minishell_heredoc_", appendix);
+    free(appendix);                // appendix was malloc'd by ft_itoa, free it
+    counter++;
+    return temp;
 }
 
 // void	cleanup_heredoc_file(char *filename)
@@ -190,7 +190,7 @@ static int	setup_heredoc(t_trash *trash, t_file_node *file, t_env_list *env_lst)
         {
             free(line);
             close(fd);
-            free(tmp_file);
+            // DO NOT free tmp_file here — tmp_file is GC-managed (gc_strjoin)
             return (perror("heredoc tokenize failed"), 0);
         }
         if(!file->qoutes_in_heredoc)
@@ -207,7 +207,8 @@ static int	setup_heredoc(t_trash *trash, t_file_node *file, t_env_list *env_lst)
         }
         write(fd, "\n", 1);
         free(line);
-        free_token_list(tok_head);
+        // DO NOT call free_token_list(tok_head) here — tokens returned from tokenize(..., trash)
+        // free_token_list(tok_head);
     }
     close(fd);
     file->filename = tmp_file;
