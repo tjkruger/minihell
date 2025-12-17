@@ -6,7 +6,7 @@
 /*   By: hkaraogl <hkaraogl@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/16 16:43:31 by hkaraogl          #+#    #+#             */
-/*   Updated: 2025/12/17 13:28:32 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2025/12/17 16:23:15 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,4 +130,48 @@ void gc_cleanup(t_trash *trash)
 	trash->head = NULL;
 	trash->tail = NULL;
 	trash->size = 0;
+}
+
+void gc_print(t_trash *trash)
+{
+	t_trash_node *current;
+	size_t index = 0;
+
+	if (!trash)
+		return;
+	current = trash->head;
+	printf("Garbage Collector Contents (size: %zd):\n", trash->size);
+	while (current)
+	{
+		printf(" [%zu]: %p\n", index, current->data);
+		current = current->next;
+		index++;
+	}
+}
+
+char *gc_strjoin(t_trash *trash, char const *s1, char const *s2)
+{
+	char	*temp;
+	size_t	len;
+	size_t	i;
+
+	i = 0;
+	if (!s1 || !s2)
+		return (NULL);
+	len = ft_strlen(s1) + ft_strlen(s2);
+	temp = gc_malloc(trash, (len + 1), sizeof(char));
+	if (!temp)
+		return (NULL);
+	while (s1[i] != '\0')
+	{
+		temp[i] = s1[i];
+		i++;
+	}
+	while (s2[i - ft_strlen(s1)] != '\0')
+	{
+		temp[i] = s2[i - ft_strlen(s1)];
+		i++;
+	}
+	temp[i] = '\0';
+	return (temp);
 }
