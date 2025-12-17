@@ -6,7 +6,7 @@
 /*   By: r2d2 <r2d2@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/24 15:32:25 by tjkruger          #+#    #+#             */
-/*   Updated: 2025/12/17 22:56:26 by r2d2             ###   ########.fr       */
+/*   Updated: 2025/12/17 23:44:40 by r2d2             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ int is_specialchar(char c)
 
 void    token_error(void)
 {
-    printf("pls think bevor wright stupid ... where second quote ???\n");
+    printf("please provide closing qoutes aswell would you ?\n");
 }
 
 char *find_token_end(char *str)

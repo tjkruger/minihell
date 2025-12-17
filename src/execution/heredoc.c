@@ -6,7 +6,7 @@
 /*   By: r2d2 <r2d2@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/02 18:18:13 by hkaraogl          #+#    #+#             */
-/*   Updated: 2025/12/17 23:12:51 by r2d2             ###   ########.fr       */
+/*   Updated: 2025/12/17 23:49:38 by r2d2             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,14 +136,10 @@ void printout_token(int fd, char *value, char *dna)
     {
         if (dna[i] != last_mode)
         {
-            // close previous quote if any
             if (last_mode == 'D') write(fd, "\"", 1);
             if (last_mode == 'S') write(fd, "'", 1);
-
-            // open new quote if needed
             if (dna[i] == 'D') write(fd, "\"", 1);
             if (dna[i] == 'S') write(fd, "'", 1);
-
             last_mode = dna[i];
         }
 
@@ -184,19 +180,16 @@ static int	setup_heredoc(t_trash *trash, t_file_node *file, t_env_list *env_lst)
             free(line);
             break;
         }
-        // tokenize heredoc line: pass NULL so quotes are handled correctly
         temp_token_heredoc = tokenize(line, trash);
-        if(!temp_token_heredoc)
+        if (line[0] == '\0')
         {
+            write(fd, "\n", 1);
             free(line);
-            close(fd);
-            // DO NOT free tmp_file here — tmp_file is GC-managed (gc_strjoin)
-            return (perror("heredoc tokenize failed"), 0);
+            continue;
         }
+
         if(!file->qoutes_in_heredoc)
             handle_expansions(temp_token_heredoc, env_lst);
-
-        // keep head so we can free properly after iterating
         tok_head = temp_token_heredoc;
         while(temp_token_heredoc)
         {
@@ -207,49 +200,11 @@ static int	setup_heredoc(t_trash *trash, t_file_node *file, t_env_list *env_lst)
         }
         write(fd, "\n", 1);
         free(line);
-        // DO NOT call free_token_list(tok_head) here — tokens returned from tokenize(..., trash)
-        // free_token_list(tok_head);
     }
     close(fd);
     file->filename = tmp_file;
     return 1;
 }
-
-// char *handle_expansions(char *str, t_env_list *env)
-// {
-//     char *ex_str;
-//     char *arg;
-//     int   i;
-//     char *new;
-
-
-// 	i = 0;
-
-// 	while (str[i] != '\0')
-// 	{
-// 		if (str[i] == '$' && check_for_single())//schauen ob single quotes oder nicht
-// 		{
-// 			arg = ft_argument(str + i + 1);
-// 			if (arg && arg[0] == '?' && arg[1] == '\0')
-// 				ex_str = exit_state_to_str(env->last_exit);
-// 			else
-// 				ex_str = ft_expand(arg, env);
-// 			if (!ex_str)
-// 				ex_str = "";
-
-// 			new = insert_expandet(str, ex_str, i, ft_strlen(arg) + 1);
-// 			free(str);
-			
-// 			// Move i to just after the inserted expansion
-// 			i += ft_strlen(ex_str) - 1; // -1 because i++ will happen
-			
-// 			if (arg)
-// 				free(arg);
-// 		}
-// 		i++;
-// 	}
-// 	return(new);
-// }
 
 int setup_all_heredoc(t_trash *trash, t_all_commands *cmd_lst, t_env_list *env_lst)
 {
