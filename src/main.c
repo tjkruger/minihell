@@ -6,9 +6,10 @@
 /*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/12/17 16:10:12 by tjkruger         ###   ########.fr       */
+/*   Updated: 2025/12/17 17:40:20 by tjkruger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 /* ************************************************************************** */
 
@@ -183,6 +184,7 @@ int main(int argc, char **argv, char **env)
 	t_all_commands *cmds = NULL;
 	t_history *history_list = NULL;
 	t_env_list *env_lst;
+	t_trash trash;
 	int i;
 	int exit_status;
 	char *input;
@@ -192,6 +194,7 @@ int main(int argc, char **argv, char **env)
 	env_lst = init_environment(env);
 
 	setup_signals_interactive();
+	trash_init(&trash);
 
 	while (1)
 	{
@@ -231,15 +234,18 @@ int main(int argc, char **argv, char **env)
 			}
 			handle_expansions(token_list, env_lst);
 			cmds 	   = build_commands(token_list);
-			setup_all_heredoc(cmds, env_lst);
+			setup_all_heredoc(&trash, cmds, env_lst);
 
-			exit_status = execute_commands(cmds, env_lst);
+			exit_status = execute_commands(&trash, cmds, env_lst);
 			env_lst->last_exit = exit_status;
+			gc_print(&trash);
+			gc_cleanup(&trash);
+			gc_print(&trash);
 		}
 		// print_everything(token_list, cmds, history_list);//for now to test
 		// print_tokens(token_list);
 		free(input);
-		free_cmd_list(cmds);
+		// free_cmd_list(cmds);
 		cmds = NULL;
 		free_token_list(token_list);
 		token_list = NULL;

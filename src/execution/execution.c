@@ -6,13 +6,13 @@
 /*   By: hkaraogl <hkaraogl@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/28 15:03:52 by hkaraogl          #+#    #+#             */
-/*   Updated: 2025/12/16 15:24:36 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2025/12/17 16:38:17 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int init_pipes(t_pipes *data, t_all_commands *lst)
+static int init_pipes(t_trash *trash, t_pipes *data, t_all_commands *lst)
 {
 	data->pipes = NULL;
 	data->pids = NULL;
@@ -20,15 +20,15 @@ static int init_pipes(t_pipes *data, t_all_commands *lst)
 	data->pipe_count = lst->size - 1;
 	if(data->pipe_count > 0)
 	{
-		data->pipes = create_pipes(data->pipe_count);
+		data->pipes = create_pipes(trash, data->pipe_count);
 		if(!data->pipes)
 			return 0;
 	}
 
-	data->pids = malloc(sizeof(pid_t) * lst->size);
+	data->pids = gc_malloc(trash, lst->size, sizeof(pid_t));
 	if(!data->pids)
 	{
-		free_pipes(data);
+		// free_pipes(data);
 		return 0;
 	}
 	return 1;
@@ -57,7 +57,7 @@ int process_builtin(t_one_command *node, t_env_list *env_lst)
 }
 
 // backup fds, set redirections, execute builtin, restore fds
-static int	execute_builtin(t_one_command *node, t_env_list *env_lst)
+static int	execute_builtin(t_trash *trash, t_one_command *node, t_env_list *env_lst)
 {
 	int status;
 	int fd_backups[2];
@@ -106,13 +106,13 @@ int	execute_external_command(t_one_command *cmd, t_env_list *env_lst)
 	exit(ERR_EXEC_FAIL);
 }
 
-static int	execute_with_pipes(t_all_commands *cmd_lst, t_env_list *env_lst)
+static int	execute_with_pipes(t_trash *trash, t_all_commands *cmd_lst, t_env_list *env_lst)
 {
 	t_pipes data;
 	t_one_command *current;
 	int i;
 
-	if(!init_pipes(&data, cmd_lst))
+	if(!init_pipes(trash, &data, cmd_lst))
 		return (ft_perror("failed to initialize pipes"),1);
 
 	
@@ -127,7 +127,8 @@ static int	execute_with_pipes(t_all_commands *cmd_lst, t_env_list *env_lst)
 			ft_perror("fork");
 			close_all_pipes(&data);
 			setup_signals_interactive();
-			return (free_pipes(&data),1);
+			return 1;
+			// return (free_pipes(&data),1);
 		}
 		if(data.pids[i] == 0)
 		{
@@ -140,7 +141,7 @@ static int	execute_with_pipes(t_all_commands *cmd_lst, t_env_list *env_lst)
 	return wait_all_children(&data);
 }
 
-int	execute_commands(t_all_commands *cmd_lst, t_env_list *env_lst)
+int	execute_commands(t_trash *trash, t_all_commands *cmd_lst, t_env_list *env_lst)
 {
 	t_one_command *current;
 
@@ -149,7 +150,7 @@ int	execute_commands(t_all_commands *cmd_lst, t_env_list *env_lst)
 	current = cmd_lst->head;
 
 	if(cmd_lst->size == 1 && current->cmd_type == BUILTIN)
-		return execute_builtin(current, env_lst);
+		return execute_builtin(trash, current, env_lst);
 
-	return execute_with_pipes(cmd_lst, env_lst);
+	return execute_with_pipes(trash, cmd_lst, env_lst);
 }
