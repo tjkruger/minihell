@@ -6,7 +6,7 @@
 /*   By: hkaraogl <hkaraogl@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/12/17 15:33:12 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2025/12/17 16:06:53 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -183,15 +183,13 @@ int main(int argc, char **argv, char **env)
 	t_all_commands *cmds = NULL;
 	t_history *history_list = NULL;
 	t_env_list *env_lst;
-	t_trash	*trash;
-	trash_init(trash);
 	int i;
 	int exit_status;
 	char *input;
 	(void)argc;
 	(void)argv;
 	exit_status = 0;
-	env_lst = init_environment(trash, env);
+	env_lst = init_environment(env);
 
 	setup_signals_interactive();
 
@@ -236,7 +234,7 @@ int main(int argc, char **argv, char **env)
 			cmds 	   = build_commands(token_list);
 			setup_all_heredoc(cmds, env_lst);
 
-			exit_status = execute_commands(trash, cmds, env_lst);
+			exit_status = execute_commands(cmds, env_lst);
 			env_lst->last_exit = exit_status;
 		}
 		// print_everything(token_list, cmds, history_list);//for now to test

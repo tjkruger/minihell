@@ -6,7 +6,7 @@
 /*   By: hkaraogl <hkaraogl@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/29 11:52:25 by hkaraogl          #+#    #+#             */
-/*   Updated: 2025/12/17 15:31:28 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2025/12/15 14:59:23 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,13 +67,13 @@ static int fill_env_array(char **arr, t_env_list *env)
 
 //convert linkedlist to an array for execve which needs a **env
 //**ret needs to be freed by user 
-char **env_list_array(t_trash *trash, t_env_list *env)
+char **env_list_array(t_env_list *env)
 {
 	char **ret;
 	int count;
 
 	count = count_exported_vars(env);
-	ret = gc_malloc(trash, count + 1, sizeof(char *));
+	ret = malloc(sizeof(char *) * (count + 1));
 	if (!ret)
 		return (NULL);
 	if (!fill_env_array(ret, env))
@@ -116,7 +116,7 @@ int	unset_env_value(t_env_list *env, char *key)
 }
 
 //add a note which has key and value to the end (tail)
-int	set_env_value(t_trash *trash, t_env_list *env, char *key, char *value, int exported)
+int	set_env_value(t_env_list *env, char *key, char *value, int exported)
 {
 	t_env_node	*node;
 
@@ -132,9 +132,9 @@ int	set_env_value(t_trash *trash, t_env_list *env, char *key, char *value, int e
 		return (0);
 	}
 	if(exported)
-		add_env_node(trash, env, ft_strdup(key), ft_strdup(value), 1);
+		add_env_node(env, ft_strdup(key), ft_strdup(value), 1);
 	else
-		add_env_node(trash, env, ft_strdup(key), NULL, 0);
+		add_env_node(env, ft_strdup(key), NULL, 0);
 	return (0);
 }
 // bekomme env linked list und key
@@ -228,11 +228,11 @@ char	*find_command_path(char *cmd)
 	return (free_str_arr(path_dirs), NULL);
 }
 
-void	add_env_node(t_trash *trash, t_env_list *env, char *key, char *value, int exported)
+void	add_env_node(t_env_list *env, char *key, char *value, int exported)
 {
 	t_env_node	*node;
 
-	node = gc_malloc(trash, 1, sizeof(t_env_node));
+	node = malloc(sizeof(t_env_node));
 	if (!node)
 		return ;
 	node->key = key;
@@ -252,7 +252,7 @@ void	add_env_node(t_trash *trash, t_env_list *env, char *key, char *value, int e
 	env->size++;
 }
 
-t_env_list	*init_environment(t_trash *trash, char **system_env)
+t_env_list	*init_environment(char **system_env)
 {
 	t_env_list	*list;
 	char		*equal;
@@ -261,7 +261,7 @@ t_env_list	*init_environment(t_trash *trash, char **system_env)
 	int			i;
 
 	i = 0;
-	list = gc_malloc(trash, 1, sizeof(t_env_list));
+	list = malloc(sizeof(t_env_list));
 	if (!list)
 		return (NULL);
 	list->head = NULL;
@@ -272,9 +272,9 @@ t_env_list	*init_environment(t_trash *trash, char **system_env)
 		equal = ft_strchr(system_env[i], '=');
 		if (equal)
 		{
-			key = gc_substr(trash, system_env[i], 0, equal - system_env[i]);
-			value = gc_strdup(trash, equal + 1);
-			add_env_node(trash, list, key, value, 1);
+			key = ft_substr(system_env[i], 0, equal - system_env[i]);
+			value = ft_strdup(equal + 1);
+			add_env_node(list, key, value, 1);
 		}
 		i++;
 	}
