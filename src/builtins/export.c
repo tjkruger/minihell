@@ -6,7 +6,7 @@
 /*   By: hkaraogl <hkaraogl@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/04 13:01:43 by hkaraogl          #+#    #+#             */
-/*   Updated: 2025/12/05 12:38:06 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2025/12/17 15:27:33 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,24 +16,23 @@
 //Es gibt Unterschiede zwischen export und env Builtin!!
 
 
-// static void sort_env(t_env_list *env)
-// {
-// 	return;
-// }
-
 static void	swap_content(t_env_node *node1, t_env_node *node2)
 {
 	char *tmp_key;
 	char *tmp_value;
+	int tmp_exported;
 
 	tmp_key = node1->key;
 	tmp_value = node1->value;
+	tmp_exported = node1->exported;
 
 	node1->key = node2->key;
 	node1->value = node2->value;
+	node1->exported = node2->exported;
 
 	node2->key = tmp_key;
 	node2->value = tmp_value;
+	node2->exported = tmp_exported;
 }
 
 //env must be sorted
@@ -50,7 +49,7 @@ static void sort_env(t_env_list *env)
 		compare = current->next;
 		while(compare)
 		{
-			if(current->key[0] > compare->key[0])
+			if(ft_strcmp(current->key, compare->key) > 0)
 				swap_content(current, compare);
 			compare = compare->next;
 		}
@@ -65,12 +64,15 @@ static void print_export(t_env_list *env)
 	current = env->head;
 	while(current)
 	{
-		printf("declare -x %s=\"%s\"\n", current->key, current->value);
+		if(current->exported && current->value)
+			printf("declare -x %s=\"%s\"\n", current->key, current->value);
+		else
+			printf("declare -x %s\n", current->key);
 		current = current->next;
 	}
 }
 
-int	run_export(t_env_list *env, char **cmd)
+int	run_export(t_trash *trash, t_env_list *env, char **cmd)
 {
 	int i = 1;
 	int exit_code = 0;
@@ -95,13 +97,13 @@ int	run_export(t_env_list *env, char **cmd)
 		equal = has_equal(cmd[i]);
 		if(equal)
 		{
-			key = ft_substr(cmd[i], 0, equal - cmd[i]);
+			key = gc_substr(trash, cmd[i], 0, equal - cmd[i]);
 			value = equal + 1;
-			set_env_value(env, key, value);
+			set_env_value(trash, env, key, value, 1);
 			free(key);
 		}
 		else
-			set_env_value(env, cmd[i], "");
+			set_env_value(trash, env, cmd[i], NULL, 0);
 		i++;
 	}
 	return exit_code;

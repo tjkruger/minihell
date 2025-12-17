@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   create_command_list.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: r2d2 <r2d2@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: hkaraogl <hkaraogl@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 13:31:35 by tjkruger          #+#    #+#             */
-/*   Updated: 2025/12/11 17:41:34 by r2d2             ###   ########.fr       */
+/*   Updated: 2025/12/17 13:28:59 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ t_file_list *init_file_list(void)
 
 t_file_node *create_file_node(char *value, t_token_type redir_type)
 {
+    // t_file_node *node = (t_file_node *)ft_malloc(sizeof(t_file_node), 1);
     t_file_node *node = malloc(sizeof(t_file_node));
     if (!node)
         return NULL;
