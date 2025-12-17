@@ -6,7 +6,7 @@
 /*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/24 15:32:25 by tjkruger          #+#    #+#             */
-/*   Updated: 2025/12/17 15:42:16 by tjkruger         ###   ########.fr       */
+/*   Updated: 2025/12/17 20:20:52 by tjkruger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,33 +39,31 @@ void    token_error(void)
     printf("pls think bevor wright stupid ... where second quote ???\n");
 }
 
-char *find_token_end(char *str, t_all_commands *cmds)
+char *find_token_end(char *str)
 {
     char quote;
-    if(!cmds)
+    while (*str && !ft_isspace(*str))
     {
-        while (*str && !ft_isspace(*str))
+        if (*str == '"' || *str == '\'')
         {
-            if (*str == '"' || *str == '\'')
-            {
-                quote = *str++;
-                while (*str && *str != quote)
-                    str++;
+            quote = *str++;
+            while (*str && *str != quote)
+                str++;
 
-                if (*str == '\0')
-                    return(NULL);
-                str++;
-            }
-            else
-                str++;
-        }   
-    }
+            if (*str == '\0')
+                return(NULL);
+            str++;
+        }
+        else
+            str++;
+    }   
+
     
     return (str);
 }
 
 
-int how_many_token(char *str, t_all_commands *cmds)
+int how_many_token(char *str)
 {
     int count;
 
@@ -76,7 +74,7 @@ int how_many_token(char *str, t_all_commands *cmds)
     while (*str)
     {
         count++;
-        str = find_token_end(str, cmds);
+        str = find_token_end(str);
         if(!str)
             return(-1);
         while (*str && ft_isspace(*str))
@@ -85,7 +83,7 @@ int how_many_token(char *str, t_all_commands *cmds)
     return(count);
 }
 
-char **extracted_token(char *str, t_all_commands *cmds)
+char **extracted_token(char *str)
 {
     char **list;
     char *token;
@@ -94,7 +92,7 @@ char **extracted_token(char *str, t_all_commands *cmds)
     int   len;
 
     list = malloc(sizeof(char *) * 3);
-    token_end = find_token_end(str, cmds);
+    token_end = find_token_end(str);
     len = token_length(str, token_end);
 
     token = malloc(len + 1);
@@ -108,13 +106,13 @@ char **extracted_token(char *str, t_all_commands *cmds)
     while (str < token_end)
     {
         // starting quotes, only if outside any quote
-        if (*str == '\'' && mode == 0 && !cmds)
+        if (*str == '\'' && mode == 0)
         {
             mode = '\'';
             str++;
             continue;
         }
-        if (*str == '"' && mode == 0 && !cmds)
+        if (*str == '"' && mode == 0)
         {
             mode = '"';
             str++;
@@ -155,7 +153,7 @@ char **extracted_token(char *str, t_all_commands *cmds)
 
 
 
-t_pretoken  *ft_split_for_token(char *input, t_all_commands *cmds)
+t_pretoken  *ft_split_for_token(char *input)
 {
     t_pretoken  *t_list;
     int         j;
@@ -165,7 +163,7 @@ t_pretoken  *ft_split_for_token(char *input, t_all_commands *cmds)
 
     j = 0;
     str = input;
-    arg_num = how_many_token(str, cmds);
+    arg_num = how_many_token(str);
     if(arg_num == -1)
     {
         token_error();
@@ -177,12 +175,12 @@ t_pretoken  *ft_split_for_token(char *input, t_all_commands *cmds)
 
     while(*str && j < arg_num)
     {
-        pair = extracted_token(str, cmds);
+        pair = extracted_token(str);
         t_list->token[j] = malloc(sizeof(char) * (ft_strlen(pair[0]) + 1));
         t_list->dna[j]   = malloc(sizeof(char) * (ft_strlen(pair[1]) + 1));
         ft_strlcpy(t_list->token[j], pair[0], ft_strlen(pair[0]) + 1);
         ft_strlcpy(t_list->dna[j], pair[1], ft_strlen(pair[1]) + 1);
-        str = find_token_end(str, cmds);
+        str = find_token_end(str);
         while (*str && ft_isspace(*str))
             str++;
 

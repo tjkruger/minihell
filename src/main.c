@@ -6,7 +6,7 @@
 /*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/12/17 17:40:20 by tjkruger         ###   ########.fr       */
+/*   Updated: 2025/12/17 20:21:21 by tjkruger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -226,7 +226,7 @@ int main(int argc, char **argv, char **env)
 				add_to_hist_list(&history_list, input);
 				add_history(input);
 			}
-			token_list = tokenize(input, cmds);
+			token_list = tokenize(input);
 			if(!token_list)
 			{
 				cmds = NULL;
