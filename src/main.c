@@ -6,7 +6,7 @@
 /*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/12/13 17:02:50 by tjkruger         ###   ########.fr       */
+/*   Updated: 2025/12/13 18:14:48 by tjkruger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -215,7 +215,6 @@ int main(int argc, char **argv, char **env)
 				print_history(history_list);
 				continue;
 			}
-
 			else
 			{
 				add_to_hist_list(&history_list, input);
@@ -230,7 +229,6 @@ int main(int argc, char **argv, char **env)
             handle_expansions(token_list, env_lst);
             cmds 	   = build_commands(token_list);
 			setup_all_heredoc(cmds, env_lst);
-
 			exit_status = execute_commands(cmds, env_lst);
 			env_lst->last_exit = exit_status;
 		}
@@ -241,9 +239,6 @@ int main(int argc, char **argv, char **env)
 		cmds = NULL;
 		free_token_list(token_list);
 		token_list = NULL;
-
-
-
 	}
     free_all_environment(env_lst);
 	free_hist(history_list);
