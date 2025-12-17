@@ -36,8 +36,8 @@ BUILTINS    = builtins/echo.c \
 					execution/heredoc.c \
 					signals/signals.c \
 					trash/trash.c \
-					trash/gc_split.c
-
+					trash/gc_split.c \
+					trash/gc_itoa.c \
 
 # Combine all source groups
 SRC         = $(MAIN) $(HISTORY) $(LEXER) $(BUILTINS) $(PARSER) $(FREE)

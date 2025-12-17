@@ -6,7 +6,7 @@
 /*   By: hkaraogl <hkaraogl@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/02 13:04:23 by hkaraogl          #+#    #+#             */
-/*   Updated: 2025/12/16 15:20:31 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2025/12/17 16:38:29 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ int wait_all_children(t_pipes *data)
 	if (last_signal == SIGQUIT)
 		write(STDOUT_FILENO, "Quit (core dumped)\n", 19);
 	close_all_pipes(data);
-	free_pipes(data);
+	// free_pipes(data);
 	return (setup_signals_interactive(), last_status);
 }
 

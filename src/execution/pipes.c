@@ -6,7 +6,7 @@
 /*   By: hkaraogl <hkaraogl@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/02 13:08:42 by hkaraogl          #+#    #+#             */
-/*   Updated: 2025/12/02 13:11:15 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2025/12/17 16:38:29 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,16 +43,16 @@ int	close_all_pipes(t_pipes *data)
 
 //creates pipes array
 //exaample: pipes[0] = [read0, write0], pipes[1] = [read1, write1], 
-int **create_pipes(int count)
+int **create_pipes(t_trash *trash, int count)
 {
 	int **pipes;
 	int i = 0;
-	pipes = malloc(count * sizeof(int *));
+	pipes = gc_malloc(trash, count, sizeof(int *));
 	if(!pipes)
 		return NULL;
 	while(i < count)
 	{
-		pipes[i] = malloc(2 * sizeof(int));
+		pipes[i] = gc_malloc(trash, 2,  sizeof(int));
 		if(!pipes[i])
 		{
 			//cleanup free(pipes)
