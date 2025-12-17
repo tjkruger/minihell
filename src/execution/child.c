@@ -6,7 +6,7 @@
 /*   By: hkaraogl <hkaraogl@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/02 13:04:23 by hkaraogl          #+#    #+#             */
-/*   Updated: 2025/12/16 15:20:31 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2025/12/17 15:28:39 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,7 @@ void setup_child_pipes(t_pipes *data, int index)
 	
 }
 
-void execute_child(t_one_command *cmd, t_pipes *data, t_env_list *env, int index)
+void execute_child(t_trash *trash, t_one_command *cmd, t_pipes *data, t_env_list *env, int index)
 {
 	setup_child_pipes(data, index);
 	close_all_pipes(data);
@@ -104,7 +104,7 @@ void execute_child(t_one_command *cmd, t_pipes *data, t_env_list *env, int index
 			exit(1);
 	}
 	if(cmd->cmd_type == BUILTIN)
-		exit(process_builtin(cmd, env));
+		exit(process_builtin(trash, cmd, env));
 	else
-		execute_external_command(cmd, env);
+		execute_external_command(trash, cmd, env);
 }
