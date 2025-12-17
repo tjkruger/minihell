@@ -6,7 +6,7 @@
 /*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/02 18:18:13 by hkaraogl          #+#    #+#             */
-/*   Updated: 2025/12/17 17:38:34 by tjkruger         ###   ########.fr       */
+/*   Updated: 2025/12/17 17:41:07 by tjkruger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,7 +130,6 @@ int	no_qoutes(char *str)
 //expand if needed
 //save tmp file
 static int	setup_heredoc(t_trash *trash, t_file_node *file, t_env_list *env_lst)
-int	setup_heredoc(t_file_node *file, t_env_list *env_lst, t_all_commands *cmds)
 {
 	t_token *temp_token_heredoc;
 	char *tmp_file;
@@ -147,7 +146,7 @@ int	setup_heredoc(t_file_node *file, t_env_list *env_lst, t_all_commands *cmds)
     char *line;
     int fd = 0;
 
-    tmp_file = generate_tmpfile_name();
+    tmp_file = generate_tmpfile_name(trash);
     
     fd = open(tmp_file, O_WRONLY | O_CREAT | O_TRUNC, 0600);
     if(fd == -1)
