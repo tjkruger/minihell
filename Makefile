@@ -35,6 +35,8 @@ BUILTINS    = builtins/echo.c \
 					execution/fd.c \
 					execution/heredoc.c \
 					signals/signals.c \
+					trash/trash.c \
+					trash/gc_split.c
 
 
 # Combine all source groups

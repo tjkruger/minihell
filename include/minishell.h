@@ -6,7 +6,7 @@
 /*   By: hkaraogl <hkaraogl@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/24 15:32:03 by tjkruger          #+#    #+#             */
-/*   Updated: 2025/12/09 15:30:25 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2025/12/16 16:44:35 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@
 # include "all_free.h"
 #include "signals.h"
 #include "execution.h"
+#include "trash.h"
 
 
 // all other .h files

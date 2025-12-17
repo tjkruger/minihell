@@ -108,6 +108,18 @@ typedef struct s_pretoken
 	char    **dna;
 } t_pretoken;
 
+typedef struct s_trash_node
+{
+	void *data;
+	struct s_trash_node *next;
+} t_trash_node;
+
+typedef struct s_trash
+{
+	struct s_trash_node *head;
+	struct s_trash_node *tail;
+	ssize_t size;
+} t_trash;
 //typedef t_pretoken *t_pretoken_pointer;
 
 #endif

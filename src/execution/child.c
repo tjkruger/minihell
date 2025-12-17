@@ -6,7 +6,7 @@
 /*   By: hkaraogl <hkaraogl@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/02 13:04:23 by hkaraogl          #+#    #+#             */
-/*   Updated: 2025/12/02 13:06:15 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2025/12/16 15:20:31 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,26 +14,62 @@
 
 int wait_all_children(t_pipes *data)
 {
-	int status;
-	int wait_status;
 	int i;
+	int status;
+	int last_status;
+	int last_signal;
 
-	close_all_pipes(data);
-	status = 0;
+	last_status = 0;
+	last_signal = 0;
 	i = 0;
-
-	while(i < data->command_count)
+	while (i < data->command_count)
 	{
-		waitpid(data->pids[i], &wait_status, 0);
-		if(i == data->command_count - 1)
+		waitpid(data->pids[i], &status, 0);
+		if (WIFSIGNALED(status))
 		{
-			status = get_exit_status(wait_status);
+			last_signal = WTERMSIG(status);
+			last_status = 128 + last_signal;
 		}
+		else if (WIFEXITED(status))
+			last_status = WEXITSTATUS(status);
 		i++;
 	}
+	if (last_signal == SIGQUIT)
+		write(STDOUT_FILENO, "Quit (core dumped)\n", 19);
+	close_all_pipes(data);
 	free_pipes(data);
-	return status;
+	return (setup_signals_interactive(), last_status);
 }
+
+// int wait_all_children(t_pipes *data)
+// {
+// 	int wait_status;
+// 	int last_status;
+// 	int i;
+// 	int sig;
+
+// 	i = 0;
+// 	while(i < data->command_count)
+// 	{
+// 		waitpid(data->pids[i], &wait_status, 0);
+// 		if(WIFSIGNALED(wait_status))
+// 		{
+// 			sig = WTERMSIG(wait_status);
+// 			last_status = 128 + sig;
+// 			if(sig == SIGQUIT)
+// 				write(STDOUT_FILENO, "Quit (core dumped)\n", 19);		
+// 		}
+// 		else if(WIFEXITED(wait_status))
+// 			last_status = WEXITSTATUS(wait_status);
+// 		else
+// 			last_status = 1;
+// 		i++;
+// 	}
+// 	close_all_pipes(data);
+// 	free_pipes(data);
+// 	setup_signals_interactive();
+// 	return last_status;
+// }
 
 //for single command: no use of dup2
 void setup_child_pipes(t_pipes *data, int index)
