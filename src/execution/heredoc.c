@@ -6,7 +6,7 @@
 /*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/02 18:18:13 by hkaraogl          #+#    #+#             */
-/*   Updated: 2025/12/13 17:04:21 by tjkruger         ###   ########.fr       */
+/*   Updated: 2025/12/17 17:33:51 by tjkruger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,49 +28,49 @@ static char *generate_tmpfile_name(void)
 	return temp;
 }
 
-void	cleanup_heredoc_file(char *filename)
-{
-	if(filename)
-	{
-		if(unlink(filename) == -1)
-		{
-			perror("unlinked failed");
-			free(filename);
-			return;
-		}
-		free(filename);
-	}
-}
+// void	cleanup_heredoc_file(char *filename)
+// {
+// 	if(filename)
+// 	{
+// 		if(unlink(filename) == -1)
+// 		{
+// 			perror("unlinked failed");
+// 			free(filename);
+// 			return;
+// 		}
+// 		free(filename);
+// 	}
+// }
 //iterate through cmd_lst and iterate through each nodes file lst
 //unlink heredoc temp file
 //this function frees the filename of the filenode and unlink (delete)  in the filelist. So be careful freeing it again somewhere else!!!!
-void	cleanup_all_heredoc_files(t_all_commands *cmd_lst)
-{
-	t_one_command *current;
-	t_file_node *file;
+// void	cleanup_all_heredoc_files(t_all_commands *cmd_lst)
+// {
+// 	t_one_command *current;
+// 	t_file_node *file;
 
-	if(!cmd_lst || !cmd_lst->head)
-		return;
-	current = cmd_lst->head;
-	while(current)
-	{
-		if(current->files)
-		{
-			file = current->files->head;
-			while(file)
-			{
-				if(file->redir_type == TOKEN_REDIR_HEREDOC && file->filename)
-				{
-					unlink(file->filename);
-					free(file->filename);
-					file->filename = NULL;
-				}
-				file = file->next;
-			}
-		}
-		current = current->next;
-	}
-}
+// 	if(!cmd_lst || !cmd_lst->head)
+// 		return;
+// 	current = cmd_lst->head;
+// 	while(current)
+// 	{
+// 		if(current->files)
+// 		{
+// 			file = current->files->head;
+// 			while(file)
+// 			{
+// 				if(file->redir_type == TOKEN_REDIR_HEREDOC && file->filename)
+// 				{
+// 					unlink(file->filename);
+// 					free(file->filename);
+// 					file->filename = NULL;
+// 				}
+// 				file = file->next;
+// 			}
+// 		}
+// 		current = current->next;
+// 	}
+// }
 
 int	no_qoutes(char *str)
 {
@@ -91,51 +91,60 @@ int	no_qoutes(char *str)
 //save tmp file
 int	setup_heredoc(t_file_node *file, t_env_list *env_lst, t_all_commands *cmds)
 {
-	t_token *temp_token_heredoc;
-	char *tmp_file;
-	char *line;
-	int fd = 0;
-	tmp_file = generate_tmpfile_name();
-	
-	fd = open(tmp_file, O_WRONLY | O_CREAT | O_TRUNC, 0600);
-	if(fd == -1)
-		return (perror("heredoc tmp file"), 0);
+    t_token *temp_token_heredoc;
+    t_token *tok_head;
+    char *tmp_file;
+    char *line;
+    int fd = 0;
 
-	while(1)
-	{
-		line = readline("heredoc:");
-		if(!line)
-			break;
-		
-		if(ft_strcmp(line, file->delimiter) == 0)
-		{
-			free(line);
-			break;
-		}
-		//expand if needed
-		temp_token_heredoc = tokenize(line, cmds);
-		if(!temp_token_heredoc)
-		{
-			free(line);
-			close(fd);
-			return (perror("heredoc tokenize failed"), 0);
-		}
-		if(!file->qoutes_in_heredoc)
-			handle_expansions(temp_token_heredoc, env_lst);
-		while(temp_token_heredoc)
-		{
-			write(fd, temp_token_heredoc->value, ft_strlen(temp_token_heredoc->value));
-			write(fd, " ", 1);
-			temp_token_heredoc = temp_token_heredoc->next;
-		}
-		// write(fd, line, ft_strlen(line));
-		write(fd, "\n", 1);
-		free(line);
-		free_token_list(temp_token_heredoc);
-	}
-	close(fd);
-	file->filename = tmp_file;
-	return 1;
+    tmp_file = generate_tmpfile_name();
+    
+    fd = open(tmp_file, O_WRONLY | O_CREAT | O_TRUNC, 0600);
+    if(fd == -1)
+    {
+        free(tmp_file);
+        return (perror("heredoc tmp file"), 0);
+    }
+
+    while(1)
+    {
+        line = readline("heredoc:");
+        if(!line)
+            break;
+        
+        if(ft_strcmp(line, file->delimiter) == 0)
+        {
+            free(line);
+            break;
+        }
+        // tokenize heredoc line: pass NULL so quotes are handled correctly
+        temp_token_heredoc = tokenize(line, NULL);
+        if(!temp_token_heredoc)
+        {
+            free(line);
+            close(fd);
+            free(tmp_file);
+            return (perror("heredoc tokenize failed"), 0);
+        }
+        if(!file->qoutes_in_heredoc)
+            handle_expansions(temp_token_heredoc, env_lst);
+
+        // keep head so we can free properly after iterating
+        tok_head = temp_token_heredoc;
+        while(temp_token_heredoc)
+        {
+            write(fd, temp_token_heredoc->value, ft_strlen(temp_token_heredoc->value));
+            if (temp_token_heredoc->next)
+                write(fd, " ", 1);
+            temp_token_heredoc = temp_token_heredoc->next;
+        }
+        write(fd, "\n", 1);
+        free(line);
+        free_token_list(tok_head);
+    }
+    close(fd);
+    file->filename = tmp_file;
+    return 1;
 }
 
 // char *handle_expansions(char *str, t_env_list *env)
