@@ -1,11 +1,9 @@
-
-
 #include "minishell.h"
 
-t_one_command   *create_new_command_node(void)// initialize t_one_command
+t_one_command   *create_new_command_node(t_trash *trash)// initialize t_one_command
 {
     t_one_command *new_command;
-    new_command = malloc(sizeof(t_one_command));
+    new_command = gc_malloc(trash, 1, sizeof(t_one_command));
     if (!new_command)
         return (NULL);
     new_command->cmd_type = 0;
@@ -16,7 +14,7 @@ t_one_command   *create_new_command_node(void)// initialize t_one_command
     return(new_command);
 }
 // basically just fill the ** in t_one_command char **command
-void add_word_to_cmd(t_one_command *curr_cmd, char *value) 
+void add_word_to_cmd(t_one_command *curr_cmd, char *value, t_trash *trash) 
 {
     int i = 0;
     int j = 0;
@@ -27,7 +25,7 @@ void add_word_to_cmd(t_one_command *curr_cmd, char *value)
         while (curr_cmd->cmd[i] != NULL)
             i++;
     }
-    new_cmd = malloc(sizeof(char *) * (i + 2));
+    new_cmd = gc_malloc(trash, (i + 2), sizeof(char *));
     if (!new_cmd)
         return;
 
@@ -37,12 +35,10 @@ void add_word_to_cmd(t_one_command *curr_cmd, char *value)
         j++;
     }
 
-    new_cmd[i] = ft_strdup(value);
+    new_cmd[i] = gc_strdup(trash, value);
     new_cmd[i + 1] = NULL;
 
-    if (curr_cmd->cmd)
-        free(curr_cmd->cmd);
-
+    /* Do not free curr_cmd->cmd: GC manages memory now */
     curr_cmd->cmd = new_cmd;
 }
 

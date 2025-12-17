@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokens.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
+/*   By: r2d2 <r2d2@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/24 15:32:21 by tjkruger          #+#    #+#             */
-/*   Updated: 2025/12/17 20:19:46 by tjkruger         ###   ########.fr       */
+/*   Updated: 2025/12/17 22:30:30 by r2d2             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,9 +73,10 @@ char *append_char(char *s, char c)
     return ft_strjoin_free(s, c);   // later chars → join
 }
 
-void push_token(t_token **head, char *value, char *dna)
+/* allocate and push a token node using GC */
+void push_token(t_token **head, char *value, char *dna, t_trash *trash)
 {
-    t_token *new = malloc(sizeof(t_token));
+    t_token *new = gc_malloc(trash, 1, sizeof(t_token));
     t_token *tmp;
 
     if (!new)
@@ -96,19 +97,18 @@ void push_token(t_token **head, char *value, char *dna)
     tmp->next = new;
 }
 
-
-void flush_word(t_token **head, char **txt_buf, char **dna_buf)
+void flush_word(t_token **head, char **txt_buf, char **dna_buf, t_trash *trash)
 {
     if (*txt_buf == NULL || (*txt_buf)[0] == '\0')
         return ;
-    push_token(head, *txt_buf, *dna_buf);
+    push_token(head, *txt_buf, *dna_buf, trash);
 
     *txt_buf = NULL;
     *dna_buf = NULL;
 }
 
-
-int make_op_token(t_token **head,char *str,char *dna, int i)
+/* make op token using GC (op/opd allocated via gc_malloc) */
+int make_op_token(t_token **head,char *str,char *dna, int i, t_trash *trash)
 {
     char *op;
     char *opd;
@@ -118,8 +118,8 @@ int make_op_token(t_token **head,char *str,char *dna, int i)
 
     if (str[i] == str[i + 1] && str[i] != '|')
     {
-        op = malloc(3);
-        opd = malloc(3);
+        op = gc_malloc(trash, 3, sizeof(char));
+        opd = gc_malloc(trash, 3, sizeof(char));
         
         op[0] = str[i];
         op[1] = str[i + 1];
@@ -132,8 +132,8 @@ int make_op_token(t_token **head,char *str,char *dna, int i)
     }
     else
     {
-        op = malloc(2);
-        opd = malloc(2);
+        op = gc_malloc(trash, 2, sizeof(char));
+        opd = gc_malloc(trash, 2, sizeof(char));
 
         op[0] = str[i];
         op[1] = '\0';
@@ -142,26 +142,24 @@ int make_op_token(t_token **head,char *str,char *dna, int i)
         opd[1] = '\0';
     }
 
-    push_token(head, op, opd);
+    push_token(head, op, opd, trash);
     return (flag);
 }
 
-t_token *split_pretoken(char *text, char *dna)
+t_token *split_pretoken(char *text, char *dna, t_trash *trash)
 {
     t_token *head = NULL;
-    char    *txt_buf;
-    char    *dna_buf;
+    char    *txt_buf = NULL;
+    char    *dna_buf = NULL;
     int     i = 0;
     int     flag = 0;
 
-    txt_buf = NULL;
-    dna_buf = NULL;
     while (text[i])
     {
         if (dna[i] == 'N' && is_op(text[i]))
         {
-            flush_word(&head, &txt_buf, &dna_buf);
-            flag = make_op_token(&head, text, dna, i);
+            flush_word(&head, &txt_buf, &dna_buf, trash);
+            flag = make_op_token(&head, text, dna, i, trash);
             if (flag)
                 i++;
         }
@@ -172,7 +170,7 @@ t_token *split_pretoken(char *text, char *dna)
         }
         i++;
     }
-    flush_word(&head, &txt_buf, &dna_buf);
+    flush_word(&head, &txt_buf, &dna_buf, trash);
     return (head);
 }
 
@@ -202,26 +200,25 @@ int validate_token(t_token  *head)
     }
     return(1);
 }
-// > h should work but doesnt atm
 
-t_token *tokenize(char *input)
+t_token *tokenize(char *input, t_trash *trash)
 {
     t_pretoken  *pretoken;
     t_token     *head = NULL;
     t_token     *tail = NULL;
     t_token     *sub;
     int         i;
-    pretoken = ft_split_for_token(input);
+    pretoken = ft_split_for_token(input, trash);
     if (!pretoken)
         return (NULL);
 
     i = 0;
     while (pretoken->token[i])
     {
-        // split each pretoken into real tokens
-        sub = split_pretoken(pretoken->token[i], pretoken->dna[i]);
+        /* split each pretoken into real tokens */
+        sub = split_pretoken(pretoken->token[i], pretoken->dna[i], trash);
 
-        // append the resulting mini-list to the main list
+        /* append the resulting mini-list to the main list */
         while (sub)
         {
             if (!head)
@@ -236,11 +233,11 @@ t_token *tokenize(char *input)
             }
             sub = sub->next;
         }
-
         i++;
     }
     if(!validate_token(head))
         return(NULL);
-    free_pretoken(pretoken);
+
+    /* pretoken and all allocations are GC-managed now, do not free here */
     return (head);
 }

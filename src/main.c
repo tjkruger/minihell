@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
+/*   By: r2d2 <r2d2@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/12/17 20:21:21 by tjkruger         ###   ########.fr       */
+/*   Updated: 2025/12/17 22:58:23 by r2d2             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -226,14 +226,14 @@ int main(int argc, char **argv, char **env)
 				add_to_hist_list(&history_list, input);
 				add_history(input);
 			}
-			token_list = tokenize(input);
+			token_list = tokenize(input, &trash);
 			if(!token_list)
 			{
 				cmds = NULL;
 				continue;
 			}
 			handle_expansions(token_list, env_lst);
-			cmds 	   = build_commands(token_list);
+			cmds 	   = build_commands(token_list, &trash);
 			setup_all_heredoc(&trash, cmds, env_lst);
 
 			exit_status = execute_commands(&trash, cmds, env_lst);
@@ -247,7 +247,7 @@ int main(int argc, char **argv, char **env)
 		free(input);
 		// free_cmd_list(cmds);
 		cmds = NULL;
-		free_token_list(token_list);
+		//free_token_list(token_list);
 		token_list = NULL;
 	}
 	free_all_environment(env_lst);

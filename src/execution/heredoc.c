@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
+/*   By: r2d2 <r2d2@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/02 18:18:13 by hkaraogl          #+#    #+#             */
-/*   Updated: 2025/12/17 20:27:59 by tjkruger         ###   ########.fr       */
+/*   Updated: 2025/12/17 22:36:06 by r2d2             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -185,7 +185,7 @@ static int	setup_heredoc(t_trash *trash, t_file_node *file, t_env_list *env_lst)
             break;
         }
         // tokenize heredoc line: pass NULL so quotes are handled correctly
-        temp_token_heredoc = tokenize(line);
+        temp_token_heredoc = tokenize(line, trash);
         if(!temp_token_heredoc)
         {
             free(line);

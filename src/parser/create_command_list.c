@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   create_command_list.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
+/*   By: r2d2 <r2d2@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/12/17 15:35:27 by tjkruger         ###   ########.fr       */
+/*   Updated: 2025/12/17 22:32:47 by r2d2             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 
 #include "minishell.h"
 
-t_file_list *init_file_list(void)
+t_file_list *init_file_list(t_trash *trash)
 {
-    t_file_list *list = malloc(sizeof(t_file_list));
+    t_file_list *list = gc_malloc(trash, 1, sizeof(t_file_list));
     if (!list)
         return NULL;
     list->head = NULL;
@@ -25,23 +25,22 @@ t_file_list *init_file_list(void)
     return list;
 }
 
-t_file_node *create_file_node(char *value, char *dna, t_token_type redir_type)
+t_file_node *create_file_node(t_trash *trash, char *value, char *dna, t_token_type redir_type)
 {
-    // t_file_node *node = (t_file_node *)ft_malloc(sizeof(t_file_node), 1);
-    t_file_node *node = malloc(sizeof(t_file_node));
+    t_file_node *node = gc_malloc(trash, 1, sizeof(t_file_node));
     if (!node)
         return NULL;
     node->qoutes_in_heredoc = 0;
     if(redir_type == TOKEN_REDIR_HEREDOC)
     {
         node->filename = NULL;
-        node->delimiter = ft_strdup(value);
+        node->delimiter = gc_strdup(trash, value);
         if(ft_strchr(dna, 'D') || ft_strchr(dna, 'S'))
             node->qoutes_in_heredoc = 1;
     }
     else
     {
-        node->filename = ft_strdup(value);
+        node->filename = gc_strdup(trash, value);
         node->delimiter = NULL;
     }
     node->redir_type = redir_type;  // store enum value
@@ -50,15 +49,15 @@ t_file_node *create_file_node(char *value, char *dna, t_token_type redir_type)
 }
 
 
-void add_file_to_cmd(t_one_command *curr_cmd, char *value, int redir_type, char *dna)
+void add_file_to_cmd(t_one_command *curr_cmd, char *value, int redir_type, char *dna, t_trash *trash)
 {
     if (!curr_cmd || !value)
         return;
 
     if (!curr_cmd->files)
-        curr_cmd->files = init_file_list();
+        curr_cmd->files = init_file_list(trash);
 
-    t_file_node *new_file = create_file_node(value, dna, redir_type);
+    t_file_node *new_file = create_file_node(trash, value, dna, redir_type);
     if (!new_file)
         return;
 
@@ -107,9 +106,9 @@ int find_executable(char *str)
     return(0);
 }
 
-t_all_commands *create_new_commands_list(void)
+t_all_commands *create_new_commands_list(t_trash *trash)
 {
-    t_all_commands *list = malloc(sizeof(t_all_commands));
+    t_all_commands *list = gc_malloc(trash, 1, sizeof(t_all_commands));
     if (!list)
         return NULL;
     list->head = NULL;
@@ -120,18 +119,18 @@ t_all_commands *create_new_commands_list(void)
 }
 
 
-t_all_commands *build_commands(t_token *tokens)
+t_all_commands *build_commands(t_token *tokens, t_trash *trash)
 {
-    t_all_commands *cmd_list = create_new_commands_list(); // function to init head/tail
+    t_all_commands *cmd_list = create_new_commands_list(trash); // function to init head/tail
     while (tokens)
     {
-        t_one_command *curr_cmd = create_new_command_node();
+        t_one_command *curr_cmd = create_new_command_node(trash);
 
         while (tokens && tokens->type != TOKEN_PIPE)
         {
 
             if (tokens->type == TOKEN_WORD)
-                add_word_to_cmd(curr_cmd, tokens->value);
+                add_word_to_cmd(curr_cmd, tokens->value, trash);
 
 
             else if (tokens->type == TOKEN_REDIR_IN
@@ -141,7 +140,7 @@ t_all_commands *build_commands(t_token *tokens)
             {
                 if(tokens->next == NULL || tokens->next->type != TOKEN_WORD) 
                     return(NULL);
-                add_file_to_cmd(curr_cmd, tokens->next->value, tokens->type, tokens->next->dna);
+                add_file_to_cmd(curr_cmd, tokens->next->value, tokens->type, tokens->next->dna, trash);
                 tokens = tokens->next; // skip filename
             }
             tokens = tokens->next;

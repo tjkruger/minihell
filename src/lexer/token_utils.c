@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
+/*   By: r2d2 <r2d2@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/24 15:32:25 by tjkruger          #+#    #+#             */
-/*   Updated: 2025/12/17 20:20:52 by tjkruger         ###   ########.fr       */
+/*   Updated: 2025/12/17 22:56:26 by r2d2             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,6 @@ int is_specialchar(char c)
     return (c == '|' || c == '<' || c == '>');
 }
 
-
 void    token_error(void)
 {
     printf("pls think bevor wright stupid ... where second quote ???\n");
@@ -57,33 +56,15 @@ char *find_token_end(char *str)
         else
             str++;
     }   
-
-    
     return (str);
 }
 
 
-int how_many_token(char *str)
-{
-    int count;
-
-    count = 0;
-    while (*str && ft_isspace(*str))
-        str++;
-
-    while (*str)
-    {
-        count++;
-        str = find_token_end(str);
-        if(!str)
-            return(-1);
-        while (*str && ft_isspace(*str))
-            str++;
-    }
-    return(count);
-}
-
-char **extracted_token(char *str)
+/*
+ * extracted_token: allocate token and dna strings for one pretoken
+ * returns a gc-managed array: [token, dna, NULL]
+ */
+char **extracted_token(char *str, t_trash *trash)
 {
     char **list;
     char *token;
@@ -91,12 +72,14 @@ char **extracted_token(char *str)
     char *token_end;
     int   len;
 
-    list = malloc(sizeof(char *) * 3);
     token_end = find_token_end(str);
+    if (!token_end)
+        return NULL;
     len = token_length(str, token_end);
 
-    token = malloc(len + 1);
-    dna   = malloc(len + 1);
+    list = gc_malloc(trash, 3, sizeof(char *));
+    token = gc_malloc(trash, len + 1, sizeof(char));
+    dna   = gc_malloc(trash, len + 1, sizeof(char));
 
     char *tp = token;
     char *dp = dna;
@@ -105,7 +88,6 @@ char **extracted_token(char *str)
 
     while (str < token_end)
     {
-        // starting quotes, only if outside any quote
         if (*str == '\'' && mode == 0)
         {
             mode = '\'';
@@ -119,7 +101,6 @@ char **extracted_token(char *str)
             continue;
         }
 
-        // closing quote of current mode
         if (*str == mode && mode != 0)
         {
             mode = 0;
@@ -127,7 +108,6 @@ char **extracted_token(char *str)
             continue;
         }
 
-        // normal char or quote inside different type
         *tp++ = *str;
         if (mode == 0)
             *dp++ = 'N';
@@ -149,11 +129,30 @@ char **extracted_token(char *str)
     return list;
 }
 
+int how_many_token(char *str)
+{
+    int count = 0;
+    char *end;
 
+    if (!str)
+        return 0;
 
+    while (*str)
+    {
+        while (*str && ft_isspace(*str))
+            str++;
+        if (!*str)
+            break;
+        end = find_token_end(str);
+        if (end == NULL) // unclosed quote
+            return -1;
+        count++;
+        str = end;
+    }
+    return count;
+}
 
-
-t_pretoken  *ft_split_for_token(char *input)
+t_pretoken  *ft_split_for_token(char *input, t_trash *trash)
 {
     t_pretoken  *t_list;
     int         j;
@@ -169,17 +168,20 @@ t_pretoken  *ft_split_for_token(char *input)
         token_error();
         return(NULL);
     }
-    t_list = malloc(sizeof(t_pretoken));
-    t_list->token = malloc(sizeof(char *) * (arg_num + 1));
-    t_list->dna= malloc(sizeof(char *) * (arg_num + 1));
+
+    t_list = gc_malloc(trash, 1, sizeof(t_pretoken));
+    t_list->token = gc_malloc(trash, arg_num + 1, sizeof(char *));
+    t_list->dna   = gc_malloc(trash, arg_num + 1, sizeof(char *));
 
     while(*str && j < arg_num)
     {
-        pair = extracted_token(str);
-        t_list->token[j] = malloc(sizeof(char) * (ft_strlen(pair[0]) + 1));
-        t_list->dna[j]   = malloc(sizeof(char) * (ft_strlen(pair[1]) + 1));
-        ft_strlcpy(t_list->token[j], pair[0], ft_strlen(pair[0]) + 1);
-        ft_strlcpy(t_list->dna[j], pair[1], ft_strlen(pair[1]) + 1);
+        pair = extracted_token(str, trash);
+        if (!pair)
+            return NULL;
+        /* steal the pointers allocated by extracted_token (already GC-managed) */
+        t_list->token[j] = pair[0];
+        t_list->dna[j]   = pair[1];
+
         str = find_token_end(str);
         while (*str && ft_isspace(*str))
             str++;
