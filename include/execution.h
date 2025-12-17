@@ -6,17 +6,17 @@
 /*   By: hkaraogl <hkaraogl@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 14:55:36 by hkaraogl          #+#    #+#             */
-/*   Updated: 2025/12/04 13:51:58 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2025/12/17 15:24:39 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef EXECUTION_H
 # define EXECUTION_H
 
-int	execute_commands(t_all_commands *cmd_lst, t_env_list *env_lst);
+int	execute_commands(t_trash *trash, t_all_commands *cmd_lst, t_env_list *env_lst);
 int get_exit_status(int status);
-int process_builtin(t_one_command *node, t_env_list *env_lst);
-int	execute_external_command(t_one_command *cmd, t_env_list *env_lst);
+int process_builtin(t_trash *trash, t_one_command *node, t_env_list *env_lst);
+int	execute_external_command(t_trash *trash, t_one_command *cmd, t_env_list *env_lst);
 
 //redirection
 int set_redirections(t_file_list *files);
@@ -25,7 +25,7 @@ int handle_heredoc_redir(char *filename);
 //child.c
 int wait_all_children(t_pipes *data);
 void setup_child_pipes(t_pipes *data, int index);
-void execute_child(t_one_command *cmd, t_pipes *data, t_env_list *env, int index);
+void execute_child(t_trash *trash, t_one_command *cmd, t_pipes *data, t_env_list *env, int index);
 
 
 //pipes.c

@@ -6,13 +6,11 @@
 /*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/12/13 18:14:48 by tjkruger         ###   ########.fr       */
+/*   Updated: 2025/12/17 15:34:50 by tjkruger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 /* ************************************************************************** */
-
-
 
 #include "minishell.h"
 
@@ -178,41 +176,48 @@ void free_all_environment(t_env_list *env_lst)
 
 
 
+
 int main(int argc, char **argv, char **env)
 {
 	t_token	*token_list = NULL;
 	t_all_commands *cmds = NULL;
 	t_history *history_list = NULL;
 	t_env_list *env_lst;
+	t_trash	*trash;
+	trash_init(trash);
 	int i;
 	int exit_status;
 	char *input;
-    (void)argc;
-    (void)argv;
-    env_lst = init_environment(env);
+	(void)argc;
+	(void)argv;
+	exit_status = 0;
+	env_lst = init_environment(trash, env);
 
 	setup_signals_interactive();
 
 	while (1)
 	{
-		g_signal_status = 0;
-
-
 		input = readline("minishell> ");
-
-		if(g_signal_status == 130)
+		if (g_signal_status == 130)
 		{
 			exit_status = 130;
-			continue;
+			env_lst->last_exit = exit_status;
+			g_signal_status = 0;
+			if (input)
+				free(input);
+			continue;             // ← Wichtig: Neue Iteration!
 		}
-		
 		if (!input)
+		{
+			write(STDOUT_FILENO, "exit\n", 5);
 			break;
+		}
 		if (!is_empty_or_whitespace(input))
 		{
 			if (strcmp(input, "history") == 0)
 			{
 				print_history(history_list);
+				free(input);
 				continue;
 			}
 			else
@@ -220,27 +225,28 @@ int main(int argc, char **argv, char **env)
 				add_to_hist_list(&history_list, input);
 				add_history(input);
 			}
-            token_list = tokenize(input, cmds);
-            if(!token_list)
-            {
-                cmds = NULL;
-                continue;
-            }
-            handle_expansions(token_list, env_lst);
-            cmds 	   = build_commands(token_list);
+			token_list = tokenize(input);
+			if(!token_list)
+			{
+				cmds = NULL;
+				continue;
+			}
+			handle_expansions(token_list, env_lst);
+			cmds 	   = build_commands(token_list);
 			setup_all_heredoc(cmds, env_lst);
-			exit_status = execute_commands(cmds, env_lst);
+
+			exit_status = execute_commands(trash, cmds, env_lst);
 			env_lst->last_exit = exit_status;
 		}
 		// print_everything(token_list, cmds, history_list);//for now to test
-        // print_tokens(token_list);
+		// print_tokens(token_list);
 		free(input);
 		free_cmd_list(cmds);
 		cmds = NULL;
 		free_token_list(token_list);
 		token_list = NULL;
 	}
-    free_all_environment(env_lst);
+	free_all_environment(env_lst);
 	free_hist(history_list);
 	return exit_status;
 }

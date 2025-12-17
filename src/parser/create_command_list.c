@@ -5,10 +5,11 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/17 13:31:35 by tjkruger          #+#    #+#             */
-/*   Updated: 2025/12/13 16:02:06 by tjkruger         ###   ########.fr       */
+/*   Created: Invalid date        by                   #+#    #+#             */
+/*   Updated: 2025/12/17 15:35:27 by tjkruger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 
 #include "minishell.h"
@@ -26,6 +27,7 @@ t_file_list *init_file_list(void)
 
 t_file_node *create_file_node(char *value, char *dna, t_token_type redir_type)
 {
+    // t_file_node *node = (t_file_node *)ft_malloc(sizeof(t_file_node), 1);
     t_file_node *node = malloc(sizeof(t_file_node));
     if (!node)
         return NULL;
