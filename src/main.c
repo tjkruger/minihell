@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hkaraogl <hkaraogl@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/12/18 16:21:48 by tjkruger         ###   ########.fr       */
+/*   Updated: 2025/12/18 16:28:23 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -180,11 +180,7 @@ void free_all_environment(t_env_list *env_lst)
 
 int main(int argc, char **argv, char **env)
 {
-	t_token	*token_list = NULL;
-	t_all_commands *cmds = NULL;
 	t_history *history_list = NULL;
-	t_env_list *env_lst;
-	t_trash trash;
 	t_ms ms;
 	int i;
 	int exit_status;
@@ -203,7 +199,7 @@ int main(int argc, char **argv, char **env)
 		if (g_signal_status == 130)
 		{
 			exit_status = 130;
-			env_lst->last_exit = exit_status;
+			ms.env_list->last_exit = exit_status;
 			g_signal_status = 0;
 			if (input)
 				free(input);

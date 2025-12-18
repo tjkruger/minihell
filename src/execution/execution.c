@@ -3,61 +3,57 @@
 /*                                                        :::      ::::::::   */
 /*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hkaraogl <hkaraogl@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/28 15:03:52 by hkaraogl          #+#    #+#             */
-/*   Updated: 2025/12/18 15:01:13 by tjkruger         ###   ########.fr       */
+/*   Updated: 2025/12/18 16:57:41 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int init_pipes(t_trash *trash, t_pipes *data, t_all_commands *lst)
+static int init_pipes(t_ms *ms, t_pipes *data)
 {
 	data->pipes = NULL;
 	data->pids = NULL;
-	data->command_count = lst->size;
-	data->pipe_count = lst->size - 1;
+	data->command_count = ms->all_commands->size;
+	data->pipe_count = ms->all_commands->size - 1;
 	if(data->pipe_count > 0)
 	{
-		data->pipes = create_pipes(trash, data->pipe_count);
+		data->pipes = create_pipes(&ms->trash, data->pipe_count);
 		if(!data->pipes)
 			return 0;
 	}
-
-	data->pids = gc_malloc(trash, lst->size, sizeof(pid_t));
+	data->pids = gc_malloc(&ms->trash, ms->all_commands->size, sizeof(pid_t));
 	if(!data->pids)
-	{
-		// free_pipes(data);
 		return 0;
-	}
 	return 1;
 }
 
-int process_builtin(t_one_command *node, t_env_list *env_lst, t_trash *trash)
+int process_builtin(t_one_command *node, t_ms *ms)
 {
 	int status;
 
 	status = 1;
 	if(ft_strcmp(node->cmd[0], "cd") == 0)
-		status = run_cd(node->cmd, env_lst);
+		status = run_cd(node->cmd, ms->env_list);
 	else if(ft_strcmp(node->cmd[0], "echo") == 0)
 		status = run_echo(node);
 	else if(ft_strcmp(node->cmd[0], "env") == 0)
-		status = run_env(env_lst);
+		status = run_env(ms->env_list);
 	else if(ft_strcmp(node->cmd[0], "exit") == 0)
-		status = run_exit(node->cmd, 1, trash);
+		status = run_exit(node->cmd, 1, &ms->trash);
 	else if(ft_strcmp(node->cmd[0], "export") == 0)
-		status = run_export(env_lst, node->cmd);
+		status = run_export(ms->env_list, node->cmd);
 	else if(ft_strcmp(node->cmd[0], "pwd") == 0)
 		status = run_pwd();
 	else if(ft_strcmp(node->cmd[0], "unset") == 0)
-		status = run_unset(node->cmd, env_lst);
+		status = run_unset(node->cmd, ms->env_list);
 	return status;
 }
 
 // backup fds, set redirections, execute builtin, restore fds
-static int	execute_builtin(t_trash *trash, t_one_command *node, t_env_list *env_lst)
+static int	execute_builtin(t_ms *ms, t_one_command *node)
 {
 	int status;
 	int fd_backups[2];
@@ -75,7 +71,7 @@ static int	execute_builtin(t_trash *trash, t_one_command *node, t_env_list *env_
 		}
 	}
 
-	status = process_builtin(node, env_lst, trash);
+	status = process_builtin(node, ms);
 	if(node->files && node->files->head)
 		restore_fds(fd_backups);
 	return (status);
@@ -88,13 +84,13 @@ int get_exit_status(int status)
 	return 1;
 }
 
-int	execute_external_command(t_trash *trash, t_one_command *cmd, t_env_list *env_lst)
+int	execute_external_command(t_ms *ms, t_one_command *cmd)
 {
 	char **env;
 	char *path;
 
-	env = env_list_array(env_lst);
-	path = find_command_path(trash, cmd->cmd[0]);
+	env = env_list_array(ms->env_list);
+	path = find_command_path(&ms->trash, cmd->cmd[0]);
 	if(!path)
 	{
 		print_cmd_error(cmd->cmd[0], "command not found");
@@ -105,19 +101,19 @@ int	execute_external_command(t_trash *trash, t_one_command *cmd, t_env_list *env
 	exit(ERR_EXEC_FAIL);
 }
 
-static int	execute_with_pipes(t_trash *trash, t_all_commands *cmd_lst, t_env_list *env_lst)
+static int	execute_with_pipes(t_ms *ms)
 {
 	t_pipes data;
 	t_one_command *current;
 	int i;
 
-	if(!init_pipes(trash, &data, cmd_lst))
+	if(!init_pipes(ms, &data))
 		return (ft_perror("failed to initialize pipes"),1);
 
 	
 	setup_signals_interactive();
 	i = 0;
-	current = cmd_lst->head;
+	current = ms->all_commands->head;
 	while(current)
 	{
 		data.pids[i] = fork();
@@ -127,12 +123,11 @@ static int	execute_with_pipes(t_trash *trash, t_all_commands *cmd_lst, t_env_lis
 			close_all_pipes(&data);
 			setup_signals_interactive();
 			return 1;
-			// return (free_pipes(&data),1);
 		}
 		if(data.pids[i] == 0)
 		{
 			setup_signals_child();
-			execute_child(trash, current, &data, env_lst, i);
+			execute_child(ms, current, &data, i);
 		}
 		current = current->next;
 		i++;
@@ -140,16 +135,16 @@ static int	execute_with_pipes(t_trash *trash, t_all_commands *cmd_lst, t_env_lis
 	return wait_all_children(&data);
 }
 
-int	execute_commands(t_trash *trash, t_all_commands *cmd_lst, t_env_list *env_lst)
+int	execute_commands(t_ms *ms)
 {
 	t_one_command *current;
 
-	if(!cmd_lst || !cmd_lst->head)
+	if(!ms->all_commands || !ms->all_commands->head)
 		return 1;
-	current = cmd_lst->head;
+	current = ms->all_commands->head;
 
-	if(cmd_lst->size == 1 && current->cmd_type == BUILTIN)
-		return execute_builtin(trash, current, env_lst);
+	if(ms->all_commands->size == 1 && current->cmd_type == BUILTIN)
+		return execute_builtin(ms, current);
 
-	return execute_with_pipes(trash, cmd_lst, env_lst);
+	return execute_with_pipes(ms);
 }

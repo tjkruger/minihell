@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hkaraogl <hkaraogl@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/02 18:18:13 by hkaraogl          #+#    #+#             */
-/*   Updated: 2025/12/18 14:18:00 by tjkruger         ###   ########.fr       */
+/*   Updated: 2025/12/18 17:16:52 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -156,14 +156,14 @@ void printout_token(int fd, char *value, char *dna)
 //collect input,
 //expand if needed
 //save tmp file
-static int	setup_heredoc(t_trash *trash, t_file_node *file, t_env_list *env_lst)
+static int	setup_heredoc(t_ms *ms, t_file_node *file)
 {
 	t_token *temp_token_heredoc;
 	t_token *tok_head;
 	char *tmp_file;
 	char *line;
 	int fd = 0;
-	tmp_file = generate_tmpfile_name(trash);
+	tmp_file = generate_tmpfile_name(&ms->trash);
 	
 	fd = open(tmp_file, O_WRONLY | O_CREAT | O_TRUNC, 0600);
 	if(fd == -1)
@@ -206,12 +206,12 @@ static int	setup_heredoc(t_trash *trash, t_file_node *file, t_env_list *env_lst)
     return 1;
 }
 
-int setup_all_heredoc(t_trash *trash, t_all_commands *cmd_lst, t_env_list *env_lst)
+int setup_all_heredoc(t_ms *ms)
 {
 	t_one_command *current;
 	t_file_node *file;
 
-	current = cmd_lst->head;
+	current = ms->all_commands->head;
 	while(current)
 	{
 		if(current->files && current->files->head)
@@ -221,7 +221,7 @@ int setup_all_heredoc(t_trash *trash, t_all_commands *cmd_lst, t_env_list *env_l
 			{
 				if(file->redir_type == TOKEN_REDIR_HEREDOC)
 				{
-					if(!setup_heredoc(trash, file, env_lst))
+					if(!setup_heredoc(ms, file))
 						return 0;
 				}
 				file = file->next;

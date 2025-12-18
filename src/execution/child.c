@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   child.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hkaraogl <hkaraogl@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/02 13:04:23 by hkaraogl          #+#    #+#             */
-/*   Updated: 2025/12/18 15:02:46 by tjkruger         ###   ########.fr       */
+/*   Updated: 2025/12/18 17:00:47 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,7 @@ void setup_child_pipes(t_pipes *data, int index)
 	
 }
 
-void execute_child(t_trash *trash, t_one_command *cmd, t_pipes *data, t_env_list *env, int index)
+void execute_child(t_ms *ms, t_one_command *cmd, t_pipes *data, int index)
 {
 	setup_child_pipes(data, index);
 	close_all_pipes(data);
@@ -104,7 +104,7 @@ void execute_child(t_trash *trash, t_one_command *cmd, t_pipes *data, t_env_list
 			exit(1);
 	}
 	if(cmd->cmd_type == BUILTIN)
-		exit(process_builtin(cmd, env, trash));
+		exit(process_builtin(cmd, ms));
 	else
-		execute_external_command(trash, cmd, env);
+		execute_external_command(ms, cmd);
 }
