@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hkaraogl <hkaraogl@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/12/18 14:38:28 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2025/12/18 16:21:48 by tjkruger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -185,20 +185,21 @@ int main(int argc, char **argv, char **env)
 	t_history *history_list = NULL;
 	t_env_list *env_lst;
 	t_trash trash;
+	t_ms ms;
 	int i;
 	int exit_status;
 	char *input;
 	(void)argc;
 	(void)argv;
 	exit_status = 0;
-	env_lst = init_environment(env);
+	ms.env_list = init_environment(env);
 
 	setup_signals_interactive();
-	trash_init(&trash);
+	trash_init(&ms.trash);
 
 	while (1)
 	{
-		input = readline("minishell> ");
+		input = readline("ms> ");
 		if (g_signal_status == 130)
 		{
 			exit_status = 130;
@@ -226,31 +227,31 @@ int main(int argc, char **argv, char **env)
 				add_to_hist_list(&history_list, input);
 				add_history(input);
 			}
-			token_list = tokenize(input, &trash);
+			ms.token = tokenize(input, &ms);
 			if(!token_list)
 			{
 				cmds = NULL;
 				continue;
 			}
-			handle_expansions(token_list, env_lst, &trash);
-			cmds 	   = build_commands(token_list, &trash);
-			setup_all_heredoc(&trash, cmds, env_lst);
+			handle_expansions(&ms);
+			ms.all_commands	= build_commands(&ms);
+			setup_all_heredoc(&ms);
 
-			exit_status = execute_commands(&trash, cmds, env_lst);
-			env_lst->last_exit = exit_status;
-			//gc_print(&trash);
-			gc_cleanup(&trash);
+			exit_status = execute_commands(&ms);
+			ms.env_list->last_exit = exit_status;
+			printf("vor cleanup\n");
+			fflush(stdout);
+			//gc_print(&ms.trash);
+			gc_cleanup(&ms.trash);
+			printf("after cleanup\n");
+			fflush(stdout);
 			//gc_print(&trash);
 		}
-		// print_everything(token_list, cmds, history_list);//for now to test
-		// print_tokens(token_list);
 		free(input);
-		// free_cmd_list(cmds);
-		cmds = NULL;
-		//free_token_list(token_list);
-		token_list = NULL;
+		ms.all_commands = NULL;
+		ms.token = NULL;
 	}
-	free_all_environment(env_lst);
+	free_all_environment(&ms);
 	free_hist(history_list);
 	return exit_status;
 }

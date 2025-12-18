@@ -3,6 +3,7 @@
 #ifndef STRUCTS_H
 # define STRUCTS_H
 
+
 typedef enum CMD_TYPE
 {
 	CMD,
@@ -97,7 +98,7 @@ typedef struct s_all_commands// kommt mit rein
 	ssize_t size;
 } t_all_commands;
 
-typedef struct s_history// kommt mit rein
+typedef struct s_history
 {
 	char                *command;
 	struct s_history    *next;
@@ -122,5 +123,7 @@ typedef struct s_trash// kommt mit rein
 	ssize_t size;
 } t_trash;
 //typedef t_pretoken *t_pretoken_pointer;
+
+
 
 #endif
