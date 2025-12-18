@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hkaraogl <hkaraogl@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/12/18 14:26:41 by tjkruger         ###   ########.fr       */
+/*   Updated: 2025/12/18 14:29:12 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
