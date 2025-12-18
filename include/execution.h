@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hkaraogl <hkaraogl@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 14:55:36 by hkaraogl          #+#    #+#             */
-/*   Updated: 2025/12/18 13:41:11 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2025/12/18 15:01:33 by tjkruger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 int	execute_commands(t_trash *trash, t_all_commands *cmd_lst, t_env_list *env_lst);
 int get_exit_status(int status);
-int process_builtin(t_one_command *node, t_env_list *env_lst);
+int process_builtin(t_one_command *node, t_env_list *env_lst, t_trash *trash);
 int	execute_external_command(t_trash *trash, t_one_command *cmd, t_env_list *env_lst);
 
 //redirection

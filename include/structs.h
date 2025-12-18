@@ -38,7 +38,7 @@ typedef struct s_env_node
 	struct s_env_node	*next;
 } t_env_node;
 
-typedef	struct s_env_list
+typedef	struct s_env_list// kommt mit rein
 {
 	t_env_node	*head;
 	t_env_node	*tail;
@@ -46,7 +46,7 @@ typedef	struct s_env_list
 	int	last_exit;
 }	t_env_list;
 
-typedef struct s_pipes
+typedef struct s_pipes// kommt mit rein
 {
 	int **pipes;
 	pid_t *pids;
@@ -54,7 +54,7 @@ typedef struct s_pipes
 	int command_count;
 }	t_pipes;
 
-typedef struct s_file_node 
+typedef struct s_file_node
 {
 	char *filename;
 	char *delimiter;
@@ -63,14 +63,14 @@ typedef struct s_file_node
 	struct s_file_node *next;
 } t_file_node;
 
-typedef struct s_file_list
+typedef struct s_file_list// kommt mit rein
 {
 	t_file_node *head;
 	t_file_node *tail;
 	ssize_t size;
 } t_file_list;
 
-typedef struct s_token
+typedef struct s_token// kommt mit rein
 {
 	char            *value;
 	char            *dna;
@@ -89,7 +89,7 @@ typedef struct s_one_command
 } t_one_command;
 
 //muss executer uebernehemen (t_command_list)
-typedef struct s_all_commands
+typedef struct s_all_commands// kommt mit rein
 {
 	int syntax_error;
 	t_one_command *head;
@@ -97,13 +97,13 @@ typedef struct s_all_commands
 	ssize_t size;
 } t_all_commands;
 
-typedef struct s_history
+typedef struct s_history// kommt mit rein
 {
 	char                *command;
 	struct s_history    *next;
 } t_history;
 
-typedef struct s_pretoken
+typedef struct s_pretoken// kommt mit rein
 {
 	char    **token;
 	char    **dna;
@@ -115,7 +115,7 @@ typedef struct s_trash_node
 	struct s_trash_node *next;
 } t_trash_node;
 
-typedef struct s_trash
+typedef struct s_trash// kommt mit rein
 {
 	struct s_trash_node *head;
 	struct s_trash_node *tail;

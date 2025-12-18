@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hkaraogl <hkaraogl@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/28 15:03:52 by hkaraogl          #+#    #+#             */
-/*   Updated: 2025/12/18 13:41:37 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2025/12/18 15:01:13 by tjkruger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ static int init_pipes(t_trash *trash, t_pipes *data, t_all_commands *lst)
 	return 1;
 }
 
-int process_builtin(t_one_command *node, t_env_list *env_lst)
+int process_builtin(t_one_command *node, t_env_list *env_lst, t_trash *trash)
 {
 	int status;
 
@@ -46,7 +46,7 @@ int process_builtin(t_one_command *node, t_env_list *env_lst)
 	else if(ft_strcmp(node->cmd[0], "env") == 0)
 		status = run_env(env_lst);
 	else if(ft_strcmp(node->cmd[0], "exit") == 0)
-		status = run_exit(node->cmd, 1);
+		status = run_exit(node->cmd, 1, trash);
 	else if(ft_strcmp(node->cmd[0], "export") == 0)
 		status = run_export(env_lst, node->cmd);
 	else if(ft_strcmp(node->cmd[0], "pwd") == 0)
@@ -75,7 +75,7 @@ static int	execute_builtin(t_trash *trash, t_one_command *node, t_env_list *env_
 		}
 	}
 
-	status = process_builtin(node, env_lst);
+	status = process_builtin(node, env_lst, trash);
 	if(node->files && node->files->head)
 		restore_fds(fd_backups);
 	return (status);

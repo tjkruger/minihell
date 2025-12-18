@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hkaraogl <hkaraogl@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/05 20:39:00 by hkaraogl          #+#    #+#             */
-/*   Updated: 2025/12/01 17:22:55 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2025/12/18 14:59:57 by tjkruger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ static int is_valid_nbr(char *nbr)
 // ✅ Overflow als ungültig behandeln
 // ✅ Zu viele Argumente = Shell läuft weiter mit Return 1
 //**cmd = {exit, 1, 2, NULL} */
-int run_exit(char **cmd, int last_exit_code)
+int run_exit(char **cmd, int last_exit_code, t_trash *trash)
 {
 	int exit_code;
 
@@ -52,6 +52,7 @@ int run_exit(char **cmd, int last_exit_code)
 	if(!cmd[1])
 	{
 		//cleanup_exit(last_exit_code);
+		gc_cleanup(trash);
 		exit(last_exit_code);
 	}
 
@@ -71,6 +72,7 @@ int run_exit(char **cmd, int last_exit_code)
 		ft_putstr_fd(cmd[1], 1);
 		ft_putendl_fd(" numeric argument required", 1);
 		//cleanup_exit(2);
+		gc_cleanup(trash);
 		exit(2);
 	}
 	exit_code = ft_atoi(cmd[1]);
@@ -80,6 +82,7 @@ int run_exit(char **cmd, int last_exit_code)
 		exit_code = 256 + exit_code;
 	}
 	//cleanup_exit(exit_code);
+	gc_cleanup(trash);
 	exit(exit_code);
 	return 0;
 }

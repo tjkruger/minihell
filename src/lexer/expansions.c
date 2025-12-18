@@ -130,15 +130,12 @@ void handle_expansions(t_token *token_list, t_env_list *env, t_trash *trash)
                     ex_str = "";
 
                 new = insert_expandet(str, ex_str, i, ft_strlen(arg) + 1, trash);
-                free(str);
                 str = new;
                 token_list->value = str;
                 
                 // Move i to just after the inserted expansion
                 i += ft_strlen(ex_str) - 1; // -1 because i++ will happen
-                
-                if (arg)
-                    free(arg);
+
             }
             i++;
         }
