@@ -6,7 +6,7 @@
 /*   By: hkaraogl <hkaraogl@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/29 11:52:25 by hkaraogl          #+#    #+#             */
-/*   Updated: 2025/12/15 14:59:23 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2025/12/18 13:37:57 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -200,7 +200,7 @@ static int	is_absolut_path(char *cmd)
 // NULL
 // }
 // return "/usr/bin/cat" if cmd is valid || NULL if invalid cmd
-char	*find_command_path(char *cmd)
+char	*find_command_path(t_trash *trash, char *cmd)
 {
 	char	*path;
 	char	**path_dirs;
@@ -212,7 +212,7 @@ char	*find_command_path(char *cmd)
 	if (is_absolut_path(cmd))
 		return (ft_strdup(cmd));
 	path = getenv("PATH");
-	path_dirs = ft_split(path, ':');
+	path_dirs = gc_split(trash, path, ':');
 	if(!path_dirs)
 		return NULL;
 	while (path_dirs[i] != NULL)

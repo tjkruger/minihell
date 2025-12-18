@@ -6,7 +6,7 @@
 /*   By: hkaraogl <hkaraogl@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/28 15:03:52 by hkaraogl          #+#    #+#             */
-/*   Updated: 2025/12/17 16:38:17 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2025/12/18 13:41:37 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,13 +88,13 @@ int get_exit_status(int status)
 	return 1;
 }
 
-int	execute_external_command(t_one_command *cmd, t_env_list *env_lst)
+int	execute_external_command(t_trash *trash, t_one_command *cmd, t_env_list *env_lst)
 {
 	char **env;
 	char *path;
 
 	env = env_list_array(env_lst);
-	path = find_command_path(cmd->cmd[0]);
+	path = find_command_path(trash, cmd->cmd[0]);
 	if(!path)
 	{
 		print_cmd_error(cmd->cmd[0], "command not found");
@@ -102,7 +102,6 @@ int	execute_external_command(t_one_command *cmd, t_env_list *env_lst)
 	}
 	execve(path, cmd->cmd, env);
 	ft_perror("execve");
-	free(path);
 	exit(ERR_EXEC_FAIL);
 }
 
@@ -133,7 +132,7 @@ static int	execute_with_pipes(t_trash *trash, t_all_commands *cmd_lst, t_env_lis
 		if(data.pids[i] == 0)
 		{
 			setup_signals_child();
-			execute_child(current, &data, env_lst, i);
+			execute_child(trash, current, &data, env_lst, i);
 		}
 		current = current->next;
 		i++;
