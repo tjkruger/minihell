@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hkaraogl <hkaraogl@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/12/18 14:29:12 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2025/12/18 16:18:26 by tjkruger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -185,16 +185,17 @@ int main(int argc, char **argv, char **env)
 	t_history *history_list = NULL;
 	t_env_list *env_lst;
 	t_trash trash;
+	t_minishell minishell;
 	int i;
 	int exit_status;
 	char *input;
 	(void)argc;
 	(void)argv;
 	exit_status = 0;
-	env_lst = init_environment(env);
+	minishell.env_list = init_environment(env);
 
 	setup_signals_interactive();
-	trash_init(&trash);
+	trash_init(&minishell.trash);
 
 	while (1)
 	{
@@ -226,35 +227,31 @@ int main(int argc, char **argv, char **env)
 				add_to_hist_list(&history_list, input);
 				add_history(input);
 			}
-			token_list = tokenize(input, &trash);
+			minishell.token = tokenize(input, &minishell);
 			if(!token_list)
 			{
 				cmds = NULL;
 				continue;
 			}
-			handle_expansions(token_list, env_lst, &trash);
-			cmds 	   = build_commands(token_list, &trash);
-			setup_all_heredoc(&trash, cmds, env_lst);
+			handle_expansions(&minishell);
+			minishell.all_commands	= build_commands(&minishell);
+			setup_all_heredoc(&minishell);
 
-			exit_status = execute_commands(&trash, cmds, env_lst);
-			env_lst->last_exit = exit_status;
+			exit_status = execute_commands(&minishell);
+			minishell.env_list->last_exit = exit_status;
 			printf("vor cleanup\n");
 			fflush(stdout);
-			//gc_print(&trash);
-			gc_cleanup(&trash);
+			//gc_print(&minishell.trash);
+			gc_cleanup(&minishell.trash);
 			printf("after cleanup\n");
 			fflush(stdout);
 			//gc_print(&trash);
 		}
-		// print_everything(token_list, cmds, history_list);//for now to test
-		// print_tokens(token_list);
 		free(input);
-		// free_cmd_list(cmds);
-		cmds = NULL;
-		//free_token_list(token_list);
-		token_list = NULL;
+		minishell.all_commands = NULL;
+		minishell.token = NULL;
 	}
-	free_all_environment(env_lst);
+	free_all_environment(&minishell);
 	free_hist(history_list);
 	return exit_status;
 }

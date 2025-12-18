@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hkaraogl <hkaraogl@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/24 15:32:03 by tjkruger          #+#    #+#             */
-/*   Updated: 2025/12/16 16:44:35 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2025/12/18 16:10:24 by tjkruger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,17 @@ struct s_cmd_node;
 struct s_file_node;
 
 extern volatile sig_atomic_t g_signal_status;
+
+typedef struct s_minishell
+{
+    t_all_commands  *all_commands;
+    t_env_list      *env_list;
+    t_trash         trash;
+    t_pretoken      *pretoken;
+    t_token         *token;
+    
+}t_minishell;
+
 
 
 # define PATH_MAX 4096
