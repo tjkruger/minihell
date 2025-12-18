@@ -10,7 +10,7 @@ int is_var_char(char c)
 char *ft_argument(char *str, t_trash *trash)
 {
     if (str[0] == '?')
-        return strdup("?");
+        return gc_strdup(trash ,"?");
 
     int len = 0;
     while (str[len] && (isalnum(str[len]) || str[len] == '_'))

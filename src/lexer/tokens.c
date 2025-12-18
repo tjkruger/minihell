@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokens.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hkaraogl <hkaraogl@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/24 15:32:21 by tjkruger          #+#    #+#             */
-/*   Updated: 2025/12/18 14:16:25 by tjkruger         ###   ########.fr       */
+/*   Updated: 2025/12/18 14:37:11 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,9 +61,6 @@ char *ft_strjoin_free(char *s1, char c, t_trash *trash)
 
     new_str[len] = c;
     new_str[len + 1] = '\0';
-
-    if (s1)
-        free(s1);
 
     return new_str;
 }
