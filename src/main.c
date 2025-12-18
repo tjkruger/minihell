@@ -6,7 +6,7 @@
 /*   By: hkaraogl <hkaraogl@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/12/18 14:29:12 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2025/12/18 14:38:28 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -238,12 +238,8 @@ int main(int argc, char **argv, char **env)
 
 			exit_status = execute_commands(&trash, cmds, env_lst);
 			env_lst->last_exit = exit_status;
-			printf("vor cleanup\n");
-			fflush(stdout);
 			//gc_print(&trash);
 			gc_cleanup(&trash);
-			printf("after cleanup\n");
-			fflush(stdout);
 			//gc_print(&trash);
 		}
 		// print_everything(token_list, cmds, history_list);//for now to test
