@@ -6,7 +6,7 @@
 /*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/12/18 16:18:26 by tjkruger         ###   ########.fr       */
+/*   Updated: 2025/12/18 16:20:44 by tjkruger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -185,21 +185,21 @@ int main(int argc, char **argv, char **env)
 	t_history *history_list = NULL;
 	t_env_list *env_lst;
 	t_trash trash;
-	t_minishell minishell;
+	t_ms ms;
 	int i;
 	int exit_status;
 	char *input;
 	(void)argc;
 	(void)argv;
 	exit_status = 0;
-	minishell.env_list = init_environment(env);
+	ms.env_list = init_environment(env);
 
 	setup_signals_interactive();
-	trash_init(&minishell.trash);
+	trash_init(&ms.trash);
 
 	while (1)
 	{
-		input = readline("minishell> ");
+		input = readline("ms> ");
 		if (g_signal_status == 130)
 		{
 			exit_status = 130;
@@ -227,31 +227,31 @@ int main(int argc, char **argv, char **env)
 				add_to_hist_list(&history_list, input);
 				add_history(input);
 			}
-			minishell.token = tokenize(input, &minishell);
+			ms.token = tokenize(input, &ms);
 			if(!token_list)
 			{
 				cmds = NULL;
 				continue;
 			}
-			handle_expansions(&minishell);
-			minishell.all_commands	= build_commands(&minishell);
-			setup_all_heredoc(&minishell);
+			handle_expansions(&ms);
+			ms.all_commands	= build_commands(&ms);
+			setup_all_heredoc(&ms);
 
-			exit_status = execute_commands(&minishell);
-			minishell.env_list->last_exit = exit_status;
+			exit_status = execute_commands(&ms);
+			ms.env_list->last_exit = exit_status;
 			printf("vor cleanup\n");
 			fflush(stdout);
-			//gc_print(&minishell.trash);
-			gc_cleanup(&minishell.trash);
+			//gc_print(&ms.trash);
+			gc_cleanup(&ms.trash);
 			printf("after cleanup\n");
 			fflush(stdout);
 			//gc_print(&trash);
 		}
 		free(input);
-		minishell.all_commands = NULL;
-		minishell.token = NULL;
+		ms.all_commands = NULL;
+		ms.token = NULL;
 	}
-	free_all_environment(&minishell);
+	free_all_environment(&ms);
 	free_hist(history_list);
 	return exit_status;
 }
