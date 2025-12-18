@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokens.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: r2d2 <r2d2@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/24 15:32:21 by tjkruger          #+#    #+#             */
-/*   Updated: 2025/12/17 23:44:51 by r2d2             ###   ########.fr       */
+/*   Updated: 2025/12/18 14:16:25 by tjkruger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ int is_op(char c)
 }
 
 
-char *ft_strjoin_free(char *s1, char c)
+char *ft_strjoin_free(char *s1, char c, t_trash *trash)
 {
     int len;
     char *new_str;
@@ -49,7 +49,7 @@ char *ft_strjoin_free(char *s1, char c)
     while (s1 && s1[len] != '\0')
         len++;
 
-    new_str = malloc(len + 2);
+    new_str = gc_malloc(trash, len + 2, sizeof(char));
     if (!new_str)
         return NULL;
 
@@ -68,9 +68,9 @@ char *ft_strjoin_free(char *s1, char c)
     return new_str;
 }
 
-char *append_char(char *s, char c)
+char *append_char(char *s, char c, t_trash *trash)
 {
-    return ft_strjoin_free(s, c);   // later chars → join
+    return ft_strjoin_free(s, c, trash);   // later chars → join
 }
 
 /* allocate and push a token node using GC */
@@ -165,8 +165,8 @@ t_token *split_pretoken(char *text, char *dna, t_trash *trash)
         }
         else
         {
-            txt_buf = append_char(txt_buf, text[i]);
-            dna_buf = append_char(dna_buf, dna[i]);
+            txt_buf = append_char(txt_buf, text[i], trash);
+            dna_buf = append_char(dna_buf, dna[i], trash);
         }
         i++;
     }

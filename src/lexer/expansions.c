@@ -7,7 +7,7 @@ int is_var_char(char c)
     return (c != '\0' && c != ' ' && c != '|' && c != '>' && c != '<' && c != '$');
 }
 
-char *ft_argument(char *str)
+char *ft_argument(char *str, t_trash *trash)
 {
     if (str[0] == '?')
         return strdup("?");
@@ -16,7 +16,7 @@ char *ft_argument(char *str)
     while (str[len] && (isalnum(str[len]) || str[len] == '_'))
         len++;
 
-    char *var = malloc(len + 1);
+    char *var = gc_malloc(trash, len + 1, sizeof(char));
     strncpy(var, str, len);
     var[len] = '\0';
     return var;
@@ -78,7 +78,7 @@ static void fill_result(char *result, char *str, char *new, int pos_in_str, int 
 }
 
 
-char    *insert_expandet(char *str, char *new, int pos_in_str, int how_much)
+char    *insert_expandet(char *str, char *new, int pos_in_str, int how_much, t_trash *trash)
 {
     char    *result;
     int     result_len;
@@ -88,7 +88,7 @@ char    *insert_expandet(char *str, char *new, int pos_in_str, int how_much)
     
     result_len = calculate_result_len(str, new, how_much);
     
-    result = (char *)malloc(sizeof(char) * (result_len + 1));
+    result = gc_malloc(trash, result_len + 1, sizeof(char));
     if (!result)
         return (NULL);
     
@@ -104,7 +104,7 @@ char *exit_state_to_str(int exit_state)
     return(str);
 }
 
-void handle_expansions(t_token *token_list, t_env_list *env)
+void handle_expansions(t_token *token_list, t_env_list *env, t_trash *trash)
 {
     char *ex_str;
     char *str;
@@ -121,7 +121,7 @@ void handle_expansions(t_token *token_list, t_env_list *env)
         {
             if (str[i] == '$' && token_list->dna[i] != 'S')
             {
-                arg = ft_argument(str + i + 1);
+                arg = ft_argument(str + i + 1, trash);
                 if (arg && arg[0] == '?' && arg[1] == '\0')
                     ex_str = exit_state_to_str(env->last_exit);
                 else
@@ -129,7 +129,7 @@ void handle_expansions(t_token *token_list, t_env_list *env)
                 if (!ex_str)
                     ex_str = "";
 
-                new = insert_expandet(str, ex_str, i, ft_strlen(arg) + 1);
+                new = insert_expandet(str, ex_str, i, ft_strlen(arg) + 1, trash);
                 free(str);
                 str = new;
                 token_list->value = str;

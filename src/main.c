@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: r2d2 <r2d2@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/12/17 23:45:19 by r2d2             ###   ########.fr       */
+/*   Updated: 2025/12/18 14:26:41 by tjkruger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -232,14 +232,18 @@ int main(int argc, char **argv, char **env)
 				cmds = NULL;
 				continue;
 			}
-			handle_expansions(token_list, env_lst);
+			handle_expansions(token_list, env_lst, &trash);
 			cmds 	   = build_commands(token_list, &trash);
 			setup_all_heredoc(&trash, cmds, env_lst);
 
 			exit_status = execute_commands(&trash, cmds, env_lst);
 			env_lst->last_exit = exit_status;
+			printf("vor cleanup\n");
+			fflush(stdout);
 			//gc_print(&trash);
 			gc_cleanup(&trash);
+			printf("after cleanup\n");
+			fflush(stdout);
 			//gc_print(&trash);
 		}
 		// print_everything(token_list, cmds, history_list);//for now to test
