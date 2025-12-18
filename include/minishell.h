@@ -6,7 +6,7 @@
 /*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/24 15:32:03 by tjkruger          #+#    #+#             */
-/*   Updated: 2025/12/18 16:19:57 by tjkruger         ###   ########.fr       */
+/*   Updated: 2025/12/18 20:08:08 by tjkruger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,13 +28,13 @@
 
 
 //header files
+# include "structs.h"
 # include "history.h"
 # include "libft.h"
 # include "parser.h"
 # include "utils.h"
 # include "environment.h"
 # include "builtins.h"
-# include "structs.h"
 # include "lexer.h"
 # include "all_free.h"
 #include "signals.h"
@@ -50,15 +50,7 @@ struct s_file_node;
 
 extern volatile sig_atomic_t g_signal_status;
 
-typedef struct s_ms
-{
-    t_all_commands  *all_commands;
-    t_env_list      *env_list;
-    t_trash         trash;
-    t_pretoken      *pretoken;
-    t_token         *token;
-    
-}t_ms;
+
 
 
 

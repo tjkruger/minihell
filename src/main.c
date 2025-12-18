@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hkaraogl <hkaraogl@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/12/18 16:28:23 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2025/12/18 20:15:09 by tjkruger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -195,7 +195,7 @@ int main(int argc, char **argv, char **env)
 
 	while (1)
 	{
-		input = readline("ms> ");
+		input = readline("minisHell> ");
 		if (g_signal_status == 130)
 		{
 			exit_status = 130;
@@ -224,30 +224,24 @@ int main(int argc, char **argv, char **env)
 				add_history(input);
 			}
 			ms.token = tokenize(input, &ms);
-			if(!token_list)
+			if(!ms.token)
 			{
-				cmds = NULL;
+				ms.all_commands = NULL;
 				continue;
 			}
-			handle_expansions(&ms);
+			handle_expansions(ms.token, ms.env_list, &ms.trash);
 			ms.all_commands	= build_commands(&ms);
 			setup_all_heredoc(&ms);
 
 			exit_status = execute_commands(&ms);
 			ms.env_list->last_exit = exit_status;
-			printf("vor cleanup\n");
-			fflush(stdout);
-			//gc_print(&ms.trash);
 			gc_cleanup(&ms.trash);
-			printf("after cleanup\n");
-			fflush(stdout);
-			//gc_print(&trash);
 		}
 		free(input);
 		ms.all_commands = NULL;
 		ms.token = NULL;
 	}
-	free_all_environment(&ms);
+	free_all_environment(ms.env_list);
 	free_hist(history_list);
 	return exit_status;
 }

@@ -78,24 +78,35 @@ static void fill_result(char *result, char *str, char *new, int pos_in_str, int 
 }
 
 
-char    *insert_expandet(char *str, char *new, int pos_in_str, int how_much, t_trash *trash)
+char *insert_expandet(t_expand_ctx *ctx)
 {
-    char    *result;
-    int     result_len;
+    char *result;
+    int   result_len;
 
-    if (!str || !new || pos_in_str < 0)
-        return (NULL);
-    
-    result_len = calculate_result_len(str, new, how_much);
-    
-    result = gc_malloc(trash, result_len + 1, sizeof(char));
+    if (!ctx || !ctx->str || !ctx->replacement || ctx->pos < 0)
+        return NULL;
+
+    result_len = calculate_result_len(
+        ctx->str,
+        ctx->replacement,
+        ctx->len
+    );
+
+    result = gc_malloc(ctx->trash, result_len + 1, sizeof(char));
     if (!result)
-        return (NULL);
-    
-    fill_result(result, str, new, pos_in_str, how_much);
-    
-    return (result);
+        return NULL;
+
+    fill_result(
+        result,
+        ctx->str,
+        ctx->replacement,
+        ctx->pos,
+        ctx->len
+    );
+
+    return result;
 }
+
 
 char *exit_state_to_str(int exit_state)
 {
@@ -106,41 +117,50 @@ char *exit_state_to_str(int exit_state)
 
 void handle_expansions(t_token *token_list, t_env_list *env, t_trash *trash)
 {
-    char *ex_str;
-    char *str;
-    char *arg;
-    int   i;
-    char *new;
+    char            *ex_str;
+    char            *str;
+    char            *arg;
+    char            *new;
+    int             i;
+    t_expand_ctx    ctx;
+
+    ctx.trash = trash;
 
     while (token_list)
     {
         str = token_list->value;
         i = 0;
 
-        while (str[i] != '\0')
+        while (str[i])
         {
             if (str[i] == '$' && token_list->dna[i] != 'S')
             {
                 arg = ft_argument(str + i + 1, trash);
+
                 if (arg && arg[0] == '?' && arg[1] == '\0')
                     ex_str = exit_state_to_str(env->last_exit);
                 else
                     ex_str = ft_expand(arg, env);
+
                 if (!ex_str)
                     ex_str = "";
 
-                new = insert_expandet(str, ex_str, i, ft_strlen(arg) + 1, trash);
+                ctx.str         = str;
+                ctx.replacement = ex_str;
+                ctx.pos         = i;
+                ctx.len         = ft_strlen(arg) + 1;
+
+                new = insert_expandet(&ctx);
                 str = new;
                 token_list->value = str;
-                
-                // Move i to just after the inserted expansion
-                i += ft_strlen(ex_str) - 1; // -1 because i++ will happen
 
+                i += ft_strlen(ex_str) - 1;
             }
             i++;
         }
         token_list = token_list->next;
     }
 }
+
 
 

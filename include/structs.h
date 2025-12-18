@@ -123,6 +123,36 @@ typedef struct s_trash// kommt mit rein
 	ssize_t size;
 } t_trash;
 //typedef t_pretoken *t_pretoken_pointer;
+typedef struct s_lexer_ctx
+{
+    t_token **head;
+    char    *text;
+    char    *dna;
+    int     i;
+    t_trash *trash;
+} t_lexer_ctx;
+
+typedef struct s_expand_ctx
+{
+    char    *str;
+    char    *replacement;
+    int     pos;
+    int     len;
+    t_trash *trash;
+} t_expand_ctx;
+
+typedef struct s_ms
+{
+    t_all_commands  *all_commands;
+    t_one_command   *one_command;
+    t_one_command   *curr_cmd;
+    t_env_list      *env_list;
+    t_trash         trash;
+    t_pretoken      *pretoken;
+    t_token         *token;
+    
+}t_ms;
+
 
 
 

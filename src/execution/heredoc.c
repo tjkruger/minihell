@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hkaraogl <hkaraogl@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/02 18:18:13 by hkaraogl          #+#    #+#             */
-/*   Updated: 2025/12/18 17:16:52 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2025/12/18 20:12:40 by tjkruger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -180,7 +180,7 @@ static int	setup_heredoc(t_ms *ms, t_file_node *file)
             free(line);
             break;
         }
-        temp_token_heredoc = tokenize(line, trash);
+        temp_token_heredoc = tokenize(line, ms);
         if (line[0] == '\0')
         {
             write(fd, "\n", 1);
@@ -189,7 +189,7 @@ static int	setup_heredoc(t_ms *ms, t_file_node *file)
         }
 
         if(!file->qoutes_in_heredoc)
-            handle_expansions(temp_token_heredoc, env_lst, trash);
+            handle_expansions(temp_token_heredoc, ms->env_list, &ms->trash);
         tok_head = temp_token_heredoc;
         while(temp_token_heredoc)
         {
