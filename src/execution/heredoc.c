@@ -128,28 +128,13 @@ int	no_qoutes(char *str)
 #include <unistd.h>
 
 // prints a single token to fd, respecting the dna string for quotes
-void printout_token(int fd, char *value, char *dna)
+void printout_token(int fd, char *value)
 {
-    char last_mode = 0; // track current quote mode
-
-    for (int i = 0; value[i]; i++)
-    {
-        if (dna[i] != last_mode)
-        {
-            if (last_mode == 'D') write(fd, "\"", 1);
-            if (last_mode == 'S') write(fd, "'", 1);
-            if (dna[i] == 'D') write(fd, "\"", 1);
-            if (dna[i] == 'S') write(fd, "'", 1);
-            last_mode = dna[i];
-        }
-
-        write(fd, &value[i], 1);
-    }
-
-    // close remaining quote if still open
-    if (last_mode == 'D') write(fd, "\"", 1);
-    if (last_mode == 'S') write(fd, "'", 1);
+    if (!value)
+        return;
+    write(fd, value, ft_strlen(value));
 }
+
 
 //this function will executed only if heredoc *file exists
 //create tmp file,
@@ -193,7 +178,7 @@ static int	setup_heredoc(t_ms *ms, t_file_node *file)
         tok_head = temp_token_heredoc;
         while(temp_token_heredoc)
         {
-            printout_token(fd, temp_token_heredoc->value, temp_token_heredoc->dna);
+            printout_token(fd, temp_token_heredoc->value);
             if (temp_token_heredoc->next)
                 write(fd, " ", 1);
             temp_token_heredoc = temp_token_heredoc->next;

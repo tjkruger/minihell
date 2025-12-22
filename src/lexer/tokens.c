@@ -212,29 +212,41 @@ int validate_token(t_token  *head)
 
 t_token *tokenize(char *input, t_ms *ms)
 {
+    t_token *single;
+
+    /* HEREDOC MODE:
+       command list already exists → treat input as raw text */
+    if (ms->all_commands)
+    {
+        single = gc_malloc(&ms->trash, 1, sizeof(t_token));
+        if (!single)
+            return NULL;
+
+        single->value = gc_strdup(&ms->trash, input);
+        single->dna = NULL;
+        single->type = TOKEN_WORD;
+        single->next = NULL;
+        return single;
+    }
+
+    /* NORMAL MODE: full tokenizer */
     t_pretoken  *pretoken;
     t_token     *head = NULL;
     t_token     *tail = NULL;
     t_token     *sub;
-    int         i;
+    int         i = 0;
+
     pretoken = ft_split_for_token(input, &ms->trash);
     if (!pretoken)
-        return (NULL);
+        return NULL;
 
-    i = 0;
     while (pretoken->token[i])
     {
-        /* split each pretoken into real tokens */
         sub = split_pretoken(pretoken->token[i], pretoken->dna[i], ms);
-
-        /* append the resulting mini-list to the main list */
         while (sub)
         {
             if (!head)
-            {
-                head = sub;
-                tail = sub;
-            }
+                head = tail = sub;
             else
             {
                 tail->next = sub;
@@ -244,9 +256,10 @@ t_token *tokenize(char *input, t_ms *ms)
         }
         i++;
     }
-    if(!validate_token(head))
-        return(NULL);
 
-    /* pretoken and all allocations are GC-managed now, do not free here */
-    return (head);
+    if (!validate_token(head))
+        return NULL;
+
+    return head;
 }
+

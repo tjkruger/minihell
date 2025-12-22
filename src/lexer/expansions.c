@@ -133,7 +133,8 @@ void handle_expansions(t_token *token_list, t_env_list *env, t_trash *trash)
 
         while (str[i])
         {
-            if (str[i] == '$' && token_list->dna[i] != 'S')
+            if (str[i] == '$' && (!token_list->dna || token_list->dna[i] != 'S'))
+
             {
                 arg = ft_argument(str + i + 1, trash);
 
