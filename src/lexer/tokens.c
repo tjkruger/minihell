@@ -6,7 +6,7 @@
 /*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/24 15:32:21 by tjkruger          #+#    #+#             */
-/*   Updated: 2025/12/18 20:00:29 by tjkruger         ###   ########.fr       */
+/*   Updated: 2026/01/05 15:45:22 by tjkruger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -214,8 +214,7 @@ t_token *tokenize(char *input, t_ms *ms)
 {
     t_token *single;
 
-    /* HEREDOC MODE:
-       command list already exists → treat input as raw text */
+    /* HEREDOC MODE:*/
     if (ms->all_commands)
     {
         single = gc_malloc(&ms->trash, 1, sizeof(t_token));
@@ -235,7 +234,6 @@ t_token *tokenize(char *input, t_ms *ms)
     t_token     *tail = NULL;
     t_token     *sub;
     int         i = 0;
-
     pretoken = ft_split_for_token(input, &ms->trash);
     if (!pretoken)
         return NULL;
