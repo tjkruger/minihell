@@ -6,7 +6,7 @@
 /*   By: hkaraogl <hkaraogl@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/29 11:52:25 by hkaraogl          #+#    #+#             */
-/*   Updated: 2025/12/18 13:37:57 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2026/01/05 17:12:40 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -267,6 +267,7 @@ t_env_list	*init_environment(char **system_env)
 	list->head = NULL;
 	list->tail = NULL;
 	list->size = 0;
+	list->last_exit = 0;
 	while (system_env[i])
 	{
 		equal = ft_strchr(system_env[i], '=');

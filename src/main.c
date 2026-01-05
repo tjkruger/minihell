@@ -6,7 +6,7 @@
 /*   By: hkaraogl <hkaraogl@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2026/01/05 16:36:47 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2026/01/05 17:13:14 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -186,6 +186,7 @@ int main(int argc, char **argv, char **env)
 	(void)argv;
 	exit_status = 0;
 	ms.env_list = init_environment(env);
+	ms.all_commands = NULL;
 
 	setup_signals_interactive();
 	trash_init(&ms.trash);

@@ -6,7 +6,7 @@
 /*   By: hkaraogl <hkaraogl@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/05 20:39:00 by hkaraogl          #+#    #+#             */
-/*   Updated: 2026/01/05 16:36:07 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2026/01/05 17:00:30 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,14 +47,16 @@ static int is_valid_nbr(char *nbr)
 int run_exit(t_ms *ms)
 {
 	int exit_code;
+	int last_exit;
 
 	ft_putendl_fd("exit", 1);
+	last_exit = ms->env_list->last_exit;
 	if(!ms->all_commands->head->cmd[1])
 	{
 		free_hist(ms->history_list);
 		free_all_environment(ms->env_list);
 		gc_cleanup(&ms->trash);
-		exit(ms->env_list->last_exit);
+		exit(last_exit);
 	}
 
 
