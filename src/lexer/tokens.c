@@ -6,7 +6,7 @@
 /*   By: hkaraogl <hkaraogl@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/24 15:32:21 by tjkruger          #+#    #+#             */
-/*   Updated: 2026/01/05 15:55:00 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2026/01/05 16:00:33 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -217,7 +217,6 @@ t_token *tokenize(char *input, t_ms *ms)
     /* HEREDOC MODE:*/
     if (ms->all_commands)
     {
-        printf("heredoc mode tokenize\n");
         single = gc_malloc(&ms->trash, 1, sizeof(t_token));
         if (!single)
             return NULL;

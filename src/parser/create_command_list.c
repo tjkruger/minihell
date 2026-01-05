@@ -6,7 +6,7 @@
 /*   By: hkaraogl <hkaraogl@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2026/01/05 15:52:11 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2026/01/05 16:08:10 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,7 +132,6 @@ t_all_commands *create_new_commands_list(t_trash *trash)
     t_all_commands *list = gc_malloc(trash, 1, sizeof(t_all_commands));
     if (!list)
         return NULL;
-    list = NULL;
     list->head = NULL;
     list->tail = NULL;
     list->size = 0;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hkaraogl <hkaraogl@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2026/01/05 15:50:11 by tjkruger         ###   ########.fr       */
+/*   Updated: 2026/01/05 16:36:47 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -175,13 +175,10 @@ void free_all_environment(t_env_list *env_lst)
 	free(env_lst);
 }
 
-
-
-
 int main(int argc, char **argv, char **env)
 {
-	t_history *history_list = NULL;
 	t_ms ms;
+	ms.history_list = NULL;
 	int i;
 	int exit_status;
 	char *input;
@@ -189,7 +186,6 @@ int main(int argc, char **argv, char **env)
 	(void)argv;
 	exit_status = 0;
 	ms.env_list = init_environment(env);
-	ms.all_commands = NULL;
 
 	setup_signals_interactive();
 	trash_init(&ms.trash);
@@ -215,13 +211,13 @@ int main(int argc, char **argv, char **env)
 		{
 			if (strcmp(input, "history") == 0)
 			{
-				print_history(history_list);
+				print_history(ms.history_list);
 				free(input);
 				continue;
 			}
 			else
 			{
-				add_to_hist_list(&history_list, input);
+				add_to_hist_list(&ms.history_list, input);
 				add_history(input);
 			}
 			ms.token = tokenize(input, &ms);
@@ -243,7 +239,7 @@ int main(int argc, char **argv, char **env)
 		ms.token = NULL;
 	}
 	free_all_environment(ms.env_list);
-	free_hist(history_list);
+	free_hist(ms.history_list);
 	return exit_status;
 }
 

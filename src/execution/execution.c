@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hkaraogl <hkaraogl@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/28 15:03:52 by hkaraogl          #+#    #+#             */
-/*   Updated: 2026/01/05 15:50:47 by tjkruger         ###   ########.fr       */
+/*   Updated: 2026/01/05 16:30:30 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ int process_builtin(t_one_command *node, t_ms *ms)
 	else if(ft_strcmp(node->cmd[0], "env") == 0)
 		status = run_env(ms->env_list);
 	else if(ft_strcmp(node->cmd[0], "exit") == 0)
-		status = run_exit(node->cmd, 1, &ms->trash);
+		status = run_exit(ms);
 	else if(ft_strcmp(node->cmd[0], "export") == 0)
 		status = run_export(ms->env_list, node->cmd);
 	else if(ft_strcmp(node->cmd[0], "pwd") == 0)

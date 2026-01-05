@@ -46,8 +46,8 @@ SRC         = $(MAIN) $(HISTORY) $(LEXER) $(BUILTINS) $(PARSER) $(FREE)
 OBJ         = $(patsubst %.c,$(OBJ_DIR)/%.o,$(SRC))
 
 # === Compiler flags ===
-CC          = cc
-CFLAGS      = -I$(INC_DIR)
+CC          = cc 
+CFLAGS = -g -I$(INC_DIR)
 READLINE    = -lreadline
 
 # === Default target ===

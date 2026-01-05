@@ -150,6 +150,7 @@ typedef struct s_ms
     t_trash         trash;
     t_pretoken      *pretoken;
     t_token         *token;
+	t_history *history_list;
     
 }t_ms;
 

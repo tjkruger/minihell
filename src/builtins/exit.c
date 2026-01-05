@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hkaraogl <hkaraogl@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/05 20:39:00 by hkaraogl          #+#    #+#             */
-/*   Updated: 2025/12/18 14:59:57 by tjkruger         ###   ########.fr       */
+/*   Updated: 2026/01/05 16:36:07 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,45 +44,48 @@ static int is_valid_nbr(char *nbr)
 // ✅ Overflow als ungültig behandeln
 // ✅ Zu viele Argumente = Shell läuft weiter mit Return 1
 //**cmd = {exit, 1, 2, NULL} */
-int run_exit(char **cmd, int last_exit_code, t_trash *trash)
+int run_exit(t_ms *ms)
 {
 	int exit_code;
 
 	ft_putendl_fd("exit", 1);
-	if(!cmd[1])
+	if(!ms->all_commands->head->cmd[1])
 	{
-		//cleanup_exit(last_exit_code);
-		gc_cleanup(trash);
-		exit(last_exit_code);
+		free_hist(ms->history_list);
+		free_all_environment(ms->env_list);
+		gc_cleanup(&ms->trash);
+		exit(ms->env_list->last_exit);
 	}
 
 
-	if(cmd[2])
+	if(ms->all_commands->head->cmd[2])
 	{
 		// exit
 		// bash: exit: too many arguments
 		ft_putendl_fd("bash: exit: too many arguments", 1);
 		return 1;
 	}
-	if(!is_valid_nbr(cmd[1]))
+	if(!is_valid_nbr(ms->all_commands->head->cmd[1]))
 	{
 		// exit
 		// bash: exit: a2: numeric argument required
 		ft_putstr_fd("bash: exit: ", 1);
-		ft_putstr_fd(cmd[1], 1);
+		ft_putstr_fd(ms->all_commands->head->cmd[1], 1);
 		ft_putendl_fd(" numeric argument required", 1);
-		//cleanup_exit(2);
-		gc_cleanup(trash);
+		free_hist(ms->history_list);
+		free_all_environment(ms->env_list);
+		gc_cleanup(&ms->trash);
 		exit(2);
 	}
-	exit_code = ft_atoi(cmd[1]);
+	exit_code = ft_atoi(ms->all_commands->head->cmd[1]);
 	exit_code = exit_code % 256;
 	if(exit_code < 0)
 	{
 		exit_code = 256 + exit_code;
 	}
-	//cleanup_exit(exit_code);
-	gc_cleanup(trash);
+	free_hist(ms->history_list);
+	free_all_environment(ms->env_list);
+	gc_cleanup(&ms->trash);
 	exit(exit_code);
 	return 0;
 }
