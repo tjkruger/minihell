@@ -6,7 +6,7 @@
 /*   By: hkaraogl <hkaraogl@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/24 15:32:21 by tjkruger          #+#    #+#             */
-/*   Updated: 2026/01/05 15:48:23 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2026/01/05 15:55:00 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -214,8 +214,7 @@ t_token *tokenize(char *input, t_ms *ms)
 {
     t_token *single;
 
-    /* HEREDOC MODE:
-       command list already exists → treat input as raw text */
+    /* HEREDOC MODE:*/
     if (ms->all_commands)
     {
         printf("heredoc mode tokenize\n");
@@ -236,7 +235,6 @@ t_token *tokenize(char *input, t_ms *ms)
     t_token     *tail = NULL;
     t_token     *sub;
     int         i = 0;
-
     pretoken = ft_split_for_token(input, &ms->trash);
     if (!pretoken)
         return NULL;

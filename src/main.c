@@ -6,7 +6,7 @@
 /*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/12/18 20:15:09 by tjkruger         ###   ########.fr       */
+/*   Updated: 2026/01/05 15:50:11 by tjkruger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -189,6 +189,7 @@ int main(int argc, char **argv, char **env)
 	(void)argv;
 	exit_status = 0;
 	ms.env_list = init_environment(env);
+	ms.all_commands = NULL;
 
 	setup_signals_interactive();
 	trash_init(&ms.trash);
