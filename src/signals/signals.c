@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hkaraogl <hkaraogl@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: r2d2 <r2d2@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/02 12:34:28 by tjkruger          #+#    #+#             */
-/*   Updated: 2025/12/16 15:17:37 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2026/01/06 17:14:34 by r2d2             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,10 +35,11 @@ void handle_sigint_interactive(int sig)
 {
 	(void)sig;
 	g_signal_status = SIGINT;
-	write(STDOUT_FILENO, "\n", 1);
+	write(STDOUT_FILENO, "^C\n", 3);
 	rl_on_new_line();
 	rl_replace_line("", 0);
 	rl_redisplay();
+	rl_done = 1;
 }
 
 void setup_signals_interactive(void)
@@ -47,7 +48,7 @@ void setup_signals_interactive(void)
 
 	sa.sa_handler = handle_sigint_interactive;
 	sigemptyset(&sa.sa_mask);
-	sa.sa_flags = SA_RESTART;
+	sa.sa_flags = 0;
 	sigaction(SIGINT, &sa, NULL);
 
 	signal(SIGQUIT, SIG_IGN);

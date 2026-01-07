@@ -6,9 +6,10 @@
 /*   By: hkaraogl <hkaraogl@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2026/01/07 13:46:08 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2026/01/07 14:17:12 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 
 /* ************************************************************************** */
@@ -206,24 +207,28 @@ int main(int argc, char **argv, char **env)
 	(void)argc;
 	(void)argv;
 	exit_status = 0;
+	ms.all_commands = NULL;
 	ms.env_list = init_environment(env);
+	rl_catch_signals = 0;
+	rl_catch_sigwinch = 0;
 	init_shell_level(&ms);
 	ms.all_commands = NULL;
 
 	setup_signals_interactive();
 	trash_init(&ms.trash);
+	
 
 	while (1)
 	{
 		input = readline("minisHell> ");
-		if (g_signal_status == 130)
+		if (g_signal_status == SIGINT)
 		{
 			exit_status = 130;
-			ms.env_list->last_exit = exit_status;
+			ms.env_list->last_exit = 130;
 			g_signal_status = 0;
 			if (input)
 				free(input);
-			continue;             // ← Wichtig: Neue Iteration!
+			continue;
 		}
 		if (!input)
 		{
@@ -251,7 +256,8 @@ int main(int argc, char **argv, char **env)
 			}
 			handle_expansions(ms.token, ms.env_list, &ms.trash);
 			ms.all_commands	= build_commands(&ms);
-			setup_all_heredoc(&ms);
+			if(ms.all_commands)
+				setup_all_heredoc(&ms);
 
 			exit_status = execute_commands(&ms);
 			ms.env_list->last_exit = exit_status;
