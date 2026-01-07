@@ -6,7 +6,7 @@
 /*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2026/01/07 15:02:44 by tjkruger         ###   ########.fr       */
+/*   Updated: 2026/01/07 15:37:43 by tjkruger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -254,7 +254,7 @@ int main(int argc, char **argv, char **env)
 				ms.all_commands = NULL;
 				continue;
 			}
-			handle_expansions(ms.token, ms.env_list, &ms.trash);
+			handle_expansions(ms.token, ms.env_list, &ms.trash);// make it so that i only expand when there is soemthing to expand
 			ms.all_commands = build_commands(&ms);
 			if (ms.all_commands)
 			{

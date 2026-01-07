@@ -137,7 +137,19 @@ void handle_expansions(t_token *token_list, t_env_list *env, t_trash *trash)
 
             {
                 arg = ft_argument(str + i + 1, trash);
-
+                if (!arg || arg[0] == '\0')
+                {
+                    // append literal '$' to the string
+                    ctx.str         = str;
+                    ctx.replacement = "$";
+                    ctx.pos         = i;
+                    ctx.len         = 1;  // only the $ itself
+                    new = insert_expandet(&ctx);
+                    str = new;
+                    token_list->value = str;
+                    i += 1; // skip the $ we just processed
+                    continue;
+                }
                 if (arg && arg[0] == '?' && arg[1] == '\0')
                     ex_str = exit_state_to_str(env->last_exit);
                 else

@@ -13,6 +13,7 @@ t_one_command   *create_new_command_node(t_trash *trash)// initialize t_one_comm
     new_command->next = NULL;
     return(new_command);
 }
+
 // basically just fill the ** in t_one_command char **command
 void add_word_to_cmd(t_one_command *curr_cmd, char *value, t_trash *trash) 
 {

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokens.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hkaraogl <hkaraogl@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/24 15:32:21 by tjkruger          #+#    #+#             */
-/*   Updated: 2026/01/05 16:00:33 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2026/01/07 18:01:05 by tjkruger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ char *ft_strjoin_free(char *s1, char c, t_trash *trash)
 
 char *append_char(char *s, char c, t_trash *trash)
 {
-    return ft_strjoin_free(s, c, trash);   // later chars → join
+    return ft_strjoin_free(s, c, trash);
 }
 
 /* allocate and push a token node using GC */
