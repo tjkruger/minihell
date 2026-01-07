@@ -6,7 +6,7 @@
 /*   By: hkaraogl <hkaraogl@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/24 15:50:25 by hkaraogl          #+#    #+#             */
-/*   Updated: 2025/12/15 14:21:56 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2026/01/07 12:30:44 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,11 @@ int    run_cd(char **args, t_env_list *env)
 	char *path;
 	char cwd[PATH_MAX];
 
+	if(args[1] && args[2])
+	{
+		ft_putendl_fd("bash: cd: too many arguments", 2);
+		return 1;
+	}
 	if(!args[1])
 		path = get_env_value(env, "HOME");
 	else

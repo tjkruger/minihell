@@ -6,7 +6,7 @@
 /*   By: hkaraogl <hkaraogl@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/04 13:01:43 by hkaraogl          #+#    #+#             */
-/*   Updated: 2025/12/15 15:39:14 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2026/01/07 12:25:18 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,9 +89,9 @@ int	run_export(t_env_list *env, char **cmd)
 	{
 		if(!is_valid_identifier(cmd[i]))
 		{
-			ft_putstr_fd("bash:", 1);
-			ft_putstr_fd(cmd[i], 1);
-			ft_putendl_fd("not a valid identifier", 1);
+			ft_putstr_fd("bash: export: `", 2);
+			ft_putstr_fd(cmd[i] , 2);
+			ft_putendl_fd("': not a valid identifier", 2);
 			exit_code = 1;
 		}
 		equal = has_equal(cmd[i]);

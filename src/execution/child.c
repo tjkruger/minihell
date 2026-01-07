@@ -6,11 +6,58 @@
 /*   By: hkaraogl <hkaraogl@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/02 13:04:23 by hkaraogl          #+#    #+#             */
-/*   Updated: 2025/12/18 17:00:47 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2026/01/07 14:14:21 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include <errno.h>
+
+// int wait_all_children(t_pipes *data)
+// {
+//     int i;
+//     int status;
+//     int last_status;
+//     int last_signal;
+    
+//     last_status = 0;
+//     last_signal = 0;
+//     i = 0;
+    
+//     // DEBUG: Zeige wie viele Prozesse erwartet werden
+//     printf("DEBUG: command_count = %d\n", data->command_count);
+    
+//     while (i < data->command_count)
+//     {
+//         printf("DEBUG: Waiting for PID %d (child %d/%d)\n", 
+//                data->pids[i], i + 1, data->command_count);
+        
+//         pid_t result = waitpid(data->pids[i], &status, 0);
+        
+//         printf("DEBUG: waitpid returned %d\n", result);
+        
+//         if (result == -1)
+//         {
+//             printf("DEBUG: waitpid error: %s\n", strerror(errno));
+//             break;  // Wichtig! Sonst hängt es hier
+//         }
+        
+//         if (WIFSIGNALED(status))
+//         {
+//             last_signal = WTERMSIG(status);
+//             last_status = 128 + last_signal;
+//         }
+//         else if (WIFEXITED(status))
+//             last_status = WEXITSTATUS(status);
+//         i++;
+//     }
+    
+//     if (last_signal == SIGQUIT)
+//         write(STDOUT_FILENO, "Quit (core dumped)\n", 19);
+    
+//     close_all_pipes(data);
+//     return (setup_signals_interactive(), last_status);
+// }
 
 int wait_all_children(t_pipes *data)
 {
@@ -37,7 +84,6 @@ int wait_all_children(t_pipes *data)
 	if (last_signal == SIGQUIT)
 		write(STDOUT_FILENO, "Quit (core dumped)\n", 19);
 	close_all_pipes(data);
-	// free_pipes(data);
 	return (setup_signals_interactive(), last_status);
 }
 
@@ -82,6 +128,8 @@ void setup_child_pipes(t_pipes *data, int index)
 			ft_perror("dup2");
 			exit(1);
 		}
+	    close(data->pipes[index - 1][0]);
+        close(data->pipes[index - 1][1]);
 	}
 	if(index < data->pipe_count)
 	{
@@ -90,6 +138,8 @@ void setup_child_pipes(t_pipes *data, int index)
 			ft_perror("dup2");
 			exit(1);
 		}
+        close(data->pipes[index][0]);
+        close(data->pipes[index][1]);
 	}
 	
 }

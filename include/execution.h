@@ -6,7 +6,7 @@
 /*   By: hkaraogl <hkaraogl@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 14:55:36 by hkaraogl          #+#    #+#             */
-/*   Updated: 2025/12/18 17:17:11 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2026/01/07 13:24:48 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,5 +43,7 @@ void init_fd_backups(int *fd_backups);
 //heredoc.c
 int setup_all_heredoc(t_ms *ms);
 // void	cleanup_all_heredoc_files(t_all_commands *cmd_lst);
+
+void print_array(char **arr);
 
 #endif

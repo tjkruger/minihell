@@ -1,0 +1,13 @@
+echo "> >> < * ? [ ] | ; [ ] || && ( ) & # $  <<"
+
+
+echo "$"
+
+echo $ 
+
+
+Test  50: ❌ exit hello 
+mini output = (bash: exit: hello numeric argument required)
+bash output = ()
+mini error = ()
+bash error = ( numeric argument required)

@@ -6,7 +6,7 @@
 /*   By: hkaraogl <hkaraogl@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/05 20:39:00 by hkaraogl          #+#    #+#             */
-/*   Updated: 2026/01/05 17:00:30 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2026/01/07 13:16:43 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,20 +36,14 @@ static int is_valid_nbr(char *nbr)
 	else
 		return 0;
 }
-// ✅ Exit wird IMMER ausgeführt außer bei zu vielen Argumenten
-// ✅ Modulo 256 für alle Exit-Codes
-// ✅ "exit" ausgeben bevor die Shell beendet wird
-// ✅ Negative Zahlen werden zu positiven (255, 254, ...)
-// ✅ Whitespace am Anfang/Ende ignorieren
-// ✅ Overflow als ungültig behandeln
-// ✅ Zu viele Argumente = Shell läuft weiter mit Return 1
-//**cmd = {exit, 1, 2, NULL} */
+
 int run_exit(t_ms *ms)
 {
 	int exit_code;
 	int last_exit;
 
-	ft_putendl_fd("exit", 1);
+	if(isatty(STDIN_FILENO))
+		ft_putendl_fd("exit", 2);
 	last_exit = ms->env_list->last_exit;
 	if(!ms->all_commands->head->cmd[1])
 	{
@@ -62,18 +56,14 @@ int run_exit(t_ms *ms)
 
 	if(ms->all_commands->head->cmd[2])
 	{
-		// exit
-		// bash: exit: too many arguments
-		ft_putendl_fd("bash: exit: too many arguments", 1);
+		ft_putendl_fd("bash: exit: too many arguments", 2);
 		return 1;
 	}
 	if(!is_valid_nbr(ms->all_commands->head->cmd[1]))
 	{
-		// exit
-		// bash: exit: a2: numeric argument required
-		ft_putstr_fd("bash: exit: ", 1);
-		ft_putstr_fd(ms->all_commands->head->cmd[1], 1);
-		ft_putendl_fd(" numeric argument required", 1);
+		ft_putstr_fd("bash: exit: ", 2);
+		ft_putstr_fd(ms->all_commands->head->cmd[1], 2);
+		ft_putendl_fd(": numeric argument required", 2);
 		free_hist(ms->history_list);
 		free_all_environment(ms->env_list);
 		gc_cleanup(&ms->trash);

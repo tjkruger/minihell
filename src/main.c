@@ -6,7 +6,7 @@
 /*   By: hkaraogl <hkaraogl@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2026/01/05 17:13:14 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2026/01/07 13:46:08 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -175,6 +175,27 @@ void free_all_environment(t_env_list *env_lst)
 	free(env_lst);
 }
 
+void init_shell_level(t_ms *ms)
+{
+	char *shlvl_str;
+	char *new_shlvl_str;
+	int shlvl;
+
+	shlvl_str = get_env_value(ms->env_list, "SHLVL");
+	if(!shlvl_str)
+		shlvl = 1;
+	else
+	{
+		shlvl = ft_atoi(shlvl_str);
+		shlvl++;
+	}
+	if(shlvl <= 0)
+		shlvl = 1;
+	new_shlvl_str = ft_itoa(shlvl);
+	set_env_value(ms->env_list, "SHLVL", new_shlvl_str, 1);
+	free(new_shlvl_str);
+}
+
 int main(int argc, char **argv, char **env)
 {
 	t_ms ms;
@@ -186,6 +207,7 @@ int main(int argc, char **argv, char **env)
 	(void)argv;
 	exit_status = 0;
 	ms.env_list = init_environment(env);
+	init_shell_level(&ms);
 	ms.all_commands = NULL;
 
 	setup_signals_interactive();
