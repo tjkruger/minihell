@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   child.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hkaraogl <hkaraogl@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: r2d2 <r2d2@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/02 13:04:23 by hkaraogl          #+#    #+#             */
-/*   Updated: 2025/12/18 17:00:47 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2026/01/06 16:57:13 by r2d2             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ int wait_all_children(t_pipes *data)
 		i++;
 	}
 	if (last_signal == SIGQUIT)
-		write(STDOUT_FILENO, "Quit (core dumped)\n", 19);
+		write(STDERR_FILENO, "Quit (core dumped)\n", 19);
 	close_all_pipes(data);
 	// free_pipes(data);
 	return (setup_signals_interactive(), last_status);

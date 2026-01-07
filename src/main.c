@@ -6,7 +6,7 @@
 /*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2026/01/07 13:24:51 by tjkruger         ###   ########.fr       */
+/*   Updated: 2026/01/07 13:32:33 by tjkruger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -187,17 +187,19 @@ int main(int argc, char **argv, char **env)
 	exit_status = 0;
 	ms.all_commands = NULL;
 	ms.env_list = init_environment(env);
-
+	rl_catch_signals = 0;
+	rl_catch_sigwinch = 0;
 	setup_signals_interactive();
 	trash_init(&ms.trash);
+	
 
 	while (1)
 	{
 		input = readline("minisHell> ");
-		if (g_signal_status == 130)
+		if (g_signal_status == SIGINT)
 		{
 			exit_status = 130;
-			ms.env_list->last_exit = exit_status;
+			ms.env_list->last_exit = 130;
 			g_signal_status = 0;
 			if (input)
 				free(input);
