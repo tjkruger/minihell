@@ -6,7 +6,7 @@
 /*   By: hkaraogl <hkaraogl@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/28 15:03:52 by hkaraogl          #+#    #+#             */
-/*   Updated: 2026/01/07 14:18:27 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2026/01/07 14:27:59 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,7 +134,7 @@ static int	execute_with_pipes(t_ms *ms)
 		i++;
 	}
 	int status;
-
+	close_all_pipes(&data);
 	status = wait_all_children(&data);
 	setup_signals_interactive();
 	return status;

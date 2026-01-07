@@ -11,3 +11,24 @@ mini output = (bash: exit: hello numeric argument required)
 bash output = ()
 mini error = ()
 bash error = ( numeric argument required)
+
+env | sort | grep -v SHLVL | grep -v ^
+
+cat ./test_files/infile_big | grep oi
+
+cat minishell.h | grep ");"$ 
+
+ export GHOST=123 | env | grep GHOST 
+
+ echo "> >> < * ? [ ] | ; [ ] || && ( ) & # $  <<"
+
+ echo "$"
+
+ echo hi >         ./outfiles/outfile01 bye
+
+ $PWD
+
+ ./test_files/invalid_permission 
+
+ $
+ 

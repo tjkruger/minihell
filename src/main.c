@@ -3,12 +3,13 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hkaraogl <hkaraogl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2026/01/07 15:37:43 by tjkruger         ###   ########.fr       */
+/*   Created: Invalid Date        by                   #+#    #+#             */
+/*   Updated: 2026/01/07 18:10:04 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 
 
@@ -193,6 +194,13 @@ void init_shell_level(t_ms *ms)
 	if(shlvl <= 0)
 		shlvl = 1;
 	new_shlvl_str = ft_itoa(shlvl);
+	if (shlvl == 3)
+		setup_signals_interactive();
+	else
+	{
+		signal(SIGINT, SIG_DFL);
+		signal(SIGQUIT, SIG_DFL);
+	}
 	set_env_value(ms->env_list, "SHLVL", new_shlvl_str, 1);
 	free(new_shlvl_str);
 }
@@ -212,7 +220,6 @@ int main(int argc, char **argv, char **env)
 	rl_catch_signals = 0;
 	rl_catch_sigwinch = 0;
 	init_shell_level(&ms);
-	ms.all_commands = NULL;
 
 	setup_signals_interactive();
 	trash_init(&ms.trash);
