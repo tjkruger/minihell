@@ -6,9 +6,10 @@
 /*   By: hkaraogl <hkaraogl@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2026/01/07 14:33:05 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2026/01/07 15:25:12 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 
 
@@ -262,9 +263,17 @@ int main(int argc, char **argv, char **env)
 				continue;
 			}
 			handle_expansions(ms.token, ms.env_list, &ms.trash);
-			ms.all_commands	= build_commands(&ms);
-			if(ms.all_commands)
-				setup_all_heredoc(&ms);
+			ms.all_commands = build_commands(&ms);
+			if (ms.all_commands)
+			{
+				if (!setup_all_heredoc(&ms))  // heredoc aborted
+				{
+					ms.env_list->last_exit = 130;  // propagate Ctrl-C
+					gc_cleanup(&ms.trash);         // clean temp memory
+					ms.all_commands = NULL;        // prevent command execution
+					continue;                      // go back to prompt
+				}
+			}
 
 			exit_status = execute_commands(&ms);
 			ms.env_list->last_exit = exit_status;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: r2d2 <r2d2@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/02 12:34:28 by tjkruger          #+#    #+#             */
-/*   Updated: 2026/01/06 17:14:34 by r2d2             ###   ########.fr       */
+/*   Updated: 2026/01/07 14:26:06 by tjkruger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,9 +35,9 @@ void handle_sigint_interactive(int sig)
 {
 	(void)sig;
 	g_signal_status = SIGINT;
-	write(STDOUT_FILENO, "^C\n", 3);
 	rl_on_new_line();
 	rl_replace_line("", 0);
+	write(STDOUT_FILENO, "^C\n", 3);
 	rl_redisplay();
 	rl_done = 1;
 }
