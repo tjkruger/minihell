@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hkaraogl <hkaraogl@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: r2d2 <r2d2@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/28 15:03:52 by hkaraogl          #+#    #+#             */
-/*   Updated: 2026/01/05 16:30:30 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2026/01/06 16:55:15 by r2d2             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,9 +109,10 @@ static int	execute_with_pipes(t_ms *ms)
 
 	if(!init_pipes(ms, &data))
 		return (ft_perror("failed to initialize pipes"),1);
+	signal(SIGINT, SIG_IGN);
+	signal(SIGQUIT, SIG_IGN);
 
 	
-	setup_signals_interactive();
 	i = 0;
 	current = ms->all_commands->head;
 	while(current)
@@ -132,19 +133,31 @@ static int	execute_with_pipes(t_ms *ms)
 		current = current->next;
 		i++;
 	}
-	return wait_all_children(&data);
+	int status;
+
+	status = wait_all_children(&data);
+	setup_signals_interactive();
+	return status;
 }
 
 int	execute_commands(t_ms *ms)
 {
+	signal(SIGINT, SIG_IGN);
+	signal(SIGQUIT, SIG_IGN);
 	t_one_command *current;
 
 	if(!ms->all_commands || !ms->all_commands->head)
 		return 1;
 	current = ms->all_commands->head;
 
-	if(ms->all_commands->size == 1 && current->cmd_type == BUILTIN)
-		return execute_builtin(ms, current);
+	if (ms->all_commands->size == 1 && current->cmd_type == BUILTIN)
+	{
+		int status;
+
+		status = execute_builtin(ms, current);
+		setup_signals_interactive();
+		return status;
+	}
 
 	return execute_with_pipes(ms);
 }
