@@ -6,7 +6,7 @@
 /*   By: hkaraogl <hkaraogl@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2026/01/07 15:25:12 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2026/01/07 17:27:07 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -220,7 +220,6 @@ int main(int argc, char **argv, char **env)
 	rl_catch_signals = 0;
 	rl_catch_sigwinch = 0;
 	init_shell_level(&ms);
-	ms.all_commands = NULL;
 
 	setup_signals_interactive();
 	trash_init(&ms.trash);

@@ -6,7 +6,7 @@
 /*   By: hkaraogl <hkaraogl@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/24 15:50:25 by hkaraogl          #+#    #+#             */
-/*   Updated: 2026/01/07 12:30:44 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2026/01/07 17:48:08 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,6 @@ int    run_cd(char **args, t_env_list *env)
 		return 1;
 	}
 	if(getcwd(cwd, sizeof(cwd)))
-	{
 		set_env_value(env, "PWD", cwd, 1);
-	}
 	return 0;
 }

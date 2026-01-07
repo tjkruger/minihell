@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hkaraogl <hkaraogl@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/02 18:18:13 by hkaraogl          #+#    #+#             */
-/*   Updated: 2026/01/07 15:21:40 by tjkruger         ###   ########.fr       */
+/*   Updated: 2026/01/07 17:12:34 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -167,7 +167,6 @@ void printout_token(int fd, char *value)
 static int	setup_heredoc(t_ms *ms, t_file_node *file)
 {
 	t_token *temp_token_heredoc;
-	t_token *tok_head;
 	char *tmp_file;
 	char *line;
 	int fd = 0;
@@ -191,7 +190,12 @@ static int	setup_heredoc(t_ms *ms, t_file_node *file)
             return 0;         // abort heredoc
         }
         if(!line)
+        {
+            ft_putstr_fd("minishell: warning: here-document delimited by end-of-file (wanted `", STDERR_FILENO);
+            ft_putstr_fd(file->delimiter, STDERR_FILENO);
+            ft_putstr_fd("')\n", STDERR_FILENO);
             break;
+        }
         
         if(ft_strcmp(line, file->delimiter) == 0)
         {
@@ -208,7 +212,6 @@ static int	setup_heredoc(t_ms *ms, t_file_node *file)
 
         if(!file->qoutes_in_heredoc)
             handle_expansions(temp_token_heredoc, ms->env_list, &ms->trash);
-        tok_head = temp_token_heredoc;
         while(temp_token_heredoc)
         {
             printout_token(fd, temp_token_heredoc->value);
