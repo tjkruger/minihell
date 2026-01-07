@@ -6,7 +6,7 @@
 /*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2026/01/05 17:37:54 by tjkruger         ###   ########.fr       */
+/*   Updated: 2026/01/07 13:24:51 by tjkruger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -201,7 +201,7 @@ int main(int argc, char **argv, char **env)
 			g_signal_status = 0;
 			if (input)
 				free(input);
-			continue;             // ← Wichtig: Neue Iteration!
+			continue;
 		}
 		if (!input)
 		{
