@@ -6,7 +6,7 @@
 /*   By: hkaraogl <hkaraogl@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/02 13:04:23 by hkaraogl          #+#    #+#             */
-/*   Updated: 2026/01/07 14:17:56 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2026/01/07 15:14:53 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,63 +59,63 @@
 //     return (setup_signals_interactive(), last_status);
 // }
 
-int wait_all_children(t_pipes *data)
-{
-	int i;
-	int status;
-	int last_status;
-	int last_signal;
-
-	last_status = 0;
-	last_signal = 0;
-	i = 0;
-	while (i < data->command_count)
-	{
-		waitpid(data->pids[i], &status, 0);
-		if (WIFSIGNALED(status))
-		{
-			last_signal = WTERMSIG(status);
-			last_status = 128 + last_signal;
-		}
-		else if (WIFEXITED(status))
-			last_status = WEXITSTATUS(status);
-		i++;
-	}
-	if (last_signal == SIGQUIT)
-		write(STDERR_FILENO, "Quit (core dumped)\n", 19);
-	close_all_pipes(data);
-	return (setup_signals_interactive(), last_status);
-}
-
 // int wait_all_children(t_pipes *data)
 // {
-// 	int wait_status;
-// 	int last_status;
 // 	int i;
-// 	int sig;
+// 	int status;
+// 	int last_status;
+// 	int last_signal;
 
+// 	last_status = 0;
+// 	last_signal = 0;
 // 	i = 0;
-// 	while(i < data->command_count)
+// 	while (i < data->command_count)
 // 	{
-// 		waitpid(data->pids[i], &wait_status, 0);
-// 		if(WIFSIGNALED(wait_status))
+// 		waitpid(data->pids[i], &status, 0);
+// 		if (WIFSIGNALED(status))
 // 		{
-// 			sig = WTERMSIG(wait_status);
-// 			last_status = 128 + sig;
-// 			if(sig == SIGQUIT)
-// 				write(STDOUT_FILENO, "Quit (core dumped)\n", 19);		
+// 			last_signal = WTERMSIG(status);
+// 			last_status = 128 + last_signal;
 // 		}
-// 		else if(WIFEXITED(wait_status))
-// 			last_status = WEXITSTATUS(wait_status);
-// 		else
-// 			last_status = 1;
+// 		else if (WIFEXITED(status))
+// 			last_status = WEXITSTATUS(status);
 // 		i++;
 // 	}
+// 	if (last_signal == SIGQUIT)
+// 		write(STDERR_FILENO, "Quit (core dumped)\n", 19);
 // 	close_all_pipes(data);
-// 	free_pipes(data);
-// 	setup_signals_interactive();
-// 	return last_status;
+// 	return (setup_signals_interactive(), last_status);
 // }
+
+int wait_all_children(t_pipes *data)
+{
+	int wait_status;
+	int last_status;
+	int i;
+	int sig;
+
+	i = 0;
+	while(i < data->command_count)
+	{
+		waitpid(data->pids[i], &wait_status, 0);
+		if(WIFSIGNALED(wait_status))
+		{
+			sig = WTERMSIG(wait_status);
+			last_status = 128 + sig;
+			if(sig == SIGQUIT)
+				write(STDOUT_FILENO, "Quit (core dumped)\n", 19);		
+		}
+		else if(WIFEXITED(wait_status))
+			last_status = WEXITSTATUS(wait_status);
+		else
+			last_status = 1;
+		i++;
+	}
+	close_all_pipes(data);
+	// free_pipes(data);
+	setup_signals_interactive();
+	return last_status;
+}
 
 //for single command: no use of dup2
 void setup_child_pipes(t_pipes *data, int index)

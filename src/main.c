@@ -6,7 +6,7 @@
 /*   By: hkaraogl <hkaraogl@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2026/01/07 14:17:12 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2026/01/07 14:33:05 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -193,6 +193,13 @@ void init_shell_level(t_ms *ms)
 	if(shlvl <= 0)
 		shlvl = 1;
 	new_shlvl_str = ft_itoa(shlvl);
+	if (shlvl == 3)
+		setup_signals_interactive();
+	else
+	{
+		signal(SIGINT, SIG_DFL);
+		signal(SIGQUIT, SIG_DFL);
+	}
 	set_env_value(ms->env_list, "SHLVL", new_shlvl_str, 1);
 	free(new_shlvl_str);
 }
