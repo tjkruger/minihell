@@ -6,7 +6,7 @@
 /*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2026/01/07 13:32:33 by tjkruger         ###   ########.fr       */
+/*   Updated: 2026/01/07 13:58:06 by tjkruger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -231,7 +231,8 @@ int main(int argc, char **argv, char **env)
 			}
 			handle_expansions(ms.token, ms.env_list, &ms.trash);
 			ms.all_commands	= build_commands(&ms);
-			setup_all_heredoc(&ms);
+			if(ms.all_commands)
+				setup_all_heredoc(&ms);
 
 			exit_status = execute_commands(&ms);
 			ms.env_list->last_exit = exit_status;
