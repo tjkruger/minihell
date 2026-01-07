@@ -6,7 +6,7 @@
 /*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/02 18:18:13 by hkaraogl          #+#    #+#             */
-/*   Updated: 2025/12/18 20:12:40 by tjkruger         ###   ########.fr       */
+/*   Updated: 2026/01/07 15:21:40 by tjkruger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,6 +112,29 @@ static char *generate_tmpfile_name(t_trash *trash)
 // 	}
 // }
 
+void heredoc_sigint(int sig)
+{
+    (void)sig;
+    g_signal_status = SIGINT;       // tell shell Ctrl-C happened
+    write(STDOUT_FILENO, "\nminisHell> ", 12);  // optional newline
+    rl_done = 1;                     // exit readline loop
+}
+
+void setup_signals_heredoc(void)
+{
+    struct sigaction sa;
+
+    sa.sa_handler = heredoc_sigint;
+    sigemptyset(&sa.sa_mask);
+    sa.sa_flags = 0;
+    sigaction(SIGINT, &sa, NULL);
+
+    // heredoc ignores SIGQUIT
+    signal(SIGQUIT, SIG_IGN);
+}
+
+
+
 int	no_qoutes(char *str)
 {
 	int i = 0;
@@ -154,9 +177,19 @@ static int	setup_heredoc(t_ms *ms, t_file_node *file)
 	if(fd == -1)
 		return (perror("heredoc tmp file"), 0);
 
+    setup_signals_heredoc(); //signal setup for heredoc
     while(1)
     {
         line = readline("heredoc:");
+        if (g_signal_status == SIGINT)
+        {
+            free(line);
+            close(fd);
+            unlink(tmp_file); // delete temp file
+            g_signal_status = 0;
+            ms->env_list->last_exit = 130;
+            return 0;         // abort heredoc
+        }
         if(!line)
             break;
         
@@ -188,6 +221,7 @@ static int	setup_heredoc(t_ms *ms, t_file_node *file)
     }
     close(fd);
     file->filename = tmp_file;
+    setup_signals_interactive();
     return 1;
 }
 
