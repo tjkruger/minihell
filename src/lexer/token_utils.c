@@ -6,7 +6,7 @@
 /*   By: r2d2 <r2d2@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/24 15:32:25 by tjkruger          #+#    #+#             */
-/*   Updated: 2025/12/17 23:44:40 by r2d2             ###   ########.fr       */
+/*   Updated: 2026/01/12 04:30:09 by r2d2             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,15 +88,20 @@ char **extracted_token(char *str, t_trash *trash)
 
     while (str < token_end)
     {
-        if (*str == '\'' && mode == 0)
+        if ((*str == '"' || *str == '\'') && mode == 0)
         {
-            mode = '\'';
-            str++;
-            continue;
-        }
-        if (*str == '"' && mode == 0)
-        {
-            mode = '"';
+            char q = *str;
+
+            // Empty quotes: "" or ''
+            if (*(str + 1) == q)
+            {
+                // mark dna to indicate expansion blocked
+                *dp++ = 'Q';   // Q = empty-quote boundary
+                str += 2;
+                continue;
+            }
+
+            mode = q;
             str++;
             continue;
         }
@@ -109,6 +114,7 @@ char **extracted_token(char *str, t_trash *trash)
         }
 
         *tp++ = *str;
+
         if (mode == 0)
             *dp++ = 'N';
         else if (mode == '\'')
@@ -118,6 +124,7 @@ char **extracted_token(char *str, t_trash *trash)
 
         str++;
     }
+
 
     *tp = '\0';
     *dp = '\0';
