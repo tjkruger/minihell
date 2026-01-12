@@ -6,7 +6,7 @@
 /*   By: r2d2 <r2d2@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2026/01/12 04:52:44 by r2d2             ###   ########.fr       */
+/*   Updated: 2026/01/12 23:26:57 by r2d2             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,50 +135,71 @@ t_all_commands	*create_new_commands_list(t_trash *trash)
 	return (list);
 }
 
+int	handle_token(t_ms *ms, t_one_command *cmd)
+{
+	if (ms->token->type == TOKEN_WORD)
+		add_word_to_cmd(cmd, ms->token->value, &ms->trash);
+	else if (ms->token->type == TOKEN_REDIR_IN
+		|| ms->token->type == TOKEN_REDIR_OUT
+		|| ms->token->type == TOKEN_REDIR_APPEND
+		|| ms->token->type == TOKEN_REDIR_HEREDOC)
+	{
+		if (!ms->token->next || ms->token->next->type != TOKEN_WORD)
+			return (0);
+		add_file_to_cmd(ms, ms->token->next->value, ms->token->type,
+			ms->token->next->dna);
+		ms->token = ms->token->next;
+	}
+	return (1);
+}
+int	finalize_command(t_one_command *cmd)
+{
+	if (!cmd->cmd && !cmd->files)
+		return (0);
+	if (cmd->cmd)
+	{
+		cmd->cmd_type = find_cmd_type(cmd->cmd);
+		cmd->executable = find_executable(cmd->cmd[0]);
+	}
+	return (1);
+}
+
+int	parse_one_command(t_ms *ms, t_all_commands *cmd_list)
+{
+	t_one_command	*cmd;
+
+	cmd = create_new_command_node(&ms->trash);
+	if (!cmd)
+		return (0);
+	ms->curr_cmd = cmd;
+	while (ms->token && ms->token->type != TOKEN_PIPE)
+	{
+		if (!handle_token(ms, cmd))
+			return (0);
+		ms->token = ms->token->next;
+	}
+	ms->curr_cmd = NULL;
+	if (!finalize_command(cmd))
+		return (0);
+	add_cmd_to_list(cmd_list, cmd);
+	if (ms->token && ms->token->type == TOKEN_PIPE)
+		ms->token = ms->token->next;
+	return (1);
+}
+
 t_all_commands	*build_commands(t_ms *ms)
 {
 	t_all_commands	*cmd_list;
-		t_one_command *curr_cmd;
 
 	if (!ms)
 		return (NULL);
 	cmd_list = create_new_commands_list(&ms->trash);
 	if (!cmd_list)
-		return NULL;
+		return (NULL);
 	while (ms->token)
 	{
-		curr_cmd = create_new_command_node(&ms->trash);
-		if (!curr_cmd)
-			return NULL;
-		ms->curr_cmd = curr_cmd;
-		while (ms->token && ms->token->type != TOKEN_PIPE)
-		{
-			if (ms->token->type == TOKEN_WORD)
-				add_word_to_cmd(curr_cmd, ms->token->value, &ms->trash);
-			else if (ms->token->type == TOKEN_REDIR_IN
-				|| ms->token->type == TOKEN_REDIR_OUT
-				|| ms->token->type == TOKEN_REDIR_APPEND
-				|| ms->token->type == TOKEN_REDIR_HEREDOC)
-			{
-				if (!ms->token->next || ms->token->next->type != TOKEN_WORD)
-					return NULL;
-				add_file_to_cmd(ms, ms->token->next->value, ms->token->type,
-					ms->token->next->dna);
-				ms->token = ms->token->next; // skip filename
-			}
-			ms->token = ms->token->next;
-		}
-		ms->curr_cmd = NULL;
-		if (!curr_cmd->cmd && !curr_cmd->files)
-			return NULL;
-		if (curr_cmd->cmd)
-		{
-			curr_cmd->cmd_type = find_cmd_type(curr_cmd->cmd);
-			curr_cmd->executable = find_executable(curr_cmd->cmd[0]);
-		}
-		add_cmd_to_list(cmd_list, curr_cmd);
-		if (ms->token && ms->token->type == TOKEN_PIPE)
-			ms->token = ms->token->next;
+		if (!parse_one_command(ms, cmd_list))
+			return (NULL);
 	}
-	return cmd_list;
+	return (cmd_list);
 }
