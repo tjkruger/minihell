@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipes.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hkaraogl <hkaraogl@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hkaraogl <hkaraogl@student.42heilbronn.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/02 13:08:42 by hkaraogl          #+#    #+#             */
-/*   Updated: 2026/01/09 13:29:13 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2026/01/13 15:46:08 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,13 +76,11 @@ int	**create_pipes(t_trash *trash, int count)
 		pipes[i] = gc_malloc(trash, 2, sizeof(int));
 		if (!pipes[i])
 		{
-			// cleanup free(pipes)
 			return (NULL);
 		}
 		if (pipe(pipes[i]) == -1)
 		{
 			perror("pipe");
-			// cleanup
 			return (NULL);
 		}
 		i++;

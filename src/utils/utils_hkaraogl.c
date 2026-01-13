@@ -3,103 +3,21 @@
 /*                                                        :::      ::::::::   */
 /*   utils_hkaraogl.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hkaraogl <hkaraogl@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hkaraogl <hkaraogl@student.42heilbronn.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/29 13:40:50 by hkaraogl          #+#    #+#             */
-/*   Updated: 2026/01/08 16:34:57 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2026/01/13 18:05:09 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include    "minishell.h"
-
-void	print_export_error(char *arg)
-{
-	ft_putstr_fd("bash: export: `", 2);
-	ft_putstr_fd(arg, 2);
-	ft_putendl_fd("': not a valid identifier", 2);
-}
-
-void	sort_env(t_env_list *env)
-{
-	t_env_node	*current;
-	t_env_node	*compare;
-	char		*tmp;
-
-	current = env->head;
-	while (current)
-	{
-		compare = current->next;
-		while (compare)
-		{
-			if (ft_strcmp(current->key, compare->key) > 0)
-				swap_content(current, compare);
-			compare = compare->next;
-		}
-		current = current->next;
-	}
-}
-
-int	error_exit(char *cmd, char*msg, int code)
-{
-	print_cmd_error(cmd, msg);
-	return code;
-}
-
-void print_cmd_error(char *cmd, char *msg)
-{
-	ft_putstr_fd("minishell: ", 2);
-	ft_putstr_fd(cmd, 2);
-	ft_putstr_fd(": ", 2);
-	ft_putendl_fd(msg, 2);
-}
-
-void	ft_perror(char *msg)
-{
-	ft_putstr_fd("minishell: ", 2);
-	perror(msg);
-}
-
-int	error_exit_perror(char *context, int code)
-{
-	ft_perror(context);
-	return code;
-}
-
-int ft_strcmp(char *s1, char *s2)
-{
-	int i = 0;
-
-	while(s1[i]  != '\0' && s2[i] != '\0')
-	{
-		if(s1[i] != s2[i])
-			return s1[i] - s2[i];
-		i++;
-	}
-
-	return s1[i] - s2[i];
-}
-
-int	strncmp_strlen(char *s1, char *s2)
-{
-	int str_len = ft_strlen(s1);
-	return ((str_len == ft_strlen(s2)) && (ft_strncmp(s1, s2, str_len) == 0));
-}
-
-int count_array_string(char **arr)
-{
-	int i = 0;
-
-	while(arr[i])
-		i++;
-	return i;
-}
+#include "minishell.h"
 
 void	free_str_arr(char **arr)
 {
-	int i;
+	int	i;
 
 	i = 0;
-	while(arr[i])
+	while (arr[i])
 	{
 		free(arr[i]);
 		i++;
@@ -109,7 +27,7 @@ void	free_str_arr(char **arr)
 
 int	is_valid_identifier(char *str)
 {
-	int i;
+	int	i;
 
 	if (!str || !str[0])
 		return (0);
@@ -125,9 +43,20 @@ int	is_valid_identifier(char *str)
 	return (1);
 }
 
-char *has_equal(char *str)
+char	*has_equal(char *str)
 {
-	char *equal;
+	char	*equal;
+
 	equal = ft_strchr(str, '=');
-	return equal;
+	return (equal);
+}
+
+int	is_absolut_path(char *cmd)
+{
+	if (ft_strchr(cmd, '/'))
+	{
+		if (access(cmd, X_OK) == 0)
+			return (1);
+	}
+	return (0);
 }

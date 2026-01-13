@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hkaraogl <hkaraogl@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hkaraogl <hkaraogl@student.42heilbronn.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/29 13:45:15 by hkaraogl          #+#    #+#             */
-/*   Updated: 2026/01/08 16:34:55 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2026/01/13 17:56:34 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,5 +25,6 @@ int	error_exit_perror(char *context, int code);
 int	error_exit(char *cmd, char*msg, int code);
 void	sort_env(t_env_list *env);
 void	print_export_error(char *arg);
+int	is_absolut_path(char *cmd);
 
 #endif

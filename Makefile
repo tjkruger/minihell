@@ -26,21 +26,34 @@ BUILTINS    = builtins/echo.c \
 					builtins/unset.c \
 					builtins/exit.c \
 					builtins/env.c \
-					execution/execution.c \
-					execution/redirections.c \
-					utils/utils_hkaraogl.c \
-					environment.c \
-					execution/pipes.c \
+					signals/signals.c \
+
+EXECUTION	= 		execution/pipes.c \
 					execution/child.c \
 					execution/fd.c \
 					execution/heredoc.c \
-					signals/signals.c \
-					trash/trash.c \
+					execution/handle_redir.c \
+					execution/fork.c \
+					execution/heredoc_utils.c \
+					execution/execution.c \
+					execution/redirections.c
+		
+TRASH		=		trash/trash.c \
 					trash/gc_split.c \
-					trash/gc_itoa.c \
+					trash/gc_itoa.c 
+
+UTILS		=		utils/utils_hkaraogl_2.c \
+					utils/utils_hkaraogl_3.c \
+					utils/utils_hkaraogl.c 
+				
+ENV			=		environment/environment_utils.c \
+					environment/environment.c
+
+INIT		=		init/init_environment.c 
+
 
 # Combine all source groups
-SRC         = $(MAIN) $(HISTORY) $(LEXER) $(BUILTINS) $(PARSER) $(FREE)
+SRC         = $(MAIN) $(HISTORY) $(LEXER) $(BUILTINS) $(PARSER) $(EXECUTION) $(TRASH) $(UTILS) $(ENV) $(INIT) $(FREE)
 
 # === Object list (preserve directories) ===
 OBJ         = $(patsubst %.c,$(OBJ_DIR)/%.o,$(SRC))

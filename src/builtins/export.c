@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hkaraogl <hkaraogl@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hkaraogl <hkaraogl@student.42heilbronn.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/04 13:01:43 by hkaraogl          #+#    #+#             */
-/*   Updated: 2026/01/08 16:35:08 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2026/01/13 15:37:01 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	swap_content(t_env_node *node1, t_env_node *node2)
+void	swap_content(t_env_node *node1, t_env_node *node2)
 {
 	char	*tmp_key;
 	char	*tmp_value;

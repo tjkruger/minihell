@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hkaraogl <hkaraogl@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hkaraogl <hkaraogl@student.42heilbronn.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/28 15:03:52 by hkaraogl          #+#    #+#             */
-/*   Updated: 2026/01/09 13:29:21 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2026/01/13 16:02:48 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,47 +75,47 @@ int	execute_external_command(t_ms *ms, t_one_command *cmd)
 	exit(ERR_EXEC_FAIL);
 }
 
-static int	execute_with_pipes(t_ms *ms)
-{
-	t_pipes			data;
-	t_one_command	*current;
-	int				i;
-	int				status;
+// static int	execute_with_pipes(t_ms *ms)
+// {
+// 	t_pipes			data;
+// 	t_one_command	*current;
+// 	int				i;
+// 	int				status;
 
-	if (!init_pipes(ms, &data))
-		return (ft_perror("failed to initialize pipes"), 1);
-	signal(SIGINT, SIG_IGN);
-	signal(SIGQUIT, SIG_IGN);
-	i = 0;
-	current = ms->all_commands->head;
-	while (current)
-	{
-		data.pids[i] = fork();
-		if (data.pids[i] == -1)
-		{
-			ft_perror("fork");
-			close_all_pipes(&data);
-			setup_signals_interactive();
-			return (1);
-		}
-		if (data.pids[i] == 0)
-		{
-			setup_signals_child();
-			execute_child(ms, current, &data, i);
-		}
-		current = current->next;
-		i++;
-	}
-	close_all_pipes(&data);
-	status = wait_all_children(&data);
-	setup_signals_interactive();
-	return (status);
-}
+// 	if (!init_pipes(ms, &data))
+// 		return (ft_perror("failed to initialize pipes"), 1);
+// 	signal(SIGINT, SIG_IGN);
+// 	signal(SIGQUIT, SIG_IGN);
+// 	i = 0;
+// 	current = ms->all_commands->head;
+// 	while (current)
+// 	{
+// 		data.pids[i] = fork();
+// 		if (data.pids[i] == -1)
+// 		{
+// 			ft_perror("fork");
+// 			close_all_pipes(&data);
+// 			setup_signals_interactive();
+// 			return (1);
+// 		}
+// 		if (data.pids[i] == 0)
+// 		{
+// 			setup_signals_child();
+// 			execute_child(ms, current, &data, i);
+// 		}
+// 		current = current->next;
+// 		i++;
+// 	}
+// 	close_all_pipes(&data);
+// 	status = wait_all_children(&data);
+// 	setup_signals_interactive();
+// 	return (status);
+// }
 
 int	execute_commands(t_ms *ms)
 {
 	t_one_command	*current;
-		int status;
+	int				status;
 
 	signal(SIGINT, SIG_IGN);
 	signal(SIGQUIT, SIG_IGN);
