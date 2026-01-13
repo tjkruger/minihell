@@ -130,7 +130,10 @@ typedef struct s_lexer_ctx
     char    *dna;
     int     i;
     t_trash *trash;
+    char    *txt_buf;
+    char    *dna_buf;
 } t_lexer_ctx;
+
 
 typedef struct s_expand_ctx
 {

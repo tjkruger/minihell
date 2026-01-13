@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hkaraogl <hkaraogl@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: hkaraogl <hkaraogl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2026/01/07 17:27:07 by hkaraogl         ###   ########.fr       */
+/*   Created: Invalid Date        by                   #+#    #+#             */
+/*   Updated: 2026/01/07 18:10:04 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -261,7 +261,7 @@ int main(int argc, char **argv, char **env)
 				ms.all_commands = NULL;
 				continue;
 			}
-			handle_expansions(ms.token, ms.env_list, &ms.trash);
+			handle_expansions(ms.token, ms.env_list, &ms.trash);// make it so that i only expand when there is soemthing to expand
 			ms.all_commands = build_commands(&ms);
 			if (ms.all_commands)
 			{
