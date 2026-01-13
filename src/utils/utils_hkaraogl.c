@@ -3,14 +3,41 @@
 /*                                                        :::      ::::::::   */
 /*   utils_hkaraogl.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hkaraogl <hkaraogl@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: hkaraogl <hkaraogl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/29 13:40:50 by hkaraogl          #+#    #+#             */
-/*   Updated: 2025/12/01 17:25:17 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2026/01/08 16:34:57 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include    "minishell.h"
+
+void	print_export_error(char *arg)
+{
+	ft_putstr_fd("bash: export: `", 2);
+	ft_putstr_fd(arg, 2);
+	ft_putendl_fd("': not a valid identifier", 2);
+}
+
+void	sort_env(t_env_list *env)
+{
+	t_env_node	*current;
+	t_env_node	*compare;
+	char		*tmp;
+
+	current = env->head;
+	while (current)
+	{
+		compare = current->next;
+		while (compare)
+		{
+			if (ft_strcmp(current->key, compare->key) > 0)
+				swap_content(current, compare);
+			compare = compare->next;
+		}
+		current = current->next;
+	}
+}
 
 int	error_exit(char *cmd, char*msg, int code)
 {

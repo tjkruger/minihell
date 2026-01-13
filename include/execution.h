@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hkaraogl <hkaraogl@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: hkaraogl <hkaraogl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 14:55:36 by hkaraogl          #+#    #+#             */
-/*   Updated: 2026/01/07 13:24:48 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2026/01/09 12:43:15 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ void execute_child(t_ms *ms, t_one_command *cmd, t_pipes *data, int index);
 int **create_pipes(t_trash *trash, int count);
 void	free_pipes(t_pipes *data);
 int	close_all_pipes(t_pipes *data);
+int	init_pipes(t_ms *ms, t_pipes *data);
 
 //fd.c
 void backup_fds(int *fd_backups);

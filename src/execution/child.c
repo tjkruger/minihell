@@ -3,15 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   child.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hkaraogl <hkaraogl@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: hkaraogl <hkaraogl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/02 13:04:23 by hkaraogl          #+#    #+#             */
-/*   Updated: 2026/01/07 17:02:15 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2026/01/09 13:29:22 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include <errno.h>
 
 // int wait_all_children(t_pipes *data)
 // {
@@ -112,7 +111,6 @@ int wait_all_children(t_pipes *data)
 		i++;
 	}
 	close_all_pipes(data);
-	// free_pipes(data);
 	setup_signals_interactive();
 	return last_status;
 }

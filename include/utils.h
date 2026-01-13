@@ -6,7 +6,7 @@
 /*   By: hkaraogl <hkaraogl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/29 13:45:15 by hkaraogl          #+#    #+#             */
-/*   Updated: 2025/11/25 14:18:13 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2026/01/08 16:34:55 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,5 +23,7 @@ void	ft_perror(char *msg);
 void print_cmd_error(char *cmd, char *msg);
 int	error_exit_perror(char *context, int code);
 int	error_exit(char *cmd, char*msg, int code);
+void	sort_env(t_env_list *env);
+void	print_export_error(char *arg);
 
 #endif

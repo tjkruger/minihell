@@ -3,59 +3,56 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hkaraogl <hkaraogl@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: hkaraogl <hkaraogl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/24 15:31:21 by hkaraogl          #+#    #+#             */
-/*   Updated: 2025/12/02 16:27:05 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2026/01/07 18:21:03 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include    "minishell.h"
+#include "minishell.h"
 
-//tokens = {echo, -nnhnnnn, -n, Hello, World, NULL}
-//echo -nnnnnnn -n -n -n Hello World
+// tokens = {echo, -nnhnnnn, -n, Hello, World, NULL}
+// echo -nnnnnnn -n -n -n Hello World
 
-
-static int validate_flag(char *flag)
+static int	validate_flag(char *flag)
 {
-	int i;
+	int	i;
 
-	if(flag[0] != '-')
-		return 0;
-	
+	if (flag[0] != '-')
+		return (0);
 	i = 1;
-
-	if(flag[i] != 'n')
-		return 0;
-
-	while(flag[i] != '\0')
+	if (flag[i] != 'n')
+		return (0);
+	while (flag[i] != '\0')
 	{
-		if(flag[i] != 'n')
-			return 0;
+		if (flag[i] != 'n')
+			return (0);
 		i++;
 	}
-	return 1;
+	return (1);
 }
 
 int	run_echo(t_one_command *cmd_node)
 {
-	int i;
-	int newline = 1;
+	int	i;
+	int	newline;
+
+	newline = 1;
 	i = 1;
-	while(cmd_node->cmd[i] != NULL && validate_flag(cmd_node->cmd[i]))
+	while (cmd_node->cmd[i] != NULL && validate_flag(cmd_node->cmd[i]))
 	{
 		newline = 0;
 		i++;
 	}
-
-	while(cmd_node->cmd[i] != NULL)
+	while (cmd_node->cmd[i] != NULL)
 	{
 		printf("%s", cmd_node->cmd[i]);
-		if(cmd_node->cmd[i + 1] != NULL)
+		if (cmd_node->cmd[i + 1] != NULL)
 			printf(" ");
 		i++;
 	}
-	if(newline)
+	if (newline)
 		printf("\n");
-	return 0;
+	return (0);
 }
