@@ -6,18 +6,13 @@
 /*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/13 15:11:04 by tjkruger          #+#    #+#             */
-/*   Updated: 2026/01/13 15:11:08 by tjkruger         ###   ########.fr       */
+/*   Updated: 2026/01/13 16:27:22 by tjkruger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 
 #include "minishell.h"
 
-int	is_var_char(char c)
-{
-    return (c != '\0' && c != ' ' && c != '|' && c != '>' && c != '<'
-        && c != '$');
-}
 
 char	*ft_argument(char *str, t_trash *trash)
 {

@@ -6,7 +6,7 @@
 /*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/24 15:32:25 by tjkruger          #+#    #+#             */
-/*   Updated: 2026/01/13 15:16:39 by tjkruger         ###   ########.fr       */
+/*   Updated: 2026/01/13 16:26:29 by tjkruger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,18 +20,6 @@ int	token_length(char *str_start, char *str_end)
 	return (length);
 }
 
-int	ft_isspace(char c) // 1 for space 0 for char
-{
-	if (c == ' ' || c == '\t' || c == '\n' || c == '\v' || c == '\f'
-		|| c == '\r')
-		return (1);
-	return (0);
-}
-
-int	is_specialchar(char c)
-{
-	return (c == '|' || c == '<' || c == '>');
-}
 
 void	token_error(void)
 {
@@ -59,69 +47,90 @@ char	*find_token_end(char *str)
 	return (str);
 }
 
-char	**extracted_token(char *str, t_trash *trash)
+static char	**make_token_pair(int len, t_trash *trash)
 {
 	char	**list;
-	char	*token;
-	char	*dna;
-	char	*token_end;
-	int		len;
-	char	*tp;
-	char	*dp;
-	char	q;
 
-	token_end = find_token_end(str);
-	if (!token_end)
-		return (NULL);
-	len = token_length(str, token_end);
 	list = gc_malloc(trash, 3, sizeof(char *));
 	if (!list)
 		return (NULL);
-	token = gc_malloc(trash, (len + 1), sizeof(char));
-	dna = gc_malloc(trash, (len + 1), sizeof(char));
-	if (!token || !dna)
+	list[0] = gc_malloc(trash, len + 1, sizeof(char));
+	list[1] = gc_malloc(trash, len + 1, sizeof(char));
+	if (!list[0] || !list[1])
 		return (NULL);
-	tp = token;
-	dp = dna;
-	int mode = 0; // 0 = outside quotes, '\'' = single quote, '"' = double quote
-	while (str < token_end)
-	{
-		if ((*str == '"' || *str == '\'') && mode == 0)
-		{
-			q = *str;
-			/* Empty quotes: "" or '' */
-			if (*(str + 1) == q)
-			{
-				/* mark dna to indicate expansion blocked */
-				*dp++ = 'Q'; /* Q = empty-quote boundary */
-				str += 2;
-				continue ;
-			}
-			mode = q;
-			str++;
-			continue ;
-		}
-		if (*str == mode && mode != 0)
-		{
-			mode = 0;
-			str++;
-			continue ;
-		}
-		*tp++ = *str;
-		if (mode == 0)
-			*dp++ = 'N';
-		else if (mode == '\'')
-			*dp++ = 'S';
-		else
-			*dp++ = 'D';
-		str++;
-	}
-	*tp = '\0';
-	*dp = '\0';
-	list[0] = token;
-	list[1] = dna;
 	list[2] = NULL;
 	return (list);
+}
+
+static int	handle_empty_quote_and_advance(char **p, char *dna, int *i)
+{
+	dna[(*i)++] = 'Q';
+	*p += 2;
+	return (1);
+}
+
+static void	toggle_or_skip_quote(char **p, char *mode)
+{
+	if (*mode == 0)
+		*mode = **p;
+	else
+		*mode = 0;
+	(*p)++;
+}
+
+static void	append_one_char(char **p, char *tok, char *dna, int *i, char mode)
+{
+	tok[*i] = **p;
+	dna[*i] = (mode == 0) ? 'N' : (mode == '\'') ? 'S' : 'D';
+	(*i)++;
+	(*p)++;
+}
+
+/* --- main extracted_token (short, delegates to helpers) --- */
+
+static void	fill_token(char *str, char *end, char **pair)
+{
+	char	*p;
+	int		i;
+	char	mode;
+
+	p = str;
+	i = 0;
+	mode = 0;
+	while (p < end)
+	{
+		if ((*p == '"' || *p == '\'') && mode == 0 && *(p + 1) == *p)
+		{
+			handle_empty_quote_and_advance(&p, pair[1], &i);
+			continue ;
+		}
+		if (((*p == '"' || *p == '\'') && mode == 0)
+		|| (*p == mode && mode != 0))
+		{
+			toggle_or_skip_quote(&p, &mode);
+			continue ;
+		}
+		append_one_char(&p, pair[0], pair[1], &i, mode);
+	}
+	pair[0][i] = '\0';
+	pair[1][i] = '\0';
+}
+
+char	**extracted_token(char *str, t_trash *trash)
+{
+	char	*end;
+	char	**pair;
+	int		len;
+
+	end = find_token_end(str);
+	if (!end)
+		return (NULL);
+	len = token_length(str, end);
+	pair = make_token_pair(len, trash);
+	if (!pair)
+		return (NULL);
+	fill_token(str, end, pair);
+	return (pair);
 }
 
 int	how_many_token(char *str)
