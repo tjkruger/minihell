@@ -1,20 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   expansions.c                                       :+:      :+:    :+:   */
+/*   expansion_helper.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/01/13 15:11:04 by tjkruger          #+#    #+#             */
-/*   Updated: 2026/01/13 16:30:34 by tjkruger         ###   ########.fr       */
+/*   Created: 2026/01/13 16:31:35 by tjkruger          #+#    #+#             */
+/*   Updated: 2026/01/13 16:34:33 by tjkruger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-
 #include "minishell.h"
-
-
-
 
 
 static int	calculate_result_len(char *str, char *new, int how_much)
@@ -64,7 +60,6 @@ char	*insert_expandet(t_expand_ctx *ctx)
     fill_result(result, ctx->str, ctx->replacement, ctx->pos, ctx->len);
     return (result);
 }
-
 
 static int	process_expansion_at(t_token *token, int i, t_env_list *env,
         t_trash *trash)
