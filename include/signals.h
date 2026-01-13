@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signals.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hkaraogl <hkaraogl@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: hkaraogl <hkaraogl@student.42heilbronn.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/02 13:03:14 by tjkruger          #+#    #+#             */
-/*   Updated: 2025/12/16 15:22:10 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2026/01/13 16:13:03 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,4 +16,6 @@
 void setup_signals_child(void);
 void handle_sigint_interactive(int sig);
 void setup_signals_interactive(void);
+void	setup_signals_heredoc(void);
+void	heredoc_sigint(int sig);
 #endif

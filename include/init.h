@@ -1,26 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pwd.c                                              :+:      :+:    :+:   */
+/*   init.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hkaraogl <hkaraogl@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hkaraogl <hkaraogl@student.42heilbronn.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/04 14:43:13 by hkaraogl          #+#    #+#             */
-/*   Updated: 2026/01/08 16:35:17 by hkaraogl         ###   ########.fr       */
+/*   Created: 2026/01/13 17:53:32 by hkaraogl          #+#    #+#             */
+/*   Updated: 2026/01/13 17:54:43 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#ifndef INIT_H
+# define INIT_H
 
-int	run_pwd(void)
-{
-	char	cwd[PATH_MAX];
+t_env_list	*init_environment(char **system_env);
 
-	if (!getcwd(cwd, sizeof(cwd)))
-	{
-		perror("pwd");
-		return (1);
-	}
-	printf("%s\n", cwd);
-	return (0);
-}
+
+
+#endif

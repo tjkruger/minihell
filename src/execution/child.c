@@ -3,15 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   child.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hkaraogl <hkaraogl@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: hkaraogl <hkaraogl@student.42heilbronn.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/02 13:04:23 by hkaraogl          #+#    #+#             */
-/*   Updated: 2026/01/07 17:02:15 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2026/01/13 15:44:25 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include <errno.h>
 
 // int wait_all_children(t_pipes *data)
 // {
@@ -19,29 +18,29 @@
 //     int status;
 //     int last_status;
 //     int last_signal;
-    
+
 //     last_status = 0;
 //     last_signal = 0;
 //     i = 0;
-    
+
 //     // DEBUG: Zeige wie viele Prozesse erwartet werden
 //     printf("DEBUG: command_count = %d\n", data->command_count);
-    
+
 //     while (i < data->command_count)
 //     {
-//         printf("DEBUG: Waiting for PID %d (child %d/%d)\n", 
+//         printf("DEBUG: Waiting for PID %d (child %d/%d)\n",
 //                data->pids[i], i + 1, data->command_count);
-        
+
 //         pid_t result = waitpid(data->pids[i], &status, 0);
-        
+
 //         printf("DEBUG: waitpid returned %d\n", result);
-        
+
 //         if (result == -1)
 //         {
 //             printf("DEBUG: waitpid error: %s\n", strerror(errno));
-//             break;  // Wichtig! Sonst hängt es hier
+//             break ;  // Wichtig! Sonst hängt es hier
 //         }
-        
+
 //         if (WIFSIGNALED(status))
 //         {
 //             last_signal = WTERMSIG(status);
@@ -51,10 +50,10 @@
 //             last_status = WEXITSTATUS(status);
 //         i++;
 //     }
-    
+
 //     if (last_signal == SIGQUIT)
 //         write(STDOUT_FILENO, "Quit (core dumped)\n", 19);
-    
+
 //     close_all_pipes(data);
 //     return (setup_signals_interactive(), last_status);
 // }
@@ -87,73 +86,70 @@
 // 	return (setup_signals_interactive(), last_status);
 // }
 
-int wait_all_children(t_pipes *data)
+int	wait_all_children(t_pipes *data)
 {
-	int wait_status;
-	int last_status;
-	int i;
-	int sig;
+	int	wait_status;
+	int	last_status;
+	int	i;
+	int	sig;
 
 	i = 0;
-	while(i < data->command_count)
+	while (i < data->command_count)
 	{
 		waitpid(data->pids[i], &wait_status, 0);
-		if(WIFSIGNALED(wait_status))
+		if (WIFSIGNALED(wait_status))
 		{
 			sig = WTERMSIG(wait_status);
 			last_status = 128 + sig;
-			if(sig == SIGQUIT)
-				write(STDOUT_FILENO, "Quit (core dumped)\n", 19);		
+			if (sig == SIGQUIT)
+				write(STDOUT_FILENO, "Quit (core dumped)\n", 19);
 		}
-		else if(WIFEXITED(wait_status))
+		else if (WIFEXITED(wait_status))
 			last_status = WEXITSTATUS(wait_status);
 		else
 			last_status = 1;
 		i++;
 	}
 	close_all_pipes(data);
-	// free_pipes(data);
 	setup_signals_interactive();
-	return last_status;
+	return (last_status);
 }
 
-//for single command: no use of dup2
-void setup_child_pipes(t_pipes *data, int index)
+// for single command: no use of dup2
+void	setup_child_pipes(t_pipes *data, int index)
 {
-
-	if(index > 0)
+	if (index > 0)
 	{
-		if(dup2(data->pipes[index - 1][0], STDIN_FILENO) == -1)
+		if (dup2(data->pipes[index - 1][0], STDIN_FILENO) == -1)
 		{
 			ft_perror("dup2");
 			exit(1);
 		}
-	    close(data->pipes[index - 1][0]);
-        close(data->pipes[index - 1][1]);
+		close(data->pipes[index - 1][0]);
+		close(data->pipes[index - 1][1]);
 	}
-	if(index < data->pipe_count)
+	if (index < data->pipe_count)
 	{
-		if(dup2(data->pipes[index][1], STDOUT_FILENO) == -1)
+		if (dup2(data->pipes[index][1], STDOUT_FILENO) == -1)
 		{
 			ft_perror("dup2");
 			exit(1);
 		}
-        close(data->pipes[index][0]);
-        close(data->pipes[index][1]);
+		close(data->pipes[index][0]);
+		close(data->pipes[index][1]);
 	}
-	
 }
 
-void execute_child(t_ms *ms, t_one_command *cmd, t_pipes *data, int index)
+void	execute_child(t_ms *ms, t_one_command *cmd, t_pipes *data, int index)
 {
 	setup_child_pipes(data, index);
 	close_all_pipes(data);
-	if(cmd->files && cmd->files->head)
+	if (cmd->files && cmd->files->head)
 	{
-		if(!set_redirections(cmd->files))
+		if (!set_redirections(cmd->files))
 			exit(1);
 	}
-	if(cmd->cmd_type == BUILTIN)
+	if (cmd->cmd_type == BUILTIN)
 		exit(process_builtin(cmd, ms));
 	else
 		execute_external_command(ms, cmd);

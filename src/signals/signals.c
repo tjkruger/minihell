@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hkaraogl <hkaraogl@student.42heilbronn.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/02 12:34:28 by tjkruger          #+#    #+#             */
-/*   Updated: 2026/01/07 14:26:06 by tjkruger         ###   ########.fr       */
+/*   Updated: 2026/01/13 16:09:23 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,25 @@ volatile sig_atomic_t g_signal_status = 0;
 // Nur wenn ein Programm läuft: sollte das Programm beendet werden können
 
 //interrupt and write newline 
+
+void	heredoc_sigint(int sig)
+{
+	(void)sig;
+	g_signal_status = SIGINT;
+	write(STDOUT_FILENO, "\nminisHell> ", 12);
+	rl_done = 1;
+}
+
+void	setup_signals_heredoc(void)
+{
+	struct sigaction	sa;
+
+	sa.sa_handler = heredoc_sigint;
+	sigemptyset(&sa.sa_mask);
+	sa.sa_flags = 0;
+	sigaction(SIGINT, &sa, NULL);
+	signal(SIGQUIT, SIG_IGN);
+}
 
 void handle_sigint_interactive(int sig)
 {

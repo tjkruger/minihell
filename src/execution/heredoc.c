@@ -3,253 +3,98 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hkaraogl <hkaraogl@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: hkaraogl <hkaraogl@student.42heilbronn.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/02 18:18:13 by hkaraogl          #+#    #+#             */
-/*   Updated: 2026/01/07 17:12:34 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2026/01/13 16:35:50 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "minishell.h"
 
-#include    "minishell.h"
-
-//must be freed by user
-static char *generate_tmpfile_name(t_trash *trash)
+static int	read_heredoc_input(int fd, t_file_node *file, t_ms *ms, char *tmp)
 {
-    static int counter = 0;
-    char *appendix;
-    char *temp;
+	char	*line;
 
-    appendix = ft_itoa(counter);
-    if(!appendix)
-        return NULL;
-    temp = gc_strjoin(trash, "/tmp/.minishell_heredoc_", appendix);
-    free(appendix);                // appendix was malloc'd by ft_itoa, free it
-    counter++;
-    return temp;
-}
-
-// void	cleanup_heredoc_file(char *filename)
-// {
-// 	if(filename)
-// 	{
-// 		if(unlink(filename) == -1)
-// 		{
-// 			perror("unlinked failed");
-// 			free(filename);
-// 			return;
-// 		}
-// 		free(filename);
-// 	}
-// }
-// void	cleanup_heredoc_file(char *filename)
-// {
-// 	if(filename)
-// 	{
-// 		if(unlink(filename) == -1)
-// 		{
-// 			perror("unlinked failed");
-// 			free(filename);
-// 			return;
-// 		}
-// 		free(filename);
-// 	}
-// }
-//iterate through cmd_lst and iterate through each nodes file lst
-//unlink heredoc temp file
-//this function frees the filename of the filenode and unlink (delete)  in the filelist. So be careful freeing it again somewhere else!!!!
-// void	cleanup_all_heredoc_files(t_all_commands *cmd_lst)
-// {
-// 	t_one_command *current;
-// 	t_file_node *file;
-// void	cleanup_all_heredoc_files(t_all_commands *cmd_lst)
-// {
-// 	t_one_command *current;
-// 	t_file_node *file;
-
-// 	if(!cmd_lst || !cmd_lst->head)
-// 		return;
-// 	current = cmd_lst->head;
-// 	while(current)
-// 	{
-// 		if(current->files)
-// 		{
-// 			file = current->files->head;
-// 			while(file)
-// 			{
-// 				if(file->redir_type == TOKEN_REDIR_HEREDOC && file->filename)
-// 				{
-// 					unlink(file->filename);
-// 					free(file->filename);
-// 					file->filename = NULL;
-// 				}
-// 				file = file->next;
-// 			}
-// 		}
-// 		current = current->next;
-// 	}
-// }
-// 	if(!cmd_lst || !cmd_lst->head)
-// 		return;
-// 	current = cmd_lst->head;
-// 	while(current)
-// 	{
-// 		if(current->files)
-// 		{
-// 			file = current->files->head;
-// 			while(file)
-// 			{
-// 				if(file->redir_type == TOKEN_REDIR_HEREDOC && file->filename)
-// 				{
-// 					unlink(file->filename);
-// 					free(file->filename);
-// 					file->filename = NULL;
-// 				}
-// 				file = file->next;
-// 			}
-// 		}
-// 		current = current->next;
-// 	}
-// }
-
-void heredoc_sigint(int sig)
-{
-    (void)sig;
-    g_signal_status = SIGINT;       // tell shell Ctrl-C happened
-    write(STDOUT_FILENO, "\nminisHell> ", 12);  // optional newline
-    rl_done = 1;                     // exit readline loop
-}
-
-void setup_signals_heredoc(void)
-{
-    struct sigaction sa;
-
-    sa.sa_handler = heredoc_sigint;
-    sigemptyset(&sa.sa_mask);
-    sa.sa_flags = 0;
-    sigaction(SIGINT, &sa, NULL);
-
-    // heredoc ignores SIGQUIT
-    signal(SIGQUIT, SIG_IGN);
-}
-
-
-
-int	no_qoutes(char *str)
-{
-	int i = 0;
-	while(str[i])
+	while (1)
 	{
-		if(str[i] == '\'' || str[i] == '\"')
-			return 0;
-		i++;
+		line = readline("heredoc:");
+		if (g_signal_status == SIGINT)
+			return (handle_heredoc_interrupt(fd, line, tmp, ms));
+		if (handle_heredoc_eof(line, file->delimiter))
+			break ;
+		if (ft_strcmp(line, file->delimiter) == 0)
+		{
+			free(line);
+			break ;
+		}
+		process_heredoc_line(fd, line, file, ms);
+		free(line);
 	}
-	return 1;
+	return (1);
 }
 
-
-#include <unistd.h>
-
-// prints a single token to fd, respecting the dna string for quotes
-void printout_token(int fd, char *value)
+static int	open_heredoc_file(char *tmp_file)
 {
-    if (!value)
-        return;
-    write(fd, value, ft_strlen(value));
+	int	fd;
+
+	fd = open(tmp_file, O_WRONLY | O_CREAT | O_TRUNC, 0600);
+	if (fd == -1)
+	{
+		perror("heredoc tmp file");
+		return (-1);
+	}
+	return (fd);
 }
 
-
-//this function will executed only if heredoc *file exists
-//create tmp file,
-//collect input,
-//expand if needed
-//save tmp file
 static int	setup_heredoc(t_ms *ms, t_file_node *file)
 {
-	t_token *temp_token_heredoc;
-	char *tmp_file;
-	char *line;
-	int fd = 0;
+	char	*tmp_file;
+	int		fd;
+	int		result;
+
 	tmp_file = generate_tmpfile_name(&ms->trash);
-	
-	fd = open(tmp_file, O_WRONLY | O_CREAT | O_TRUNC, 0600);
-	if(fd == -1)
-		return (perror("heredoc tmp file"), 0);
-
-    setup_signals_heredoc(); //signal setup for heredoc
-    while(1)
-    {
-        line = readline("heredoc:");
-        if (g_signal_status == SIGINT)
-        {
-            free(line);
-            close(fd);
-            unlink(tmp_file); // delete temp file
-            g_signal_status = 0;
-            ms->env_list->last_exit = 130;
-            return 0;         // abort heredoc
-        }
-        if(!line)
-        {
-            ft_putstr_fd("minishell: warning: here-document delimited by end-of-file (wanted `", STDERR_FILENO);
-            ft_putstr_fd(file->delimiter, STDERR_FILENO);
-            ft_putstr_fd("')\n", STDERR_FILENO);
-            break;
-        }
-        
-        if(ft_strcmp(line, file->delimiter) == 0)
-        {
-            free(line);
-            break;
-        }
-        temp_token_heredoc = tokenize(line, ms);
-        if (line[0] == '\0')
-        {
-            write(fd, "\n", 1);
-            free(line);
-            continue;
-        }
-
-        if(!file->qoutes_in_heredoc)
-            handle_expansions(temp_token_heredoc, ms->env_list, &ms->trash);
-        while(temp_token_heredoc)
-        {
-            printout_token(fd, temp_token_heredoc->value);
-            if (temp_token_heredoc->next)
-                write(fd, " ", 1);
-            temp_token_heredoc = temp_token_heredoc->next;
-        }
-        write(fd, "\n", 1);
-        free(line);
-    }
-    close(fd);
-    file->filename = tmp_file;
-    setup_signals_interactive();
-    return 1;
+	fd = open_heredoc_file(tmp_file);
+	if (fd == -1)
+		return (0);
+	setup_signals_heredoc();
+	result = read_heredoc_input(fd, file, ms, tmp_file);
+	close(fd);
+	if (result)
+		file->filename = tmp_file;
+	setup_signals_interactive();
+	return (result);
 }
 
-int setup_all_heredoc(t_ms *ms)
+static int	process_command_heredocs(t_ms *ms, t_one_command *cmd)
 {
-	t_one_command *current;
-	t_file_node *file;
+	t_file_node	*file;
+
+	if (!cmd->files || !cmd->files->head)
+		return (1);
+	file = cmd->files->head;
+	while (file)
+	{
+		if (file->redir_type == TOKEN_REDIR_HEREDOC)
+		{
+			if (!setup_heredoc(ms, file))
+				return (0);
+		}
+		file = file->next;
+	}
+	return (1);
+}
+
+int	setup_all_heredoc(t_ms *ms)
+{
+	t_one_command	*current;
 
 	current = ms->all_commands->head;
-	while(current)
+	while (current)
 	{
-		if(current->files && current->files->head)
-		{
-			file = current->files->head;
-			while(file)
-			{
-				if(file->redir_type == TOKEN_REDIR_HEREDOC)
-				{
-					if(!setup_heredoc(ms, file))
-						return 0;
-				}
-				file = file->next;
-			}
-		}
+		if (!process_command_heredocs(ms, current))
+			return (0);
 		current = current->next;
 	}
-	return 1;
+	return (1);
 }
