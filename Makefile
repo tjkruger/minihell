@@ -15,9 +15,14 @@ FREE        = all_free_functions.c
 PARSER      = parser/create_command_list.c \
               parser/command_list_helper.c
 
-LEXER       = lexer/tokens.c \
-              lexer/token_utils.c \
-			  lexer/expansions.c
+LEXER = lexer/tokens.c \
+        lexer/expansion.c \
+        lexer/allocate-fill_pretoken.c \
+        lexer/node_append_helper.c \
+        lexer/string-argument_helper.c \
+        lexer/token-pretoken_management.c \
+        lexer/token-pretoken_management2.c \
+        lexer/token_helpers-checks.c
 
 BUILTINS    = builtins/echo.c \
 					builtins/cd.c \

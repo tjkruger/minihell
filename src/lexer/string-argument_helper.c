@@ -6,7 +6,7 @@
 /*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/13 16:28:35 by tjkruger          #+#    #+#             */
-/*   Updated: 2026/01/13 16:30:59 by tjkruger         ###   ########.fr       */
+/*   Updated: 2026/01/13 16:43:07 by tjkruger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ char	*exit_state_to_str(int exit_state, t_trash *trash)
     return (gc_itoa(trash, exit_state));
 }
 
-static char	*get_expansion_string(char *arg, t_env_list *env, t_trash *trash)
+char	*get_expansion_string(char *arg, t_env_list *env, t_trash *trash)
 {
     if (!arg)
         return (NULL);
@@ -55,7 +55,7 @@ static char	*get_expansion_string(char *arg, t_env_list *env, t_trash *trash)
 }
 
 
-static char	*insert_literal_dollar(char *str, int pos, t_trash *trash)
+char	*insert_literal_dollar(char *str, int pos, t_trash *trash)
 {
     t_expand_ctx	ctx;
     char			*new;

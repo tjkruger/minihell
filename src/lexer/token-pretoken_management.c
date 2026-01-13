@@ -6,7 +6,7 @@
 /*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/13 16:35:42 by tjkruger          #+#    #+#             */
-/*   Updated: 2026/01/13 16:36:16 by tjkruger         ###   ########.fr       */
+/*   Updated: 2026/01/13 16:43:18 by tjkruger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ char	*find_token_end(char *str)
 	return (str);
 }
 
-static char	**make_token_pair(int len, t_trash *trash)
+char	**make_token_pair(int len, t_trash *trash)
 {
 	char	**list;
 
@@ -62,7 +62,7 @@ static char	**make_token_pair(int len, t_trash *trash)
 	return (list);
 }
 
-static int	handle_empty_quote_and_advance(char **p, char *dna, int *i)
+int	handle_empty_quote_and_advance(char **p, char *dna, int *i)
 {
 	dna[(*i)++] = 'Q';
 	*p += 2;

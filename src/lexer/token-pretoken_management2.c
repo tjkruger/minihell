@@ -6,13 +6,13 @@
 /*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/13 16:36:21 by tjkruger          #+#    #+#             */
-/*   Updated: 2026/01/13 16:36:57 by tjkruger         ###   ########.fr       */
+/*   Updated: 2026/01/13 16:43:34 by tjkruger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	toggle_or_skip_quote(char **p, char *mode)
+void	toggle_or_skip_quote(char **p, char *mode)
 {
 	if (*mode == 0)
 		*mode = **p;
@@ -21,7 +21,7 @@ static void	toggle_or_skip_quote(char **p, char *mode)
 	(*p)++;
 }
 
-static void	append_one_char(char **p, char *tok, char *dna, int *i, char mode)
+void	append_one_char(char **p, char *tok, char *dna, int *i, char mode)
 {
 	tok[*i] = **p;
 	dna[*i] = (mode == 0) ? 'N' : (mode == '\'') ? 'S' : 'D';
@@ -31,7 +31,7 @@ static void	append_one_char(char **p, char *tok, char *dna, int *i, char mode)
 
 /* --- main extracted_token (short, delegates to helpers) --- */
 
-static void	fill_token(char *str, char *end, char **pair)
+void	fill_token(char *str, char *end, char **pair)
 {
 	char	*p;
 	int		i;

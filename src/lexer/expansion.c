@@ -1,19 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   expansion_helper.c                                 :+:      :+:    :+:   */
+/*   expansion.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/13 16:31:35 by tjkruger          #+#    #+#             */
-/*   Updated: 2026/01/13 16:34:33 by tjkruger         ###   ########.fr       */
+/*   Updated: 2026/01/13 16:42:55 by tjkruger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 
-static int	calculate_result_len(char *str, char *new, int how_much)
+int	calculate_result_len(char *str, char *new, int how_much)
 {
     int	str_len;
     int	new_len;
@@ -26,8 +26,7 @@ static int	calculate_result_len(char *str, char *new, int how_much)
         new_len++;
     return (str_len - how_much + new_len);
 }
-
-static void	fill_result(char *result, char *str, char *new, int pos_in_str,
+void	fill_result(char *result, char *str, char *new, int pos_in_str,
         int how_much)
 {
     int	i;
@@ -61,7 +60,7 @@ char	*insert_expandet(t_expand_ctx *ctx)
     return (result);
 }
 
-static int	process_expansion_at(t_token *token, int i, t_env_list *env,
+int	process_expansion_at(t_token *token, int i, t_env_list *env,
         t_trash *trash)
 {
     char		*arg;
