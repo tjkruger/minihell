@@ -6,7 +6,7 @@
 /*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/13 16:37:40 by tjkruger          #+#    #+#             */
-/*   Updated: 2026/01/14 15:42:14 by tjkruger         ###   ########.fr       */
+/*   Updated: 2026/01/14 17:18:27 by tjkruger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,5 +101,5 @@ int	make_op_token(t_lexer_ctx *ctx)
 		opd[0] = ctx->dna[ctx->i];
 		opd[1] = '\0';
 	}
-	return (push_token(ctx->head, op, opd, ctx->trash), ctx->opflag);
+	return (push_token(&ctx->head, op, opd, ctx->trash), ctx->opflag);
 }
