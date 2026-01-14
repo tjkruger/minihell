@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token-pretoken_management.c                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hkaraogl <hkaraogl@student.42heilbronn.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/13 16:35:42 by tjkruger          #+#    #+#             */
-/*   Updated: 2026/01/14 12:03:23 by tjkruger         ###   ########.fr       */
+/*   Updated: 2026/01/14 17:53:58 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
