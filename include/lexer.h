@@ -6,7 +6,7 @@
 /*   By: hkaraogl <hkaraogl@student.42heilbronn.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/24 15:31:51 by tjkruger          #+#    #+#             */
-/*   Updated: 2026/01/14 16:07:29 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2026/01/14 17:34:05 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,5 +60,11 @@ void			handle_expansions(t_token *token_list, t_env_list *env,
 					t_trash *trash);
 
 void			token_error(void);
+char    **make_token_pair(int len, t_trash *trash);
+int     token_length(char *str_start, char *str_end);
+void    token_error(void);
+char    *find_token_end(char *str);
+char	*insert_literal_dollar(char *str, int pos, t_trash *trash);
+char	*get_expansion_string(char *arg, t_env_list *env, t_trash *trash);
 
 #endif

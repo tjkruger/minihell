@@ -6,7 +6,7 @@
 /*   By: hkaraogl <hkaraogl@student.42heilbronn.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/14 13:45:04 by tjkruger          #+#    #+#             */
-/*   Updated: 2026/01/14 16:11:49 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2026/01/14 17:31:24 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,7 +134,7 @@ typedef struct s_trash // kommt mit rein
 // typedef t_pretoken *t_pretoken_pointer;
 typedef struct s_lexer_ctx
 {
-	t_token					**head;
+	t_token					*head;
 	char					*text;
 	char					*dna;
 	int						i;
