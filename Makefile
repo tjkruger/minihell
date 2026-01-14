@@ -40,7 +40,8 @@ EXECUTION	= 		execution/pipes.c \
 		
 TRASH		=		trash/trash.c \
 					trash/gc_split.c \
-					trash/gc_itoa.c 
+					trash/gc_itoa.c \
+					trash/gc_utils.c
 
 UTILS		=		utils/utils_hkaraogl_2.c \
 					utils/utils_hkaraogl_3.c \

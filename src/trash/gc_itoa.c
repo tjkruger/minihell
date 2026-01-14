@@ -6,7 +6,7 @@
 /*   By: hkaraogl <hkaraogl@student.42heilbronn.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/17 16:25:12 by hkaraogl          #+#    #+#             */
-/*   Updated: 2026/01/13 18:22:13 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2026/01/14 15:01:12 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,9 +29,9 @@ static int	get_len(int n)
 
 char	*gc_itoa(t_trash *trash, int n)
 {
-	int lengh;
-	char *result;
-	int is_neg;
+	int		lengh;
+	char	*result;
+	int		is_neg;
 
 	if (n == -2147483648)
 		return (gc_strdup(trash, "-2147483648"));

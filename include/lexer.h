@@ -3,13 +3,12 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: r2d2 <r2d2@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: hkaraogl <hkaraogl@student.42heilbronn.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/24 15:31:51 by tjkruger          #+#    #+#             */
-/*   Updated: 2026/01/13 00:02:02 by r2d2             ###   ########.fr       */
+/*   Updated: 2026/01/14 14:57:03 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #ifndef LEXER_H
 # define LEXER_H
@@ -39,12 +38,14 @@ t_token			*split_pretoken(char *text, char *dna, t_ms *ms);
 char			*ft_strjoin_free(char *s1, char c, t_trash *trash);
 char			*append_char(char *s, char c, t_trash *trash);
 
-void			push_token(t_token **head, char *value, char *dna, t_trash *trash);
-void			flush_word(t_token **head, char **txt_buf, char **dna_buf, t_trash *trash);
+void			push_token(t_token **head, char *value, char *dna,
+					t_trash *trash);
+void			flush_word(t_token **head, char **txt_buf, char **dna_buf,
+					t_trash *trash);
 void			append_subtokens(t_token **head, t_token **tail, t_token *sub);
 
 int				validate_token(t_token *head);
-t_token_type		get_token_type(char *str);
+t_token_type	get_token_type(char *str);
 
 t_token			*tokenize(char *input, t_ms *ms);
 t_token			*tokenize_normal(char *input, t_ms *ms);
@@ -55,7 +56,8 @@ char			*insert_expandet(t_expand_ctx *ctx);
 char			*exit_state_to_str(int exit_state, t_trash *trash);
 char			*ft_argument(char *str, t_trash *trash);
 char			*ft_expand(char *arg, t_env_list *env);
-void			handle_expansions(t_token *token_list, t_env_list *env, t_trash *trash);
+void			handle_expansions(t_token *token_list, t_env_list *env,
+					t_trash *trash);
 
 void			token_error(void);
 
