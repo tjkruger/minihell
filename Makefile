@@ -49,7 +49,8 @@ UTILS		=		utils/utils_hkaraogl_2.c \
 ENV			=		environment/environment_utils.c \
 					environment/environment.c
 
-INIT		=		init/init_environment.c 
+INIT		=		init/init_environment.c \
+					init/init.c 
 
 
 # Combine all source groups

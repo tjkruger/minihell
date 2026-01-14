@@ -6,11 +6,11 @@
 /*   By: hkaraogl <hkaraogl@student.42heilbronn.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/13 18:00:30 by hkaraogl          #+#    #+#             */
-/*   Updated: 2026/01/13 18:01:34 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2026/01/13 18:22:05 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include    "minishell.h"
+#include "minishell.h"
 
 void	print_export_error(char *arg)
 {
@@ -39,13 +39,13 @@ void	sort_env(t_env_list *env)
 	}
 }
 
-int	error_exit(char *cmd, char*msg, int code)
+int	error_exit(char *cmd, char *msg, int code)
 {
 	print_cmd_error(cmd, msg);
-	return code;
+	return (code);
 }
 
-void print_cmd_error(char *cmd, char *msg)
+void	print_cmd_error(char *cmd, char *msg)
 {
 	ft_putstr_fd("minishell: ", 2);
 	ft_putstr_fd(cmd, 2);
