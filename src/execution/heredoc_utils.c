@@ -3,14 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hkaraogl <hkaraogl@student.42heilbronn.de> +#+  +:+       +#+        */
+/*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/13 16:18:01 by hkaraogl          #+#    #+#             */
-/*   Updated: 2026/01/13 16:37:16 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2026/01/14 15:22:12 by tjkruger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+extern volatile sig_atomic_t	g_signal_status;
 
 char	*generate_tmpfile_name(t_trash *trash)
 {

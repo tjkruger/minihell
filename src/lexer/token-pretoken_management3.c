@@ -6,7 +6,7 @@
 /*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/14 12:07:01 by tjkruger          #+#    #+#             */
-/*   Updated: 2026/01/14 13:47:21 by tjkruger         ###   ########.fr       */
+/*   Updated: 2026/01/14 15:41:33 by tjkruger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ t_lexer_ctx	init_lexer_ctx(char *text, char *dna, t_ms *ms)
 	ctx.dna = dna;
 	ctx.trash = &ms->trash;
 	ctx.i = 0;
-	ctx.flag = 0;
+	ctx.opflag = 0;
 	ctx.txt_buf = NULL;
 	ctx.dna_buf = NULL;
 	return (ctx);
@@ -55,8 +55,8 @@ t_token	*split_pretoken(char *text, char *dna, t_ms *ms)
 		if (dna[ctx.i] == 'N' && is_op(text[ctx.i]))
 		{
 			flush_word(&ctx.head, &ctx.txt_buf, &ctx.dna_buf, ctx.trash);
-			ctx.flag = make_op_token(&ctx);
-			if (ctx.flag)
+			ctx.opflag = make_op_token(&ctx);
+			if (ctx.opflag)
 				ctx.i++;
 		}
 		else

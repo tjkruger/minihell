@@ -3,19 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   environment_utils.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hkaraogl <hkaraogl@student.42heilbronn.de> +#+  +:+       +#+        */
+/*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/13 17:46:47 by hkaraogl          #+#    #+#             */
-/*   Updated: 2026/01/13 17:47:41 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2026/01/14 15:44:07 by tjkruger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include    "minishell.h"
+#include "minishell.h"
 
-char **env_list_array(t_env_list *env)
+char	**env_list_array(t_env_list *env)
 {
-	char **ret;
-	int count;
+	char	**ret;
+	int		count;
 
 	count = count_exported_vars(env);
 	ret = malloc(sizeof(char *) * (count + 1));
@@ -26,11 +26,10 @@ char **env_list_array(t_env_list *env)
 		free_str_arr(ret);
 		return (NULL);
 	}
-	
-	return ret;
+	return (ret);
 }
 
-//delete a node which has char *key
+// delete a node which has char *key
 int	unset_env_value(t_env_list *env, char *key)
 {
 	t_env_node	*prev;
@@ -60,7 +59,7 @@ int	unset_env_value(t_env_list *env, char *key)
 	return (0);
 }
 
-//add a note which has key and value to the end (tail)
+// add a note which has key and value to the end (tail)
 int	set_env_value(t_env_list *env, char *key, char *value, int exported)
 {
 	t_env_node	*node;
@@ -68,7 +67,7 @@ int	set_env_value(t_env_list *env, char *key, char *value, int exported)
 	node = find_env_node(env, key);
 	if (node)
 	{
-		if(exported)
+		if (exported)
 		{
 			free(node->value);
 			node->value = ft_strdup(value);
@@ -76,12 +75,13 @@ int	set_env_value(t_env_list *env, char *key, char *value, int exported)
 		}
 		return (0);
 	}
-	if(exported)
+	if (exported)
 		add_env_node(env, ft_strdup(key), ft_strdup(value), 1);
 	else
 		add_env_node(env, ft_strdup(key), NULL, 0);
 	return (0);
 }
+
 // bekomme env linked list und key
 // returnt den value
 // PWD=/home/hkaraogl/Core/Rank3/minishell

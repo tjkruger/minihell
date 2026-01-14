@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils_hkaraogl_3.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hkaraogl <hkaraogl@student.42heilbronn.de> +#+  +:+       +#+        */
+/*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/13 18:03:29 by hkaraogl          #+#    #+#             */
-/*   Updated: 2026/01/13 18:22:04 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2026/01/14 15:31:43 by tjkruger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,9 @@ int	strncmp_strlen(char *s1, char *s2)
 
 int	count_array_string(char **arr)
 {
-	int i = 0;
+	int	i;
 
+	i = 0;
 	while (arr[i])
 		i++;
 	return (i);

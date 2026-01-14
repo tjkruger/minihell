@@ -13,6 +13,7 @@ HISTORY     = history.c
 FREE        = all_free_functions.c
 
 PARSER      = parser/create_command_list.c \
+			  parser/file_initialisation-handeling.c \
               parser/command_list_helper.c
 
 LEXER = lexer/tokens.c \

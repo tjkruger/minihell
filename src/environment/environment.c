@@ -3,19 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   environment.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hkaraogl <hkaraogl@student.42heilbronn.de> +#+  +:+       +#+        */
+/*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/29 11:52:25 by hkaraogl          #+#    #+#             */
-/*   Updated: 2026/01/13 17:59:48 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2026/01/14 15:44:51 by tjkruger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int count_exported_vars(t_env_list *env)
+int	count_exported_vars(t_env_list *env)
 {
-	t_env_node *current;
-	int count;
+	t_env_node	*current;
+	int			count;
 
 	count = 0;
 	current = env->head;
@@ -28,10 +28,10 @@ int count_exported_vars(t_env_list *env)
 	return (count);
 }
 
-static char *create_env_string(char *key, char *value)
+static char	*create_env_string(char *key, char *value)
 {
-	char *str;
-	int len;
+	char	*str;
+	int		len;
 
 	len = ft_strlen(key) + ft_strlen(value);
 	str = malloc(len + 2);
@@ -43,10 +43,10 @@ static char *create_env_string(char *key, char *value)
 	return (str);
 }
 
-int fill_env_array(char **arr, t_env_list *env)
+int	fill_env_array(char **arr, t_env_list *env)
 {
-	t_env_node *current;
-	int i;
+	t_env_node	*current;
+	int			i;
 
 	i = 0;
 	current = env->head;
@@ -71,15 +71,15 @@ char	*find_command_path(t_trash *trash, char *cmd)
 	char	**path_dirs;
 	char	*full_path;
 	int		i;
-	char *temp;
+	char	*temp;
 
 	i = 0;
 	if (is_absolut_path(cmd))
 		return (ft_strdup(cmd));
 	path = getenv("PATH");
 	path_dirs = gc_split(trash, path, ':');
-	if(!path_dirs)
-		return NULL;
+	if (!path_dirs)
+		return (NULL);
 	while (path_dirs[i] != NULL)
 	{
 		temp = ft_strjoin(path_dirs[i], "/");
@@ -116,4 +116,3 @@ void	add_env_node(t_env_list *env, char *key, char *value, int exported)
 	}
 	env->size++;
 }
-

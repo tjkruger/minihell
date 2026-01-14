@@ -3,14 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hkaraogl <hkaraogl@student.42heilbronn.de> +#+  +:+       +#+        */
+/*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/02 18:18:13 by hkaraogl          #+#    #+#             */
-/*   Updated: 2026/01/13 16:35:50 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2026/01/14 15:21:37 by tjkruger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+extern volatile sig_atomic_t	g_signal_status;
 
 static int	read_heredoc_input(int fd, t_file_node *file, t_ms *ms, char *tmp)
 {
