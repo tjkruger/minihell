@@ -6,7 +6,7 @@
 /*   By: hkaraogl <hkaraogl@student.42heilbronn.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/17 12:47:24 by hkaraogl          #+#    #+#             */
-/*   Updated: 2026/01/14 14:51:13 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2026/01/14 16:11:03 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,4 +74,25 @@ char	**gc_split(t_trash *trash, char *s, char c)
 	}
 	result[j] = NULL;
 	return (result);
+}
+
+void	gc_cleanup(t_trash *trash)
+{
+	t_trash_node	*current;
+	t_trash_node	*next;
+
+	if (!trash)
+		return ;
+	current = trash->head;
+	while (current)
+	{
+		next = current->next;
+		if (current->data)
+			free(current->data);
+		free(current);
+		current = next;
+	}
+	trash->head = NULL;
+	trash->tail = NULL;
+	trash->size = 0;
 }

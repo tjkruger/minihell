@@ -3,168 +3,24 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hkaraogl <hkaraogl@student.42heilbronn.de> +#+  +:+       +#+        */
+/*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: Invalid Date        by                   #+#    #+#             */
-/*   Updated: 2026/01/14 12:55:06 by hkaraogl         ###   ########.fr       */
+/*   Created: 2026/01/14 15:45:59 by tjkruger          #+#    #+#             */
+/*   Updated: 2026/01/14 16:05:59 by tjkruger         ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
-
-
-
-
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/* ---------------- TOKEN PRINTING ---------------- */
+extern volatile sig_atomic_t	g_signal_status;
 
-static void print_tokens(t_token *t)
+void	free_all_environment(t_env_list *env_lst)
 {
-	printf("\n=== TOKENS ===\n");
-
-	while (t)
-	{
-		printf("Type: %d  | DNA: %s |  Value: %s\n",
-			   t->type,
-			   t->dna,
-			   t->value ? t->value : "(null)");
-		t = t->next;
-	}
-}
-
-// /* ---------------- FILE REDIRECT PRINTING ---------------- */
-
-static void print_file_nodes(t_file_list *fl)
-{
-	printf("Redirect list (size: %zd):\n", fl ? fl->size : 0);
-
-	if (!fl || !fl->head)
-	{
-		printf("   (no redirects)\n");
-		return;
-	}
-
-	t_file_node *n = fl->head;
-	while (n)
-	{
-		printf("   type: %d  -> file: %s\n",
-			   n->redir_type,
-			   n->filename ? n->filename : "(null)");
-		n = n->next;
-	}
-}
-
-// /* ---------------- ONE COMMAND PRINTING ---------------- */
-
-static void print_one_cmd(t_one_command *cmd, int index)
-{
-	printf("\n--- COMMAND %d ---\n", index);
-
-	printf("cmd_type: %d\n", cmd->cmd_type);
-	printf("executable: %d\n", cmd->executable);
-
-	/* Command arguments (cmd is your char **) */
-	printf("Arguments:\n");
-	if (!cmd->cmd)
-		printf("   (none)\n");
-	else
-	{
-		int i = 0;
-		while (cmd->cmd[i])
-		{
-			printf("   [%d] %s\n", i, cmd->cmd[i]);
-			i++;
-		}
-	}
-
-	/* Redirects list */
-	printf("Redirects:\n");
-	print_file_nodes(cmd->files);
-}
-
-// /* ---------------- COMMAND LIST PRINTING ---------------- */
-
-static void print_all_commands(t_all_commands *cmds)
-{
-	printf("\n=== COMMAND LIST ===\n");
-
-	if (!cmds)
-	{
-		printf("(NULL commands struct)\n");
-		return;
-	}
-
-	printf("syntax_error: %d\n", cmds->syntax_error);
-	printf("size: %zd\n", cmds->size);
-
-	t_one_command *current = cmds->head;
-	int index = 0;
-
-	while (current)
-	{
-		print_one_cmd(current, index);
-		index++;
-		current = current->next;
-	}
-}
-
-// /* ---------------- HISTORY PRINTING ---------------- */
-
-static void print_history_list(t_history *h)
-{
-	printf("\n=== HISTORY ===\n");
-
-	if (!h)
-	{
-		printf("(empty)\n");
-		return;
-	}
-
-	while (h)
-	{
-		printf("%s\n", h->command);
-		h = h->next;
-	}
-}
-
-void print_array(char **arr)
-{
-	if (!arr)
-	{
-		printf("(null array)\n");
-		return;
-	}
-
-	int i = 0;
-	while (arr[i])
-	{
-		printf("arr[%d]: %s\n", i, arr[i]);
-		i++;
-	}
-}
-
-// /* ---------------- EVERYTHING PRINTING ---------------- */
-
-void print_everything(t_token *tokens, t_all_commands *cmds, t_history *history)
-{
-	printf("\n\n=========================\n");
-	printf("      DEBUG OUTPUT\n");
-	printf("=========================\n");
-
-	print_all_commands(cmds);
-
-	printf("=========================\n\n");
-}
-
-void free_all_environment(t_env_list *env_lst)
-{
-	t_env_node *current;
-	t_env_node *next;
+	t_env_node	*current;
+	t_env_node	*next;
 
 	if (!env_lst)
-		return;
-
+		return ;
 	current = env_lst->head;
 	while (current)
 	{
@@ -177,87 +33,123 @@ void free_all_environment(t_env_list *env_lst)
 	free(env_lst);
 }
 
-int main(int argc, char **argv, char **env)
+/* initialize shell runtime state (ms) */
+static void	init_ms(t_ms *ms, char **env)
 {
-	t_ms ms;
-	ms.history_list = NULL;
-	int i;
-	int exit_status;
-	char *input;
+	ms->history_list = NULL;
+	ms->all_commands = NULL;
+	ms->token = NULL;
+	ms->curr_cmd = NULL;
+	ms->env_list = init_environment(env);
+	rl_catch_signals = 0;
+	rl_catch_sigwinch = 0;
+	init_shell_level(ms);
+	setup_signals_interactive();
+	trash_init(&ms->trash);
+}
+
+static void	shutdown_ms(t_ms *ms)
+{
+	free_all_environment(ms->env_list);
+	free_hist(ms->history_list);
+}
+
+/* handle the "history" builtin line */
+static int	handle_history_line(t_ms *ms, char *input)
+{
+	if (strcmp(input, "history") != 0)
+		return (0);
+	print_history(ms->history_list);
+	return (1);
+}
+
+/* prepare tokens/expansions/commands and handle heredoc setup
+   returns 1 on success, 0 on recoverable failure */
+static int	prepare_commands(t_ms *ms, char *input)
+{
+	ms->token = tokenize(input, ms);
+	if (!ms->token)
+	{
+		ms->all_commands = NULL;
+		return (0);
+	}
+	handle_expansions(ms->token, ms->env_list, &ms->trash);
+	ms->all_commands = build_commands(ms);
+	if (!ms->all_commands)
+		return (0);
+	if (!setup_all_heredoc(ms))
+	{
+		ms->env_list->last_exit = 130;
+		gc_cleanup(&ms->trash);
+		ms->all_commands = NULL;
+		return (0);
+	}
+	return (1);
+}
+
+/* execute built commands and cleanup per-line GC */
+static int	execute_and_cleanup(t_ms *ms)
+{
+	int	status;
+
+	status = execute_commands(ms);
+	ms->env_list->last_exit = status;
+	gc_cleanup(&ms->trash);
+	return (status);
+}
+
+/* process a non-empty input line (history, tokenize, exec flow) */
+static void	process_line(t_ms *ms, char *input, int *exit_status)
+{
+	if (handle_history_line(ms, input))
+		return ;
+	add_to_hist_list(&ms->history_list, input);
+	add_history(input);
+	if (!prepare_commands(ms, input))
+		return ;
+	*exit_status = execute_and_cleanup(ms);
+}
+
+/* single iteration of the read/handle loop; returns 0 to break main loop */
+static int	readline_iteration(t_ms *ms, int *exit_status)
+{
+	char	*input;
+
+	input = readline("minisHell> ");
+	if (g_signal_status == SIGINT)
+	{
+		*exit_status = 130;
+		if (ms->env_list)
+			ms->env_list->last_exit = 130;
+		g_signal_status = 0;
+		if (input)
+			free(input);
+		return (1);
+	}
+	if (!input)
+	{
+		write(STDOUT_FILENO, "exit\n", 5);
+		return (0);
+	}
+	if (!is_empty_or_whitespace(input))
+		process_line(ms, input, exit_status);
+	free(input);
+	ms->all_commands = NULL;
+	ms->token = NULL;
+	return (1);
+}
+
+/* main: short dispatch loop */
+int	main(int argc, char **argv, char **env)
+{
+	t_ms	ms;
+	int		exit_status;
+
 	(void)argc;
 	(void)argv;
 	exit_status = 0;
-	ms.all_commands = NULL;
-	ms.env_list = init_environment(env);
-	rl_catch_signals = 0;
-	rl_catch_sigwinch = 0;
-	init_shell_level(&ms);
-
-	setup_signals_interactive();
-	trash_init(&ms.trash);
-	
-
-	while (1)
-	{
-		input = readline("minisHell> ");
-		if (g_signal_status == SIGINT)
-		{
-			exit_status = 130;
-			ms.env_list->last_exit = 130;
-			g_signal_status = 0;
-			if (input)
-				free(input);
-			continue;
-		}
-		if (!input)
-		{
-			write(STDOUT_FILENO, "exit\n", 5);
-			break;
-		}
-		if (!is_empty_or_whitespace(input))
-		{
-			if (strcmp(input, "history") == 0)
-			{
-				print_history(ms.history_list);
-				free(input);
-				continue;
-			}
-			else
-			{
-				add_to_hist_list(&ms.history_list, input);
-				add_history(input);
-			}
-			ms.token = tokenize(input, &ms);
-			if(!ms.token)
-			{
-				ms.all_commands = NULL;
-				continue;
-			}
-			handle_expansions(ms.token, ms.env_list, &ms.trash);// make it so that i only expand when there is soemthing to expand
-			ms.all_commands = build_commands(&ms);
-			if (ms.all_commands)
-			{
-				if (!setup_all_heredoc(&ms))  // heredoc aborted
-				{
-					ms.env_list->last_exit = 130;  // propagate Ctrl-C
-					gc_cleanup(&ms.trash);         // clean temp memory
-					ms.all_commands = NULL;        // prevent command execution
-					continue;                      // go back to prompt
-				}
-			}
-
-			exit_status = execute_commands(&ms);
-			ms.env_list->last_exit = exit_status;
-			gc_cleanup(&ms.trash);
-		}
-		free(input);
-		ms.all_commands = NULL;
-		ms.token = NULL;
-	}
-	free_all_environment(ms.env_list);
-	free_hist(ms.history_list);
-	return exit_status;
+	init_ms(&ms, env);
+	while (readline_iteration(&ms, &exit_status));
+	shutdown_ms(&ms);
+	return (exit_status);
 }
-
-
-

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils_hkaraogl_2.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hkaraogl <hkaraogl@student.42heilbronn.de> +#+  +:+       +#+        */
+/*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/13 18:00:30 by hkaraogl          #+#    #+#             */
-/*   Updated: 2026/01/13 18:22:05 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2026/01/14 15:31:53 by tjkruger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

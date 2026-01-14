@@ -6,7 +6,7 @@
 /*   By: hkaraogl <hkaraogl@student.42heilbronn.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/13 17:46:47 by hkaraogl          #+#    #+#             */
-/*   Updated: 2026/01/14 14:58:49 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2026/01/14 16:09:26 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,13 @@ int	set_env_value(t_env_list *env, char *key, char *value, int exported)
 	return (0);
 }
 
+// bekomme env linked list und key
+// returnt den value
+// PWD=/home/hkaraogl/Core/Rank3/minishell
+// zB key = "PWD"
+// value = "/home/hkaraogl/Core/Rank3/minishell"
+// falls Variable nicht im linkedlist ist, such im Sytem_ENV
+// falls dort auch nicht, dann return (NULL);
 char	*get_env_value(t_env_list *env, char *key)
 {
 	t_env_node	*node;

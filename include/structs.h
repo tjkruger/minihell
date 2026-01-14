@@ -1,4 +1,14 @@
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   structs.h                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hkaraogl <hkaraogl@student.42heilbronn.de> +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/01/14 13:45:04 by tjkruger          #+#    #+#             */
+/*   Updated: 2026/01/14 16:11:49 by hkaraogl         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #ifndef STRUCTS_H
 # define STRUCTS_H
@@ -24,10 +34,10 @@ typedef enum e_token_type
 {
 	TOKEN_WORD,
 	TOKEN_PIPE,
-	TOKEN_REDIR_IN,      //<
-	TOKEN_REDIR_OUT,     //>
-	TOKEN_REDIR_APPEND,  //<<
-	TOKEN_REDIR_HEREDOC, // >>
+	TOKEN_REDIR_IN,
+	TOKEN_REDIR_OUT,
+	TOKEN_REDIR_APPEND,
+	TOKEN_REDIR_HEREDOC,
 }							t_token_type;
 
 typedef struct s_env_node
@@ -40,18 +50,18 @@ typedef struct s_env_node
 
 typedef struct s_env_list // kommt mit rein
 {
-	t_env_node *head;
-	t_env_node *tail;
-	ssize_t size;
-	int last_exit;
+	t_env_node	*head;
+	t_env_node	*tail;
+	ssize_t		size;
+	int			last_exit;
 }							t_env_list;
 
 typedef struct s_pipes // kommt mit rein
 {
-	int **pipes;
-	pid_t *pids;
-	int pipe_count;
-	int command_count;
+	int		**pipes;
+	pid_t	*pids;
+	int		pipe_count;
+	int		command_count;
 }							t_pipes;
 
 typedef struct s_file_node
@@ -65,25 +75,25 @@ typedef struct s_file_node
 
 typedef struct s_file_list // kommt mit rein
 {
-	t_file_node *head;
-	t_file_node *tail;
-	ssize_t size;
+	t_file_node	*head;
+	t_file_node	*tail;
+	ssize_t		size;
 }							t_file_list;
 
 typedef struct s_token // kommt mit rein
 {
-	char *value;
-	char *dna;
-	t_token_type type;
-	struct s_token *next;
+	char			*value;
+	char			*dna;
+	t_token_type	type;
+	struct s_token	*next;
 }							t_token;
 
 // muss executer uebernehemen (t_command_node)
 typedef struct s_one_command
 {
 	struct s_one_command	*next;
-	int cmd_type;   // 1 for buildin, 0 for external
-	int executable; // 1 if executable, 0 if not
+	int						cmd_type;
+	int						executable;
 	char					**cmd;
 	t_file_list				*files;
 }							t_one_command;
@@ -91,10 +101,10 @@ typedef struct s_one_command
 // muss executer uebernehemen (t_command_list)
 typedef struct s_all_commands // kommt mit rein
 {
-	int syntax_error;
-	t_one_command *head;
-	t_one_command *tail;
-	ssize_t size;
+	int				syntax_error;
+	t_one_command	*head;
+	t_one_command	*tail;
+	ssize_t			size;
 }							t_all_commands;
 
 typedef struct s_history
@@ -105,8 +115,8 @@ typedef struct s_history
 
 typedef struct s_pretoken // kommt mit rein
 {
-	char **token;
-	char **dna;
+	char	**token;
+	char	**dna;
 }							t_pretoken;
 
 typedef struct s_trash_node
@@ -117,9 +127,9 @@ typedef struct s_trash_node
 
 typedef struct s_trash // kommt mit rein
 {
-	struct s_trash_node *head;
-	struct s_trash_node *tail;
-	ssize_t size;
+	struct s_trash_node	*head;
+	struct s_trash_node	*tail;
+	ssize_t				size;
 }							t_trash;
 // typedef t_pretoken *t_pretoken_pointer;
 typedef struct s_lexer_ctx
@@ -128,6 +138,7 @@ typedef struct s_lexer_ctx
 	char					*text;
 	char					*dna;
 	int						i;
+	int						opflag;
 	t_trash					*trash;
 	char					*txt_buf;
 	char					*dna_buf;
@@ -141,6 +152,15 @@ typedef struct s_expand_ctx
 	int						len;
 	t_trash					*trash;
 }							t_expand_ctx;
+
+typedef struct s_token_ctx
+{
+	char					*p;
+	char					*tok;
+	char					*dna;
+	int						i;
+	char					mode;
+}							t_token_ctx;
 
 typedef struct s_ms
 {

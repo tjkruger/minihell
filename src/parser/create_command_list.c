@@ -3,91 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   create_command_list.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: r2d2 <r2d2@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2026/01/12 23:26:57 by r2d2             ###   ########.fr       */
+/*   Created: 2026/01/14 14:56:57 by tjkruger          #+#    #+#             */
+/*   Updated: 2026/01/14 15:05:19 by tjkruger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-t_file_list	*init_file_list(t_ms *ms)
-{
-	t_file_list	*list;
-
-	list = gc_malloc(&ms->trash, 1, sizeof(t_file_list));
-	if (!list)
-		return (NULL);
-	list->head = NULL;
-	list->tail = NULL;
-	list->size = 0;
-	return (list);
-}
-
-t_file_node	*create_file_node(t_ms *ms, char *value, char *dna,
-		t_token_type redir_type)
-{
-	t_file_node	*node;
-
-	node = gc_malloc(&ms->trash, 1, sizeof(t_file_node));
-	if (!node)
-		return (NULL);
-	node->qoutes_in_heredoc = 0;
-	if (redir_type == TOKEN_REDIR_HEREDOC)
-	{
-		node->filename = NULL;
-		node->delimiter = gc_strdup(&ms->trash, value);
-		if (dna && (ft_strchr(dna, 'D') || ft_strchr(dna, 'S')))
-			node->qoutes_in_heredoc = 1;
-	}
-	else
-	{
-		node->filename = gc_strdup(&ms->trash, value);
-		node->delimiter = NULL;
-	}
-	node->redir_type = redir_type; // store enum value
-	node->next = NULL;
-	return (node);
-}
-
-static void	ensure_file_list(t_ms *ms)
-{
-	if (!ms || !ms->curr_cmd)
-		return ;
-	if (!ms->curr_cmd->files)
-		ms->curr_cmd->files = init_file_list(ms);
-}
-
-static void	append_file_node(t_ms *ms, t_file_node *node)
-{
-	t_file_list	*files;
-
-	if (!ms || !ms->curr_cmd || !node)
-		return ;
-	files = ms->curr_cmd->files;
-	if (!files->head)
-		files->head = files->tail = node;
-	else
-	{
-		files->tail->next = node;
-		files->tail = node;
-	}
-	files->size++;
-}
-
-void	add_file_to_cmd(t_ms *ms, char *value, int redir_type, char *dna)
-{
-	t_file_node	*new_file;
-
-	if (!ms || !value || !ms->curr_cmd)
-		return ;
-	ensure_file_list(ms);
-	new_file = create_file_node(ms, value, dna, redir_type);
-	if (!new_file)
-		return ;
-	append_file_node(ms, new_file);
-}
 
 int	find_cmd_type(char **cmd)
 {
@@ -110,31 +33,6 @@ int	find_cmd_type(char **cmd)
 	return (0);
 }
 
-int	find_executable(char *str)
-{
-	int	i;
-
-	i = 0;
-	if (str[i] == '.')
-		if (str[++i] == '/')
-			return (1);
-	return (0);
-}
-
-t_all_commands	*create_new_commands_list(t_trash *trash)
-{
-	t_all_commands	*list;
-
-	list = gc_malloc(trash, 1, sizeof(t_all_commands));
-	if (!list)
-		return (NULL);
-	list->head = NULL;
-	list->tail = NULL;
-	list->size = 0;
-	list->syntax_error = 0;
-	return (list);
-}
-
 int	handle_token(t_ms *ms, t_one_command *cmd)
 {
 	if (ms->token->type == TOKEN_WORD)
@@ -152,6 +50,7 @@ int	handle_token(t_ms *ms, t_one_command *cmd)
 	}
 	return (1);
 }
+
 int	finalize_command(t_one_command *cmd)
 {
 	if (!cmd->cmd && !cmd->files)

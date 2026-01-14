@@ -6,7 +6,7 @@
 /*   By: hkaraogl <hkaraogl@student.42heilbronn.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/24 15:32:03 by tjkruger          #+#    #+#             */
-/*   Updated: 2026/01/14 14:57:05 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2026/01/14 16:07:46 by hkaraogl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,12 +41,10 @@
 # include "utils.h"
 
 // all other .h files
-struct s_file_list;
-struct s_file_list;
-struct s_cmd_node;
-struct s_file_node;
-
-extern volatile sig_atomic_t	g_signal_status;
+struct	s_file_list;
+struct	s_file_list;
+struct	s_cmd_node;
+struct	s_file_node;
 
 # define PATH_MAX 4096
 
