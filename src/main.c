@@ -6,13 +6,31 @@
 /*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/14 15:45:59 by tjkruger          #+#    #+#             */
-/*   Updated: 2026/01/14 16:05:59 by tjkruger         ###   ########.fr       */
+/*   Updated: 2026/01/14 17:50:51 by tjkruger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 extern volatile sig_atomic_t	g_signal_status;
+
+void	print_tokens(t_token *tok)
+{
+	int	i;
+
+	i = 0;
+	while (tok)
+	{
+		printf("tok[%d] type=%d value='%s' dna='%s'\n",
+			i,
+			tok->type,
+			tok->value ? tok->value : "(null)",
+			tok->dna ? tok->dna : "(null)",
+			tok->type ? tok->type : "(null)");
+		tok = tok->next;
+		i++;
+	}
+}
 
 void	free_all_environment(t_env_list *env_lst)
 {
@@ -73,6 +91,7 @@ static int	prepare_commands(t_ms *ms, char *input)
 		ms->all_commands = NULL;
 		return (0);
 	}
+	print_tokens(ms->token);
 	handle_expansions(ms->token, ms->env_list, &ms->trash);
 	ms->all_commands = build_commands(ms);
 	if (!ms->all_commands)
@@ -149,7 +168,8 @@ int	main(int argc, char **argv, char **env)
 	(void)argv;
 	exit_status = 0;
 	init_ms(&ms, env);
-	while (readline_iteration(&ms, &exit_status));
+	while (readline_iteration(&ms, &exit_status))
+		;
 	shutdown_ms(&ms);
 	return (exit_status);
 }

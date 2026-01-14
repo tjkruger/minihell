@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token-pretoken_management2.c                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hkaraogl <hkaraogl@student.42heilbronn.de> +#+  +:+       +#+        */
+/*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/13 16:36:21 by tjkruger          #+#    #+#             */
-/*   Updated: 2026/01/14 17:55:19 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2026/01/14 18:57:45 by tjkruger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,8 +57,7 @@ void	fill_token(char *str, char *end, char **pair)
 		if ((*ctx.p == '"' || *ctx.p == '\'')
 			&& ctx.mode == 0 && *(ctx.p + 1) == *ctx.p)
 		{
-			// handle_empty_quote(&ctx);
-			ctx.p +=2;
+			ctx.p += 2;
 			continue ;
 		}
 		if (((*ctx.p == '"' || *ctx.p == '\'') && ctx.mode == 0)
