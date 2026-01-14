@@ -6,7 +6,7 @@
 /*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/14 15:01:00 by tjkruger          #+#    #+#             */
-/*   Updated: 2026/01/14 15:02:01 by tjkruger         ###   ########.fr       */
+/*   Updated: 2026/01/14 17:17:45 by tjkruger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ static void	append_file_node(t_ms *ms, t_file_node *node)
 	files = ms->curr_cmd->files;
 	if (!files->head)
 	{
-		files->head = files->tail;
+		files->head = node;
 		files->tail = node;
 	}
 	else
