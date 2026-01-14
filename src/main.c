@@ -6,7 +6,7 @@
 /*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/14 15:45:59 by tjkruger          #+#    #+#             */
-/*   Updated: 2026/01/14 15:58:12 by tjkruger         ###   ########.fr       */
+/*   Updated: 2026/01/14 16:05:59 by tjkruger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,8 +149,7 @@ int	main(int argc, char **argv, char **env)
 	(void)argv;
 	exit_status = 0;
 	init_ms(&ms, env);
-	while (readline_iteration(&ms, &exit_status))
-		;
+	while (readline_iteration(&ms, &exit_status));
 	shutdown_ms(&ms);
 	return (exit_status);
 }
