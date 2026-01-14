@@ -6,7 +6,7 @@
 /*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/13 16:25:17 by tjkruger          #+#    #+#             */
-/*   Updated: 2026/01/13 16:28:00 by tjkruger         ###   ########.fr       */
+/*   Updated: 2026/01/14 12:03:13 by tjkruger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,8 @@ int	is_specialchar(char c)
 
 int	is_var_char(char c)
 {
-    return (c != '\0' && c != ' ' && c != '|' && c != '>' && c != '<'
-        && c != '$');
+	return (c != '\0' && c != ' ' && c != '|' && c != '>' && c != '<'
+		&& c != '$');
 }
 
 t_token_type	get_token_type(char *str)

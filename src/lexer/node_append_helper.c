@@ -6,7 +6,7 @@
 /*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/13 16:37:40 by tjkruger          #+#    #+#             */
-/*   Updated: 2026/01/13 16:38:15 by tjkruger         ###   ########.fr       */
+/*   Updated: 2026/01/14 12:02:09 by tjkruger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,9 +79,7 @@ int	make_op_token(t_lexer_ctx *ctx)
 {
 	char	*op;
 	char	*opd;
-	int		flag;
 
-	flag = 0;
 	if (ctx->text[ctx->i] == ctx->text[ctx->i + 1] && ctx->text[ctx->i] != '|')
 	{
 		op = gc_malloc(ctx->trash, 3, sizeof(char));
@@ -92,7 +90,7 @@ int	make_op_token(t_lexer_ctx *ctx)
 		opd[0] = ctx->dna[ctx->i];
 		opd[1] = ctx->dna[ctx->i + 1];
 		opd[2] = '\0';
-		flag = 1;
+		ctx->flag = 1;
 	}
 	else
 	{
@@ -103,6 +101,5 @@ int	make_op_token(t_lexer_ctx *ctx)
 		opd[0] = ctx->dna[ctx->i];
 		opd[1] = '\0';
 	}
-	push_token(ctx->head, op, opd, ctx->trash);
-	return (flag);
+	return (push_token(ctx->head, op, opd, ctx->trash), ctx->flag);
 }

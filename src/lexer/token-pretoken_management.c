@@ -6,7 +6,7 @@
 /*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/13 16:35:42 by tjkruger          #+#    #+#             */
-/*   Updated: 2026/01/13 16:43:18 by tjkruger         ###   ########.fr       */
+/*   Updated: 2026/01/14 12:03:23 by tjkruger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@ int	token_length(char *str_start, char *str_end)
 	length = (int)(str_end - str_start);
 	return (length);
 }
-
 
 void	token_error(void)
 {

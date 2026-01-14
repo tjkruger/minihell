@@ -22,6 +22,7 @@ LEXER = lexer/tokens.c \
         lexer/string-argument_helper.c \
         lexer/token-pretoken_management.c \
         lexer/token-pretoken_management2.c \
+		lexer/token-pretoken_management3.c \
         lexer/token_helpers-checks.c
 
 BUILTINS    = builtins/echo.c \

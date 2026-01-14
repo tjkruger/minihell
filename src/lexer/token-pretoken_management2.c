@@ -6,7 +6,7 @@
 /*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/13 16:36:21 by tjkruger          #+#    #+#             */
-/*   Updated: 2026/01/13 16:43:34 by tjkruger         ###   ########.fr       */
+/*   Updated: 2026/01/14 13:47:27 by tjkruger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,42 +21,55 @@ void	toggle_or_skip_quote(char **p, char *mode)
 	(*p)++;
 }
 
-void	append_one_char(char **p, char *tok, char *dna, int *i, char mode)
+void	append_char_to_ctx(t_token_ctx *ctx)
 {
-	tok[*i] = **p;
-	dna[*i] = (mode == 0) ? 'N' : (mode == '\'') ? 'S' : 'D';
-	(*i)++;
-	(*p)++;
+	ctx->tok[ctx->i] = *ctx->p;
+	if (ctx->mode == 0)
+		ctx->dna[ctx->i] = 'N';
+	else if (ctx->mode == '\'')
+		ctx->dna[ctx->i] = 'S';
+	else
+		ctx->dna[ctx->i] = 'D';
+	ctx->i++;
+	ctx->p++;
+}
+
+int	handle_empty_quote(t_token_ctx *ctx)
+{
+	ctx->dna[ctx->i++] = 'Q';
+	ctx->p += 2;
+	return (1);
 }
 
 /* --- main extracted_token (short, delegates to helpers) --- */
 
 void	fill_token(char *str, char *end, char **pair)
 {
-	char	*p;
-	int		i;
-	char	mode;
+	t_token_ctx	ctx;
 
-	p = str;
-	i = 0;
-	mode = 0;
-	while (p < end)
+	ctx.p = str;
+	ctx.tok = pair[0];
+	ctx.dna = pair[1];
+	ctx.i = 0;
+	ctx.mode = 0;
+	while (ctx.p < end)
 	{
-		if ((*p == '"' || *p == '\'') && mode == 0 && *(p + 1) == *p)
+		if ((*ctx.p == '"' || *ctx.p == '\'')
+			&& ctx.mode == 0 && *(ctx.p + 1) == *ctx.p)
 		{
-			handle_empty_quote_and_advance(&p, pair[1], &i);
+			handle_empty_quote(&ctx);
 			continue ;
 		}
-		if (((*p == '"' || *p == '\'') && mode == 0)
-		|| (*p == mode && mode != 0))
+		if (((*ctx.p == '"' || *ctx.p == '\'') && ctx.mode == 0)
+			|| (*ctx.p == ctx.mode && ctx.mode != 0))
 		{
-			toggle_or_skip_quote(&p, &mode);
+			toggle_or_skip_quote(&ctx.p, &ctx.mode);
 			continue ;
 		}
-		append_one_char(&p, pair[0], pair[1], &i, mode);
+		append_char_to_ctx(&ctx);
 	}
-	pair[0][i] = '\0';
-	pair[1][i] = '\0';
+	ctx.tok[ctx.i] = '\0';
+	ctx.dna[ctx.i] = '\0';
 }
 
 char	**extracted_token(char *str, t_trash *trash)
@@ -74,27 +87,4 @@ char	**extracted_token(char *str, t_trash *trash)
 		return (NULL);
 	fill_token(str, end, pair);
 	return (pair);
-}
-
-int	how_many_token(char *str)
-{
-	int		count;
-	char	*end;
-
-	count = 0;
-	if (!str)
-		return (0);
-	while (*str)
-	{
-		while (*str && ft_isspace(*str))
-			str++;
-		if (!*str)
-			break ;
-		end = find_token_end(str);
-		if (end == NULL) /* unclosed quote */
-			return (-1);
-		count++;
-		str = end;
-	}
-	return (count);
 }
