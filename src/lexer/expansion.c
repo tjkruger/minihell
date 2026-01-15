@@ -77,7 +77,7 @@ int	process_expansion_at(t_token *token, int i, t_env_list *env,
 	}
 	ex_str = get_expansion_string(arg, env, trash);
 	if (!ex_str)
-		ex_str = "";
+		return (i + ft_strlen(arg) + 1);
 	ctx.trash = trash;
 	ctx.str = token->value;
 	ctx.replacement = ex_str;
@@ -105,8 +105,7 @@ void	handle_expansions(t_token *token_list, t_env_list *env, t_trash *trash)
 		i = 0;
 		while (str[i])
 		{
-			if (str[i] == '$' && (!token_list->dna || token_list->dna[i] != 'S')
-				&& (!token_list->dna || token_list->dna[i + 1] != 'Q'))
+			if (str[i] == '$' && (!token_list->dna || token_list->dna[i] != 'S'))
 			{
 				i = process_expansion_at(token_list, i, env, trash);
 				continue ;
