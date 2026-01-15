@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils_hkaraogl.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hkaraogl <hkaraogl@student.42heilbronn.de> +#+  +:+       +#+        */
+/*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/29 13:40:50 by hkaraogl          #+#    #+#             */
-/*   Updated: 2026/01/13 18:22:03 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2026/01/15 14:23:12 by tjkruger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,4 +59,22 @@ int	is_absolut_path(char *cmd)
 			return (1);
 	}
 	return (0);
+}
+
+char	*ft_strncpy(char *dest, const char *src, size_t n)
+{
+	size_t	i;
+
+	i = 0;
+	while (i < n && src[i] != '\0')
+	{
+		dest[i] = src[i];
+		i++;
+	}
+	while (i < n)
+	{
+		dest[i] = '\0';
+		i++;
+	}
+	return (dest);
 }

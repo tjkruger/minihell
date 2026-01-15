@@ -6,7 +6,7 @@
 /*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/13 16:31:35 by tjkruger          #+#    #+#             */
-/*   Updated: 2026/01/14 12:42:16 by tjkruger         ###   ########.fr       */
+/*   Updated: 2026/01/15 14:23:35 by tjkruger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,8 +59,7 @@ char	*insert_expandet(t_expand_ctx *ctx)
 	return (result);
 }
 
-int	process_expansion_at(t_token *token, int i, t_env_list *env,
-		t_trash *trash)
+int	process_expansion_at(t_token *token, int i, t_env_list *env, t_trash *trash)
 {
 	char			*arg;
 	char			*ex_str;
@@ -89,29 +88,30 @@ int	process_expansion_at(t_token *token, int i, t_env_list *env,
 	return (i + (int)ft_strlen(ex_str));
 }
 
-void	handle_expansions(t_token *token_list, t_env_list *env, t_trash *trash)
+void	handle_expansions(t_token *tok_list, t_env_list *env, t_trash *trash)
 {
 	char	*str;
 	int		i;
 
-	while (token_list)
+	while (tok_list)
 	{
-		str = token_list->value;
+		str = tok_list->value;
 		if (!str)
 		{
-			token_list = token_list->next;
+			tok_list = tok_list->next;
 			continue ;
 		}
 		i = 0;
 		while (str[i])
 		{
-			if (str[i] == '$' && (!token_list->dna || token_list->dna[i] != 'S'))
+			if (str[i] == '$' && (!tok_list->dna || tok_list->dna[i] != 'S')
+				&& (str[i + 1] && tok_list->dna[i + 1] != 'S'))
 			{
-				i = process_expansion_at(token_list, i, env, trash);
+				i = process_expansion_at(tok_list, i, env, trash);
 				continue ;
 			}
 			i++;
 		}
-		token_list = token_list->next;
+		tok_list = tok_list->next;
 	}
 }

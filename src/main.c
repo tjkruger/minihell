@@ -6,7 +6,7 @@
 /*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/14 15:45:59 by tjkruger          #+#    #+#             */
-/*   Updated: 2026/01/14 17:50:51 by tjkruger         ###   ########.fr       */
+/*   Updated: 2026/01/15 14:29:26 by tjkruger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,23 +14,23 @@
 
 extern volatile sig_atomic_t	g_signal_status;
 
-void	print_tokens(t_token *tok)
-{
-	int	i;
+// void	print_tokens(t_token *tok)
+// {
+// 	int	i;
 
-	i = 0;
-	while (tok)
-	{
-		printf("tok[%d] type=%d value='%s' dna='%s'\n",
-			i,
-			tok->type,
-			tok->value ? tok->value : "(null)",
-			tok->dna ? tok->dna : "(null)",
-			tok->type ? tok->type : "(null)");
-		tok = tok->next;
-		i++;
-	}
-}
+// 	i = 0;
+// 	while (tok)
+// 	{
+// 		printf("tok[%d] type=%d value='%s' dna='%s'\n",
+// 			i,
+// 			tok->type,
+// 			tok->value ? tok->value : "(null)",
+// 			tok->dna ? tok->dna : "(null)",
+// 			tok->type ? tok->type : "(null)");
+// 		tok = tok->next;
+// 		i++;
+// 	}
+// }
 
 void	free_all_environment(t_env_list *env_lst)
 {
@@ -73,88 +73,11 @@ static void	shutdown_ms(t_ms *ms)
 }
 
 /* handle the "history" builtin line */
-static int	handle_history_line(t_ms *ms, char *input)
+int	handle_history_line(t_ms *ms, char *input)
 {
 	if (strcmp(input, "history") != 0)
 		return (0);
 	print_history(ms->history_list);
-	return (1);
-}
-
-/* prepare tokens/expansions/commands and handle heredoc setup
-   returns 1 on success, 0 on recoverable failure */
-static int	prepare_commands(t_ms *ms, char *input)
-{
-	ms->token = tokenize(input, ms);
-	if (!ms->token)
-	{
-		ms->all_commands = NULL;
-		return (0);
-	}
-	print_tokens(ms->token);
-	handle_expansions(ms->token, ms->env_list, &ms->trash);
-	ms->all_commands = build_commands(ms);
-	if (!ms->all_commands)
-		return (0);
-	if (!setup_all_heredoc(ms))
-	{
-		ms->env_list->last_exit = 130;
-		gc_cleanup(&ms->trash);
-		ms->all_commands = NULL;
-		return (0);
-	}
-	return (1);
-}
-
-/* execute built commands and cleanup per-line GC */
-static int	execute_and_cleanup(t_ms *ms)
-{
-	int	status;
-
-	status = execute_commands(ms);
-	ms->env_list->last_exit = status;
-	gc_cleanup(&ms->trash);
-	return (status);
-}
-
-/* process a non-empty input line (history, tokenize, exec flow) */
-static void	process_line(t_ms *ms, char *input, int *exit_status)
-{
-	if (handle_history_line(ms, input))
-		return ;
-	add_to_hist_list(&ms->history_list, input);
-	add_history(input);
-	if (!prepare_commands(ms, input))
-		return ;
-	*exit_status = execute_and_cleanup(ms);
-}
-
-/* single iteration of the read/handle loop; returns 0 to break main loop */
-static int	readline_iteration(t_ms *ms, int *exit_status)
-{
-	char	*input;
-
-	input = readline("minisHell> ");
-	if (g_signal_status == SIGINT)
-	{
-		*exit_status = 130;
-		if (ms->env_list)
-			ms->env_list->last_exit = 130;
-		g_signal_status = 0;
-		if (input)
-			free(input);
-		return (1);
-	}
-	if (!input)
-	{
-		write(STDOUT_FILENO, "exit\n", 5);
-		return (0);
-	}
-	if (!is_empty_or_whitespace(input))
-		process_line(ms, input, exit_status);
-	free(input);
-	ms->all_commands = NULL;
-	ms->token = NULL;
 	return (1);
 }
 

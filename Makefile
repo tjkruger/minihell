@@ -51,6 +51,7 @@ TRASH		=		trash/trash.c \
 
 UTILS		=		utils/utils_hkaraogl_2.c \
 					utils/utils_hkaraogl_3.c \
+					utils/util4.c \
 					utils/utils_hkaraogl.c 
 				
 ENV			=		environment/environment_utils.c \

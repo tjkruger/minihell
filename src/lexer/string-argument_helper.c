@@ -6,7 +6,7 @@
 /*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/13 16:28:35 by tjkruger          #+#    #+#             */
-/*   Updated: 2026/01/14 11:54:44 by tjkruger         ###   ########.fr       */
+/*   Updated: 2026/01/15 14:11:58 by tjkruger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ char	*ft_argument(char *str, t_trash *trash)
 	var = gc_malloc(trash, len + 1, sizeof(char));
 	if (!var)
 		return (NULL);
-	strncpy(var, str, len);
+	ft_strncpy(var, str, len);
 	var[len] = '\0';
 	return (var);
 }

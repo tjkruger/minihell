@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hkaraogl <hkaraogl@student.42heilbronn.de> +#+  +:+       +#+        */
+/*   By: tjkruger <tjkruger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/29 13:45:15 by hkaraogl          #+#    #+#             */
-/*   Updated: 2026/01/14 14:56:53 by hkaraogl         ###   ########.fr       */
+/*   Updated: 2026/01/15 14:29:32 by tjkruger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,5 +26,11 @@ int		error_exit(char *cmd, char *msg, int code);
 void	sort_env(t_env_list *env);
 void	print_export_error(char *arg);
 int		is_absolut_path(char *cmd);
+char	*ft_strncpy(char *dest, const char *src, size_t n);
+int		prepare_commands(t_ms *ms, char *input);
+int		execute_and_cleanup(t_ms *ms);
+void	process_line(t_ms *ms, char *input, int *exit_status);
+int		readline_iteration(t_ms *ms, int *exit_status);
+int		handle_history_line(t_ms *ms, char *input);
 
 #endif
